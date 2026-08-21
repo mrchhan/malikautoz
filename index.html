@@ -52,8 +52,9 @@
   button.btn.small{padding:6px 10px;font-size:12px;}
   button.btn:disabled{opacity:.5;cursor:not-allowed;}
   input:disabled, select:disabled{background:var(--bg);color:var(--muted);cursor:not-allowed;opacity:.85;}
-  table{width:100%;border-collapse:collapse;font-size:13px;}
-  th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--border);}
+  .table-scroll{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  table{width:100%;min-width:max-content;border-collapse:collapse;font-size:13px;}
+  th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--border);white-space:nowrap;}
   th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;}
   .low{color:var(--danger);font-weight:600;}
   .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
@@ -519,10 +520,10 @@
         <button class="btn danger small" id="deleteSelectedBtn" onclick="deleteSelectedProducts()" disabled>🗑️ Delete Selected (0)</button>
         <button class="btn danger small" onclick="deleteAllProducts()">🗑️ Delete All</button>
       </div>
-      <table>
+      <div class="table-scroll"><table>
         <thead><tr><th><input type="checkbox" id="selectAllProducts" onchange="toggleSelectAllProducts(this)"></th><th>Name</th><th>Model</th><th>Company</th><th>Category</th><th>SKU</th><th>Stock</th><th>Cost</th><th>Retail</th><th>Wholesale</th><th></th></tr></thead>
         <tbody id="inventoryTable"></tbody>
-      </table>
+      </table></div>
     </div>
 
     <div class="card">
@@ -532,10 +533,10 @@
         so you always know why a number changed. Stock is never edited silently.
       </p>
       <input id="searchLedger" placeholder="🔍 Filter by product name..." oninput="renderStockLedger()">
-      <table>
+      <div class="table-scroll"><table>
         <thead><tr><th>Date</th><th>Product</th><th>Type</th><th>Change</th><th>Resulting Stock</th><th>Reason / Note</th></tr></thead>
         <tbody id="ledgerTable"></tbody>
-      </table>
+      </table></div>
     </div>
   </div>
 
@@ -562,10 +563,10 @@
     </div>
     <div class="card">
       <h2>Supplier List</h2>
-      <table>
+      <div class="table-scroll"><table>
         <thead><tr><th>Name</th><th>Contact</th><th>Phone</th><th>Products Supplied</th><th>Total Purchased</th><th>Owed to Supplier</th><th></th></tr></thead>
         <tbody id="supplierTable"></tbody>
-      </table>
+      </table></div>
     </div>
   </div>
 
@@ -602,10 +603,10 @@
     </div>
     <div class="card">
       <h2>Claim List</h2>
-      <table>
+      <div class="table-scroll"><table>
         <thead><tr><th>Date</th><th>Product</th><th>Supplier</th><th>Qty</th><th>Reason</th><th>Status</th><th>Refund</th><th></th></tr></thead>
         <tbody id="claimTable"></tbody>
-      </table>
+      </table></div>
     </div>
   </div>
 
@@ -715,10 +716,10 @@
     <div class="card">
       <h2>Purchase History</h2>
       <input id="searchPurchase" placeholder="🔍 Search by invoice number or supplier..." oninput="renderPurchaseList()">
-      <table>
+      <div class="table-scroll"><table>
         <thead><tr><th>Date</th><th>Invoice #</th><th>Supplier</th><th>Items</th><th>Discount</th><th>Total</th><th>Paid</th><th>Owed</th><th>Logistics</th><th>Attachment</th><th></th></tr></thead>
         <tbody id="purchaseTable"></tbody>
-      </table>
+      </table></div>
     </div>
   </div>
 
@@ -758,10 +759,10 @@
     <div class="card">
       <h2>Demand List</h2>
       <input id="searchDemand" placeholder="🔍 Search by supplier..." oninput="renderDemandList()">
-      <table>
+      <div class="table-scroll"><table>
         <thead><tr><th>Date</th><th>Supplier</th><th>Items</th><th>Status</th><th></th></tr></thead>
         <tbody id="demandTable"></tbody>
-      </table>
+      </table></div>
     </div>
   </div>
 
@@ -816,10 +817,10 @@
       <button class="btn" onclick="saveReconciliation()">💾 Save Today's Reconciliation</button>
 
       <h2 style="margin-top:24px;font-size:14px;">📜 Recent Reconciliation History</h2>
-      <table>
+      <div class="table-scroll"><table>
         <thead><tr><th>Date</th><th>Closed By</th><th>Expense By</th><th>Expected</th><th>Actual</th><th>Difference</th></tr></thead>
         <tbody id="reconciliationHistoryTable"></tbody>
-      </table>
+      </table></div>
     </div>
 
     <div class="card">
@@ -832,10 +833,10 @@
         <div><label>Note (optional)</label><input id="exNote" placeholder="Details"></div>
       </div>
       <button class="btn" onclick="addExpense()">➕ Add Expense</button>
-      <table style="margin-top:10px;">
+      <div class="table-scroll"><table style="margin-top:10px;">
         <thead><tr><th>Date</th><th>Category</th><th>Amount</th><th>Note</th><th></th></tr></thead>
         <tbody id="expenseTable"></tbody>
-      </table>
+      </table></div>
     </div>
   </div>
 
@@ -845,19 +846,19 @@
     <div class="card">
       <h2>Sales History</h2>
       <input id="searchSales" placeholder="🔍 Search by customer or item..." oninput="renderSalesView()">
-      <table>
+      <div class="table-scroll"><table>
         <thead><tr><th>Date</th><th>Customer</th><th>Sold By</th><th>Items</th><th>Total</th><th>Payment</th><th></th></tr></thead>
         <tbody id="salesTable"></tbody>
-      </table>
+      </table></div>
     </div>
 
     <div class="card">
       <h2>↩️ Sales Returns</h2>
       <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Use the "Return" button on a sale above to process one. Returns automatically restock inventory and adjust reported sales/profit.</p>
-      <table>
+      <div class="table-scroll"><table>
         <thead><tr><th>Date</th><th>Customer</th><th>Items Returned</th><th>Refund</th><th>Method</th><th>Reason</th></tr></thead>
         <tbody id="returnsTable"></tbody>
-      </table>
+      </table></div>
     </div>
   </div>
 
@@ -891,10 +892,10 @@
     <div class="card">
       <h2>Customer List</h2>
       <input id="searchCustomer" placeholder="🔍 Search by name or phone..." oninput="renderCustomers()">
-      <table>
+      <div class="table-scroll"><table>
         <thead><tr><th>Name</th><th>Phone</th><th>Type</th><th>Bike</th><th>Purchases</th><th>Total Spent</th><th>Credit Owed</th><th></th></tr></thead>
         <tbody id="customerTable"></tbody>
-      </table>
+      </table></div>
     </div>
   </div>
 
@@ -940,10 +941,10 @@
       <h2>Employee List</h2>
       <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Only <strong>Active</strong> employees appear in the POS "Served By" dropdown and the Login screen. Set someone to Inactive instead of deleting them to keep their sales history intact.</p>
       <p style="font-size:11px;color:var(--muted);margin-top:-6px;">⚠️ PINs are a practical deterrent and an accountability log (who did what), not bank-grade security — this app has no server, so anyone with deep technical knowledge and access to this device could bypass it. Don't rely on it alone for sensitive access control.</p>
-      <table>
+      <div class="table-scroll"><table>
         <thead><tr><th>Name</th><th>Phone</th><th>Position</th><th>Access Role</th><th>Status</th><th>Sales (This Month)</th><th></th></tr></thead>
         <tbody id="employeeTable"></tbody>
-      </table>
+      </table></div>
     </div>
   </div>
 
@@ -1380,10 +1381,10 @@
       <div class="card">
         <h2>📋 Transactions</h2>
         <input id="searchBankFeed" placeholder="🔍 Search description..." oninput="renderBankFeed()">
-        <table>
+        <div class="table-scroll"><table>
           <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Category</th><th>Status</th><th></th></tr></thead>
           <tbody id="bankFeedTable"></tbody>
-        </table>
+        </table></div>
       </div>
     </div>
   </div>
@@ -1485,10 +1486,10 @@
       <div><span>Current Balance Owed</span><span id="ledgerCurrentBalance" style="font-weight:800;"></span></div>
     </div>
     <div style="max-height:45vh;overflow:auto;">
-      <table class="rcpt-items">
+      <div class="table-scroll"><table class="rcpt-items">
         <thead><tr><th>Date</th><th>Description</th><th>Debit</th><th>Credit</th><th>Balance</th></tr></thead>
         <tbody id="ledgerTableBody"></tbody>
-      </table>
+      </table></div>
     </div>
     <div id="ledgerReconcileNote" class="hidden" style="font-size:11px;color:var(--muted);margin-top:8px;"></div>
     <div class="row" style="margin-top:10px;">
@@ -4573,10 +4574,10 @@ function viewPurchase(id){
       <div><span>Invoice #</span><span>${p.invoiceNumber}</span></div>
       <div><span>Supplier</span><span>${sup ? sup.name : '-'}</span></div>
     </div>
-    <table class="rcpt-items">
+    <div class="table-scroll"><table class="rcpt-items">
       <thead><tr><th>Item</th><th>Qty</th><th>Cost</th><th>Discount</th><th>Net</th></tr></thead>
       <tbody>${itemRows}</tbody>
-    </table>
+    </table></div>
     <div class="rcpt-totals">
       <div><span>Subtotal</span><span>${fmt(p.subtotal)}</span></div>
       ${totalDiscount>0 ? `<div><span>Discount</span><span>− ${fmt(totalDiscount)}</span></div>` : ''}
@@ -6174,10 +6175,10 @@ function buildReceiptHtml(sale){
     </div>
     <div class="rcpt-title">SALES RECEIPT</div>
     <div class="rcpt-meta">${metaRows}</div>
-    <table class="rcpt-items">
+    <div class="table-scroll"><table class="rcpt-items">
       <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
       <tbody>${itemRows}</tbody>
-    </table>
+    </table></div>
     <div class="rcpt-totals">
       ${totalsRows}
       <div class="grand"><span>TOTAL</span><span>${escapeHtml(fmt(d.total))}</span></div>
@@ -6491,10 +6492,10 @@ function generateCustomReport(){
         <div class="box"><div class="num">${fmt(purchaseTotal)}</div><div class="lbl">Purchases (Stock Bought)</div></div>
       </div>
       <h2 style="font-size:14px;margin-top:16px;color:var(--primary);">Sales by Payment Method</h2>
-      <table>
+      <div class="table-scroll"><table>
         <thead><tr><th>Method</th><th>Total</th></tr></thead>
         <tbody>${Object.entries(methodTotals).length ? Object.entries(methodTotals).map(([m,v])=>`<tr><td>${m}</td><td>${fmt(v)}</td></tr>`).join('') : '<tr><td colspan="2" class="empty">No sales in this range.</td></tr>'}</tbody>
-      </table>`;
+      </table></div>`;
   }
   else if(type==='customer'){
     const map = {};
@@ -6516,10 +6517,10 @@ function generateCustomReport(){
     lastCustomReportFilename = `sales-by-customer-${fromVal}-to-${toVal}.csv`;
 
     output.innerHTML = `
-      <table>
+      <div class="table-scroll"><table>
         <thead><tr><th>Customer</th><th># Sales</th><th>Gross Sales</th><th>Returns</th><th>Net Sales</th></tr></thead>
         <tbody>${rows.length ? rows.map(r=>`<tr><td>${r.name}</td><td>${r.count}</td><td>${fmt(r.gross)}</td><td>${fmt(r.returns)}</td><td>${fmt(r.net)}</td></tr>`).join('') : '<tr><td colspan="5" class="empty">No sales in this range.</td></tr>'}</tbody>
-      </table>`;
+      </table></div>`;
   }
   else if(type==='supplier'){
     const map = {};
@@ -6536,10 +6537,10 @@ function generateCustomReport(){
     lastCustomReportFilename = `purchases-by-supplier-${fromVal}-to-${toVal}.csv`;
 
     output.innerHTML = `
-      <table>
+      <div class="table-scroll"><table>
         <thead><tr><th>Supplier</th><th># Invoices</th><th>Total Purchased</th><th>Paid</th><th>Owed</th></tr></thead>
         <tbody>${rows.length ? rows.map(r=>`<tr><td>${r.name}</td><td>${r.count}</td><td>${fmt(r.total)}</td><td>${fmt(r.paid)}</td><td class="${r.owed>0?'low':''}">${fmt(r.owed)}</td></tr>`).join('') : '<tr><td colspan="5" class="empty">No purchases in this range.</td></tr>'}</tbody>
-      </table>`;
+      </table></div>`;
   }
 }
 
@@ -6666,7 +6667,7 @@ function generatePL(){
   const expenseRows = Object.entries(expenseByCategory).sort((a,b)=>b[1]-a[1]);
 
   output.innerHTML = `
-    <table>
+    <div class="table-scroll"><table>
       <tbody>
         <tr><td colspan="2" style="font-weight:700;color:var(--primary);">Revenue</td></tr>
         <tr><td>Gross Sales</td><td style="text-align:right;">${fmt(grossSales)}</td></tr>
@@ -6694,7 +6695,7 @@ function generatePL(){
         <tr><td style="font-weight:700;font-size:15px;padding-top:14px;border-top:2px solid var(--border);">NET PROFIT</td>
             <td style="text-align:right;font-weight:700;font-size:15px;padding-top:14px;border-top:2px solid var(--border);" class="${netProfit<0?'low':''}">${fmt(netProfit)}</td></tr>
       </tbody>
-    </table>
+    </table></div>
   `;
 
   lastPLRows = [
@@ -6751,7 +6752,7 @@ function renderBalanceSheet(){
   const equity = totalAssets - totalLiabilities;
 
   document.getElementById('balanceSheetOutput').innerHTML = `
-    <table>
+    <div class="table-scroll"><table>
       <tbody>
         <tr><td colspan="2" style="font-weight:700;color:var(--primary);">Assets</td></tr>
         <tr><td>Cash on Hand</td><td style="text-align:right;">${fmt(cash)}</td></tr>
@@ -6769,7 +6770,7 @@ function renderBalanceSheet(){
         <tr><td style="font-weight:700;font-size:15px;padding-top:14px;border-top:2px solid var(--border);">OWNER'S EQUITY (Assets − Liabilities)</td>
             <td style="text-align:right;font-weight:700;font-size:15px;padding-top:14px;border-top:2px solid var(--border);">${fmt(equity)}</td></tr>
       </tbody>
-    </table>
+    </table></div>
   `;
 
   lastBSRows = [
@@ -6880,10 +6881,10 @@ function renderPartnersPanel(){
   document.getElementById('partnerShareWarning').textContent = (partners.length && Math.abs(totalShare-100)>0.5) ? `⚠️ Shares add up to ${totalShare}%, not 100%. Profit distribution will still split proportionally to whatever you've entered.` : '';
 
   const rows = [...capitalLog].sort((a,b)=>b.date.localeCompare(a.date));
-  document.getElementById('capitalLogOutput').innerHTML = '<table><tbody>' + (rows.length ? rows.map(c=>{
+  document.getElementById('capitalLogOutput').innerHTML = '<div class="table-scroll"><table><tbody>' + (rows.length ? rows.map(c=>{
     const p = partners.find(x=>x.id===c.partnerId);
     return `<tr><td>${formatDate(c.date)}</td><td>${p?p.name:'—'}</td><td>${c.note||''}</td><td style="text-align:right;">${fmt(c.amount)}</td></tr>`;
-  }).join('') : '<tr><td class="empty">No capital contributions recorded yet.</td></tr>') + '</tbody></table>';
+  }).join('') : '<tr><td class="empty">No capital contributions recorded yet.</td></tr>') + '</tbody></table></div>';
 
   const maxCap = Math.max(1, ...partners.map(p=>partnerCapitalBalance(p.id)), 0);
   document.getElementById('capitalChart').innerHTML = partners.map(p=>{
@@ -6961,9 +6962,9 @@ function renderProfitPanel(){
   }).join('') || '<div class="empty">No partners yet.</div>';
 
   const rows = [...distributions].sort((a,b)=>b.date.localeCompare(a.date));
-  document.getElementById('distributionHistoryOutput').innerHTML = '<table><tbody>' + (rows.length ? rows.map(d=>
+  document.getElementById('distributionHistoryOutput').innerHTML = '<div class="table-scroll"><table><tbody>' + (rows.length ? rows.map(d=>
     `<tr><td>${formatDate(d.date)}</td><td>${fmt(d.total)}</td><td>${d.shares.map(s=>{const p=partners.find(x=>x.id===s.partnerId); return `${p?p.name:'—'}: ${fmt(s.amount)}`;}).join(', ')}</td></tr>`
-  ).join('') : '<tr><td class="empty">No distributions recorded yet.</td></tr>') + '</tbody></table>';
+  ).join('') : '<tr><td class="empty">No distributions recorded yet.</td></tr>') + '</tbody></table></div>';
 }
 function distributeProfitAction(){
   if(!hasPermission('edit')){ denyAccess(); return; }
@@ -7003,10 +7004,10 @@ function renderDrawingsPanel(){
   }).join('');
 
   const rows = [...drawingsLog].sort((a,b)=>b.date.localeCompare(a.date));
-  document.getElementById('drawingsHistoryOutput').innerHTML = '<table><tbody>' + (rows.length ? rows.map(d=>{
+  document.getElementById('drawingsHistoryOutput').innerHTML = '<div class="table-scroll"><table><tbody>' + (rows.length ? rows.map(d=>{
     const p = partners.find(x=>x.id===d.partnerId);
     return `<tr><td>${formatDate(d.date)}</td><td>${p?p.name:'—'}</td><td>${d.method}</td><td>${d.note||''}</td><td style="text-align:right;">${fmt(d.amount)}</td></tr>`;
-  }).join('') : '<tr><td class="empty">No drawings recorded yet.</td></tr>') + '</tbody></table>';
+  }).join('') : '<tr><td class="empty">No drawings recorded yet.</td></tr>') + '</tbody></table></div>';
 }
 function addDrawingEntry(){
   if(!hasPermission('edit')){ denyAccess(); return; }
@@ -7032,15 +7033,15 @@ function exportDrawingsCsv(){
 }
 
 function renderLiabilitiesPanel(){
-  document.getElementById('liabilitiesOutput').innerHTML = '<table><tbody>' + (liabilitiesExtra.length ? liabilitiesExtra.map(l=>{
+  document.getElementById('liabilitiesOutput').innerHTML = '<div class="table-scroll"><table><tbody>' + (liabilitiesExtra.length ? liabilitiesExtra.map(l=>{
     const overdue = new Date(l.dueDate) < new Date();
     return `<tr><td>${l.name}<br><span class="badge">${l.category}</span></td><td class="${overdue?'low':''}">${l.dueDate}</td><td style="text-align:right;">${fmt(l.amount)}</td>
       <td>${hasPermission('edit')?`<button class="btn small" onclick="payLiabilityEntry(${l.id})">Record Payment</button>`:''}${hasPermission('delete')?` <button class="btn danger small" onclick="deleteLiabilityEntry(${l.id})">Delete</button>`:''}</td></tr>`;
-  }).join('') : '<tr><td class="empty">No other liabilities recorded.</td></tr>') + '</tbody></table>';
+  }).join('') : '<tr><td class="empty">No other liabilities recorded.</td></tr>') + '</tbody></table></div>';
 
-  document.getElementById('fixedAssetsOutput').innerHTML = '<table><tbody>' + (fixedAssets.length ? fixedAssets.map(a=>
+  document.getElementById('fixedAssetsOutput').innerHTML = '<div class="table-scroll"><table><tbody>' + (fixedAssets.length ? fixedAssets.map(a=>
     `<tr><td>${a.name}<br><span class="badge">${a.category}</span></td><td>${a.purchaseDate}</td><td style="text-align:right;">${fmt(a.value)}</td><td>${hasPermission('delete')?`<button class="btn danger small" onclick="deleteFixedAsset(${a.id})">Delete</button>`:''}</td></tr>`
-  ).join('') : '<tr><td class="empty">No fixed assets registered.</td></tr>') + '</tbody></table>';
+  ).join('') : '<tr><td class="empty">No fixed assets registered.</td></tr>') + '</tbody></table></div>';
 }
 function addLiabilityEntry(){
   if(!hasPermission('edit')){ denyAccess(); return; }
@@ -7125,7 +7126,7 @@ function renderCashFlow(){
   const netChange = operatingNet + investingNet + financingNet;
 
   document.getElementById('cashFlowOutput').innerHTML = `
-    <table><tbody>
+    <div class="table-scroll"><table><tbody>
       <tr><td colspan="2" style="font-weight:700;color:var(--primary);">Operating Activities</td></tr>
       <tr><td>Cash received from sales</td><td style="text-align:right;">${fmt(cashFromSales)}</td></tr>
       <tr><td>Cash paid for purchases</td><td style="text-align:right;">- ${fmt(cashPaidPurchases)}</td></tr>
@@ -7143,7 +7144,7 @@ function renderCashFlow(){
 
       <tr><td style="font-weight:700;font-size:15px;padding-top:14px;border-top:2px solid var(--border);">NET CHANGE IN CASH</td>
           <td style="text-align:right;font-weight:700;font-size:15px;padding-top:14px;border-top:2px solid var(--border);" class="${netChange<0?'low':''}">${fmt(netChange)}</td></tr>
-    </tbody></table>
+    </tbody></table></div>
     <p style="font-size:11px;color:var(--muted);margin-top:8px;">Built from cash actually recorded through sales, purchases, expenses, capital, and drawings entries in this range — it's a computed log, not a substitute for the physical Cash on Hand count on the Balance Sheet tab. Bank loan draws/repayments are tracked manually under Liabilities &amp; Assets.</p>
   `;
 
@@ -7183,7 +7184,7 @@ function exportCashFlowCsv(){
 function renderChartOfAccounts(){
   const el = document.getElementById('coaList');
   if(!el) return;
-  el.innerHTML = '<table><thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Balance</th><th></th></tr></thead><tbody>' +
+  el.innerHTML = '<div class="table-scroll"><table><thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Balance</th><th></th></tr></thead><tbody>' +
     (chartOfAccounts.length ? chartOfAccounts.slice().sort((a,b)=>a.code.localeCompare(b.code)).map(a=>{
       const bal = accountBalance(a.id);
       return `<tr${a.active===false?' style="opacity:.5;"':''}>
@@ -7191,7 +7192,7 @@ function renderChartOfAccounts(){
         <td>${fmt(bal)}</td>
         <td>${hasPermission('edit')?`<button class="btn ghost small" onclick="editAccount(${a.id})">Edit</button>`:''}${hasPermission('delete')?` <button class="btn danger small" onclick="deleteAccount(${a.id})">Delete</button>`:''}</td>
       </tr>`;
-    }).join('') : '<tr><td colspan="5" class="empty">No accounts yet.</td></tr>') + '</tbody></table>';
+    }).join('') : '<tr><td colspan="5" class="empty">No accounts yet.</td></tr>') + '</tbody></table></div>';
   populateLedgerAccountSelect();
 }
 function saveAccount(){
@@ -7421,7 +7422,7 @@ function renderGeneralLedger(){
     running += side==='debit' ? (p.debit-p.credit) : (p.credit-p.debit);
     rows += `<tr><td>${formatDate(p.date)}</td><td>${p.memo}${p.reference?' ('+p.reference+')':''}</td><td>${p.debit?fmt(p.debit):''}</td><td>${p.credit?fmt(p.credit):''}</td><td style="text-align:right;">${fmt(running)}</td></tr>`;
   });
-  el.innerHTML = `<table><thead><tr><th>Date</th><th>Memo</th><th>Debit</th><th>Credit</th><th>Balance</th></tr></thead><tbody>${rows}</tbody></table>`;
+  el.innerHTML = `<div class="table-scroll"><table><thead><tr><th>Date</th><th>Memo</th><th>Debit</th><th>Credit</th><th>Balance</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
 // ---- Trial Balance ----
@@ -7438,10 +7439,10 @@ function renderTrialBalance(){
     return { code:a.code, name:a.name, debitCol, creditCol };
   });
   const balanced = Math.abs(totalDebit-totalCredit) < 0.01;
-  el.innerHTML = `<table><thead><tr><th>Code</th><th>Account</th><th>Debit</th><th>Credit</th></tr></thead><tbody>` +
+  el.innerHTML = `<div class="table-scroll"><table><thead><tr><th>Code</th><th>Account</th><th>Debit</th><th>Credit</th></tr></thead><tbody>` +
     rows.map(r=>`<tr><td>${r.code}</td><td>${r.name}</td><td>${r.debitCol?fmt(r.debitCol):''}</td><td>${r.creditCol?fmt(r.creditCol):''}</td></tr>`).join('') +
     `<tr style="font-weight:700;border-top:2px solid var(--border);"><td colspan="2">Total</td><td>${fmt(totalDebit)}</td><td>${fmt(totalCredit)}</td></tr>` +
-    `</tbody></table><div class="recon-note" style="margin-top:8px;">${balanced ? '✅ Debits equal credits — the books balance.' : '⚠️ Debits and credits don\'t match — check for an unbalanced journal entry.'}</div>`;
+    `</tbody></table></div><div class="recon-note" style="margin-top:8px;">${balanced ? '✅ Debits equal credits — the books balance.' : '⚠️ Debits and credits don\'t match — check for an unbalanced journal entry.'}</div>`;
   lastTrialBalanceRows = [['Malik Autoz — Trial Balance'], ['As of', new Date().toISOString().slice(0,10)], [], ['Code','Account','Debit','Credit'],
     ...rows.map(r=>[r.code, r.name, r.debitCol, r.creditCol]), [], ['Total','', totalDebit, totalCredit]];
 }
