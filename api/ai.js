@@ -16,7 +16,7 @@
 //   { mode: "intent",  text, lang, context }              -> natural-language command -> structured action
 //   { mode: "invoice", fileBase64, mediaType, lang }       -> invoice file -> structured invoice data
 
-const GEMINI_MODEL = 'gemini-2.5-flash'; // pinned stable model (GA through Oct 2026) — avoids the "-latest" alias, which can route to slower/experimental variants
+const GEMINI_MODEL = 'gemini-3.6-flash'; // per Google's guidance after 2.5-flash was retired for new API keys
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 const REQUEST_TIMEOUT_MS = 25000; // fail fast instead of hanging — the frontend already shows a friendly fallback message
 
