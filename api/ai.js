@@ -81,7 +81,7 @@ async function callGemini(apiKey, { system, parts, maxTokens }) {
         generationConfig: {
           maxOutputTokens: maxTokens || 1024,
           responseMimeType: 'application/json',
-          thinkingConfig: { thinkingBudget: 0 }
+          thinkingConfig: { thinkingLevel: 'low' }
         }
       })
     });
