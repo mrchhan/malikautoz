@@ -195,6 +195,58 @@
   #appWatermark img{ width:180px; max-width:40vw; height:auto; }
   #appWatermark .wm-text{ font-size:34px; font-weight:800; letter-spacing:4px; margin-top:8px; color:var(--text); white-space:nowrap; }
   header, main{ position:relative; z-index:1; }
+
+  /* ==================== i18n / RTL ==================== */
+  html[dir="rtl"] body{ text-align:right; }
+  html[dir="rtl"] header{ flex-direction:row-reverse; }
+  html[dir="rtl"] .hdr-right{ flex-direction:row-reverse; }
+  html[dir="rtl"] nav{ flex-direction:row-reverse; }
+  html[dir="rtl"] .row{ flex-direction:row-reverse; }
+  html[dir="rtl"] table{ direction:rtl; }
+  html[dir="rtl"] .modal-bg{ direction:rtl; }
+  /* Technical identifiers must never flip, in any language mode */
+  .ltr-locked, .ltr-locked *{ direction:ltr; unicode-bidi:isolate; display:inline-block; }
+  #langSelect{ background:rgba(255,255,255,.15); border:none; color:#fff; padding:6px 8px; border-radius:10px; font-size:13px; cursor:pointer; }
+  html[dir="rtl"] #langSelect{ font-family: inherit; }
+
+  /* ==================== AI Assistant ==================== */
+  #aiFab{ position:fixed; bottom:22px; right:22px; z-index:120; width:56px; height:56px; border-radius:50%; background:var(--accent); color:#fff; border:none; font-size:24px; box-shadow:0 6px 18px rgba(0,0,0,.25); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  html[dir="rtl"] #aiFab{ right:auto; left:22px; }
+  #aiFab.hidden{ display:none; }
+  #aiPanel{ position:fixed; bottom:0; right:0; z-index:130; width:min(420px,100vw); height:min(640px,92vh); background:var(--card); border-radius:14px 0 0 0; box-shadow:0 8px 30px rgba(0,0,0,.3); display:flex; flex-direction:column; overflow:hidden; }
+  html[dir="rtl"] #aiPanel{ right:auto; left:0; border-radius:0 14px 0 0; }
+  #aiPanel.hidden{ display:none; }
+  #aiPanelHeader{ background:var(--primary); color:#fff; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; }
+  #aiPanelHeader h3{ margin:0; font-size:15px; }
+  #aiPanelHeader button{ background:rgba(255,255,255,.15); border:none; color:#fff; width:28px; height:28px; border-radius:8px; cursor:pointer; }
+  #aiQuickActions{ display:flex; gap:6px; flex-wrap:wrap; padding:8px 10px; border-bottom:1px solid var(--border); }
+  #aiQuickActions button{ font-size:11px; padding:5px 8px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text); cursor:pointer; }
+  #aiMessages{ flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:10px; }
+  .ai-msg{ max-width:85%; padding:9px 12px; border-radius:12px; font-size:13.5px; line-height:1.4; white-space:pre-wrap; }
+  .ai-msg.user{ align-self:flex-end; background:var(--primary); color:#fff; border-bottom-right-radius:2px; }
+  html[dir="rtl"] .ai-msg.user{ align-self:flex-start; border-bottom-right-radius:12px; border-bottom-left-radius:2px; }
+  .ai-msg.assistant{ align-self:flex-start; background:var(--bg); border:1px solid var(--border); border-bottom-left-radius:2px; }
+  html[dir="rtl"] .ai-msg.assistant{ align-self:flex-end; border-bottom-left-radius:12px; border-bottom-right-radius:2px; }
+  .ai-msg.system{ align-self:center; font-size:11px; color:var(--muted); background:none; }
+  #aiStatusLine{ font-size:11px; color:var(--muted); padding:0 12px 4px; min-height:14px; }
+  #aiInputRow{ display:flex; gap:6px; padding:10px; border-top:1px solid var(--border); align-items:flex-end; }
+  #aiTextInput{ flex:1; resize:none; max-height:80px; padding:9px 10px; border-radius:10px; border:1px solid var(--border); font-size:13.5px; background:var(--card); color:var(--text); }
+  #aiInputRow button{ width:38px; height:38px; border-radius:10px; border:none; cursor:pointer; font-size:16px; flex-shrink:0; }
+  #aiMicBtn{ background:var(--bg); border:1px solid var(--border) !important; color:var(--text); }
+  #aiMicBtn.listening{ background:var(--danger); color:#fff; animation:pulseMic 1.2s infinite; }
+  @keyframes pulseMic{ 0%{box-shadow:0 0 0 0 rgba(214,69,69,.5);} 70%{box-shadow:0 0 0 10px rgba(214,69,69,0);} 100%{box-shadow:0 0 0 0 rgba(214,69,69,0);} }
+  #aiUploadBtn{ background:var(--bg); border:1px solid var(--border); color:var(--text); }
+  #aiSendBtn{ background:var(--accent); color:#fff; }
+  .ai-confidence{ display:inline-block; font-size:10px; padding:1px 6px; border-radius:8px; margin-left:6px; font-weight:600; }
+  html[dir="rtl"] .ai-confidence{ margin-left:0; margin-right:6px; }
+  .ai-confidence.high{ background:rgba(47,158,68,.15); color:var(--success); }
+  .ai-confidence.medium{ background:rgba(232,98,44,.15); color:var(--accent); }
+  .ai-confidence.low{ background:rgba(214,69,69,.15); color:var(--danger); }
+  .ai-review-table{ width:100%; border-collapse:collapse; font-size:12.5px; margin:8px 0; }
+  .ai-review-table th, .ai-review-table td{ border:1px solid var(--border); padding:5px 6px; text-align:left; }
+  html[dir="rtl"] .ai-review-table th, html[dir="rtl"] .ai-review-table td{ text-align:right; }
+  .ai-review-row.mismatch{ background:rgba(214,69,69,.08); }
+  #aiInvoiceUploadInput{ display:none; }
 </style>
 </head>
 <body>
@@ -233,14 +285,14 @@
       <img id="loginLogoImg" alt="Malik Autoz" style="max-height:110px;width:auto;display:inline-block;">
     </div>
     <h2 style="text-align:center;color:var(--primary);margin:0 0 4px;">Malik Autoz</h2>
-    <p style="text-align:center;color:var(--text);margin:0 0 14px;font-size:15px;">👋 Welcome! Ready to start the day?</p>
-    <p style="font-size:13px;color:var(--muted);text-align:center;margin-top:-4px;">Select your name and enter your PIN to sign in.</p>
-    <label>Employee</label>
+    <p data-i18n="login.welcome" style="text-align:center;color:var(--text);margin:0 0 14px;font-size:15px;">👋 Welcome! Ready to start the day?</p>
+    <p data-i18n="login.instructions" style="font-size:13px;color:var(--muted);text-align:center;margin-top:-4px;">Select your name and enter your PIN to sign in.</p>
+    <label data-i18n="login.employee">Employee</label>
     <select id="loginEmployee"></select>
-    <label>PIN</label>
-    <input type="password" id="loginPin" inputmode="numeric" placeholder="Your login PIN" onkeydown="if(event.key==='Enter') tryLogin()">
+    <label data-i18n="login.pin">PIN</label>
+    <input type="password" id="loginPin" inputmode="numeric" data-i18n-placeholder="login.pinPlaceholder" placeholder="Your login PIN" onkeydown="if(event.key==='Enter') tryLogin()">
     <div id="loginError" style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:8px;"></div>
-    <button class="btn" style="width:100%;" onclick="tryLogin()">🔓 Log In</button>
+    <button class="btn" style="width:100%;" onclick="tryLogin()" data-i18n="login.logIn">🔓 Log In</button>
     <p style="font-size:11px;color:var(--muted);margin-top:12px;">No employees set up yet, or forgot a PIN? Open this file's data directly isn't possible from here — an existing Admin needs to add/reset employees from the Employees tab first.</p>
   </div>
 </div>
@@ -259,13 +311,17 @@
     <span id="licenseStatusPill" class="hidden" style="font-size:12px;padding:4px 10px;border-radius:12px;white-space:nowrap;"></span>
     <span id="cloudSyncIndicator" style="font-size:14px;cursor:default;" title="Checking sync…">⚪</span>
     <button id="headerBackupBtn" class="hidden" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 10px;border-radius:10px;cursor:pointer;font-size:13px;" onclick="quickBackupBoth()" title="Downloads both a .json and a full .html backup right now">💾 Backup</button>
+    <select id="langSelect" onchange="setLanguage(this.value)" title="Language / زبان">
+      <option value="en">English</option>
+      <option value="ur">اردو</option>
+    </select>
     <button id="themeToggle" onclick="toggleTheme()">🌙 Dark</button>
     <button id="installBtn" class="hidden" style="background:var(--accent);border:none;color:#fff;padding:6px 10px;border-radius:10px;cursor:pointer;font-size:13px;" onclick="installApp()">⬇️ Install</button>
   </div>
 </header>
 
 <nav>
-  <button class="active" data-view="dashboard">📊 Dashboard</button>
+  <button class="active" data-view="dashboard">📊 <span data-i18n="navigation.dashboard">Dashboard</span></button>
 </nav>
 
 <main>
@@ -280,18 +336,18 @@
     <div class="card hidden" id="quickAccessCard">
       <h2 style="margin-bottom:10px;">Quick Access</h2>
       <div class="quick-grid" id="quickAccessGrid">
-        <button class="quick-tile" data-view="pos" onclick="goToTab('pos')"><span class="quick-icon">🧾</span>POS</button>
-        <button class="quick-tile" data-view="sales" onclick="goToTab('sales')"><span class="quick-icon">💰</span>Sales</button>
-        <button class="quick-tile" data-view="inventory" onclick="goToTab('inventory')"><span class="quick-icon">📦</span>Inventory</button>
-        <button class="quick-tile" data-view="suppliers" onclick="goToTab('suppliers')"><span class="quick-icon">🚚</span>Suppliers</button>
-        <button class="quick-tile" data-view="purchases" onclick="goToTab('purchases')"><span class="quick-icon">🧾</span>Purchases</button>
-        <button class="quick-tile" data-view="claims" onclick="goToTab('claims')"><span class="quick-icon">🛠️</span>Claims</button>
-        <button class="quick-tile" data-view="demand" onclick="goToTab('demand')"><span class="quick-icon">📨</span>Demand</button>
-        <button class="quick-tile" data-view="customers" onclick="goToTab('customers')"><span class="quick-icon">👤</span>Customers</button>
-        <button class="quick-tile" data-view="employees" onclick="goToTab('employees')"><span class="quick-icon">🧑‍🔧</span>Employees</button>
-        <button class="quick-tile" data-view="reports" onclick="goToTab('reports')"><span class="quick-icon">📈</span>Reports</button>
-        <button class="quick-tile" data-view="backup" onclick="goToTab('backup')"><span class="quick-icon">🗂️</span>Backup</button>
-        <button class="quick-tile" data-view="accounting" onclick="goToTab('accounting')"><span class="quick-icon">💰</span>Accounting &amp; Partners</button>
+        <button class="quick-tile" data-view="pos" onclick="goToTab('pos')"><span class="quick-icon">🧾</span><span data-i18n="navigation.pos">POS</span></button>
+        <button class="quick-tile" data-view="sales" onclick="goToTab('sales')"><span class="quick-icon">💰</span><span data-i18n="navigation.sales">Sales</span></button>
+        <button class="quick-tile" data-view="inventory" onclick="goToTab('inventory')"><span class="quick-icon">📦</span><span data-i18n="navigation.inventory">Inventory</span></button>
+        <button class="quick-tile" data-view="suppliers" onclick="goToTab('suppliers')"><span class="quick-icon">🚚</span><span data-i18n="navigation.suppliers">Suppliers</span></button>
+        <button class="quick-tile" data-view="purchases" onclick="goToTab('purchases')"><span class="quick-icon">🧾</span><span data-i18n="navigation.purchases">Purchases</span></button>
+        <button class="quick-tile" data-view="claims" onclick="goToTab('claims')"><span class="quick-icon">🛠️</span><span data-i18n="navigation.claims">Claims</span></button>
+        <button class="quick-tile" data-view="demand" onclick="goToTab('demand')"><span class="quick-icon">📨</span><span data-i18n="navigation.demand">Demand</span></button>
+        <button class="quick-tile" data-view="customers" onclick="goToTab('customers')"><span class="quick-icon">👤</span><span data-i18n="navigation.customers">Customers</span></button>
+        <button class="quick-tile" data-view="employees" onclick="goToTab('employees')"><span class="quick-icon">🧑‍🔧</span><span data-i18n="navigation.employees">Employees</span></button>
+        <button class="quick-tile" data-view="reports" onclick="goToTab('reports')"><span class="quick-icon">📈</span><span data-i18n="navigation.reports">Reports</span></button>
+        <button class="quick-tile" data-view="backup" onclick="goToTab('backup')"><span class="quick-icon">🗂️</span><span data-i18n="navigation.backup">Backup</span></button>
+        <button class="quick-tile" data-view="accounting" onclick="goToTab('accounting')"><span class="quick-icon">💰</span><span data-i18n="navigation.accounting">Accounting &amp; Partners</span></button>
       </div>
     </div>
 
@@ -8207,6 +8263,755 @@ if(!document.getElementById('clmDate').value) setDateFieldValue('clmDate', new D
   setTimeout(runAutoBackupIfDue, 2000);
   setInterval(runAutoBackupIfDue, 60*60*1000);
 })();
+</script>
+
+<!-- ==================== AI ASSISTANT ==================== -->
+<button id="aiFab" class="hidden" onclick="openAIAssistant()" title="AI Assistant">🤖</button>
+
+<div id="aiPanel" class="hidden">
+  <div id="aiPanelHeader">
+    <h3 data-i18n="aiAssistant.title">🤖 AI Assistant</h3>
+    <button onclick="closeAIAssistant()">✖</button>
+  </div>
+  <div id="aiQuickActions">
+    <button onclick="triggerInvoiceUpload()" data-i18n="aiAssistant.quickReadInvoice">📄 Read Invoice</button>
+    <button onclick="aiQuickPrompt('search_customer')" data-i18n="aiAssistant.quickSearchCustomer">👤 Search Customer</button>
+    <button onclick="aiQuickPrompt('check_inventory')" data-i18n="aiAssistant.quickCheckInventory">📦 Check Inventory</button>
+    <button onclick="aiQuickPrompt('outstanding')" data-i18n="aiAssistant.quickOutstanding">💰 Outstanding</button>
+  </div>
+  <div id="aiMessages"></div>
+  <div id="aiStatusLine"></div>
+  <div id="aiInputRow">
+    <button id="aiUploadBtn" onclick="triggerInvoiceUpload()" title="Upload invoice">📎</button>
+    <input type="file" id="aiInvoiceUploadInput" accept=".pdf,.png,.jpg,.jpeg" onchange="handleInvoiceUpload(this.files[0])">
+    <textarea id="aiTextInput" rows="1" data-i18n-placeholder="aiAssistant.inputPlaceholder" placeholder="Ask anything or give me a command..." onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); sendAITextInput();}"></textarea>
+    <button id="aiMicBtn" onclick="toggleVoiceInput()" title="Voice input">🎙️</button>
+    <button id="aiSendBtn" onclick="sendAITextInput()" title="Send">➤</button>
+  </div>
+</div>
+
+<!-- AI INVOICE REVIEW MODAL -->
+<div class="modal-bg hidden" id="aiInvoiceReviewModal">
+  <div class="modal" style="max-width:640px;">
+    <h2 style="margin-top:0;color:var(--primary);" data-i18n="aiAssistant.reviewTitle">🧾 AI Invoice Review</h2>
+    <div id="aiReviewBody"></div>
+    <div class="row" style="margin-top:12px;">
+      <button class="btn ghost" style="flex:1;" onclick="closeAIInvoiceReview()" data-i18n="common.cancel">Cancel</button>
+      <button class="btn ghost" style="flex:1;" onclick="aiReviewEditManually()" data-i18n="aiAssistant.editManually">Edit</button>
+      <button class="btn accent" style="flex:1;" onclick="approveAIInvoice()" data-i18n="aiAssistant.approveSave">Approve &amp; Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- AI CONFIRM ACTION MODAL (for sensitive/irreversible voice or chat commands) -->
+<div class="modal-bg hidden" id="aiConfirmModal">
+  <div class="modal" style="max-width:380px;">
+    <h2 style="margin-top:0;color:var(--danger);" data-i18n="aiAssistant.confirmTitle">⚠️ Confirm Action</h2>
+    <p id="aiConfirmMessage" style="font-size:13.5px;"></p>
+    <div class="row" style="margin-top:12px;">
+      <button class="btn ghost" style="flex:1;" onclick="aiConfirmResolve(false)" data-i18n="common.cancel">Cancel</button>
+      <button class="btn accent" style="flex:1;background:var(--danger);" onclick="aiConfirmResolve(true)" data-i18n="common.confirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// ============================================================================
+// ==================== BILINGUAL (EN/UR) + AI ASSISTANT MODULE =============
+// ============================================================================
+// Added on top of the existing application without modifying any existing
+// function. Everything below only READS existing globals (products,
+// customers, suppliers, purchases, currentUser, save(), load(), goToTab(),
+// hasPermission(), etc.) or calls them the same way the existing UI does,
+// so no business logic is duplicated. See SETUP.md for the backend piece
+// (/api/ai.js) this module talks to.
+
+// ==================== I18N ENGINE ====================
+const TRANSLATIONS = {
+  en: {
+    common: {
+      save:'Save', cancel:'Cancel', confirm:'Confirm', search:'Search', edit:'Edit',
+      delete:'Delete', approve:'Approve', reject:'Reject', close:'Close', yes:'Yes', no:'No',
+      loading:'Loading…', retry:'Retry'
+    },
+    navigation: {
+      dashboard:'Dashboard', pos:'POS', sales:'Sales', inventory:'Inventory', suppliers:'Suppliers',
+      purchases:'Purchases', claims:'Claims', demand:'Demand', customers:'Customers',
+      employees:'Employees', reports:'Reports', backup:'Backup', accounting:'Accounting & Partners'
+    },
+    login: {
+      welcome:'👋 Welcome! Ready to start the day?', instructions:'Select your name and enter your PIN to sign in.',
+      employee:'Employee', pin:'PIN', pinPlaceholder:'Your login PIN', logIn:'🔓 Log In'
+    },
+    aiAssistant: {
+      title:'AI Assistant', inputPlaceholder:'Ask anything or give me a command...',
+      quickReadInvoice:'📄 Read Invoice', quickSearchCustomer:'👤 Search Customer',
+      quickCheckInventory:'📦 Check Inventory', quickOutstanding:'💰 Outstanding',
+      processing:'Processing…', listening:'Listening…', transcribing:'Transcribing…',
+      languageDetected:'Language detected', completed:'Completed', failed:'Failed',
+      reviewTitle:'AI Invoice Review', approveSave:'Approve & Save', editManually:'Edit',
+      confirmTitle:'Confirm Action', confirmMatch:'Confirm Match', chooseAnother:'Choose Another Product',
+      createNew:'Create New Product', possibleMatch:'I found a possible match:', invoiceItem:'Invoice item',
+      existingProduct:'Existing product', matchThisProduct:'Match this product?',
+      totalMismatch:'Invoice total mismatch detected.', aiCalculatedTotal:'AI Calculated Total',
+      invoiceStatedTotal:'Invoice Stated Total', difference:'Difference',
+      possibleDuplicate:'This invoice may already exist in the system.',
+      didntUnderstand:"I didn't fully understand that command.",
+      unavailable:"The AI service isn't reachable right now — you can still use the app normally.",
+      confirmDeleteGeneric:'This action cannot be automatically undone. Do you want to continue?',
+      voiceNotSupported:'Voice input is not supported in this browser.',
+      invoiceProcessed:'Invoice processed.', itemsMatched:'of {total} items matched existing products.',
+      needsConfirmation:'item(s) require your confirmation.', invoiceTotalLabel:'Invoice total',
+      createdSuccessfully:'Invoice created successfully.'
+    },
+    validation: {
+      requiredField:'This field is required.'
+    }
+  },
+  ur: {
+    common: {
+      save:'محفوظ کریں', cancel:'منسوخ کریں', confirm:'تصدیق کریں', search:'تلاش کریں', edit:'ترمیم کریں',
+      delete:'حذف کریں', approve:'منظور کریں', reject:'مسترد کریں', close:'بند کریں', yes:'جی ہاں', no:'نہیں',
+      loading:'لوڈ ہو رہا ہے…', retry:'دوبارہ کوشش کریں'
+    },
+    navigation: {
+      dashboard:'ڈیش بورڈ', pos:'POS', sales:'سیلز', inventory:'انوینٹری', suppliers:'سپلائرز',
+      purchases:'خریداری', claims:'کلیمز', demand:'ڈیمانڈ', customers:'کسٹمرز',
+      employees:'ملازمین', reports:'رپورٹس', backup:'بیک اپ', accounting:'اکاؤنٹنگ اور پارٹنرز'
+    },
+    login: {
+      welcome:'👋 خوش آمدید! کیا آپ دن کا آغاز کرنے کے لیے تیار ہیں؟', instructions:'سائن ان کرنے کے لیے اپنا نام منتخب کریں اور اپنا PIN درج کریں۔',
+      employee:'ملازم', pin:'PIN', pinPlaceholder:'آپ کا لاگ ان PIN', logIn:'🔓 لاگ ان کریں'
+    },
+    aiAssistant: {
+      title:'AI معاون', inputPlaceholder:'کچھ بھی پوچھیں یا کوئی کمانڈ دیں...',
+      quickReadInvoice:'📄 انوائس پڑھیں', quickSearchCustomer:'👤 کسٹمر تلاش کریں',
+      quickCheckInventory:'📦 انوینٹری چیک کریں', quickOutstanding:'💰 بقایا جات',
+      processing:'کارروائی جاری ہے…', listening:'سن رہا ہوں…', transcribing:'تحریر ہو رہی ہے…',
+      languageDetected:'زبان معلوم ہو گئی', completed:'مکمل ہو گیا', failed:'ناکام',
+      reviewTitle:'AI انوائس کا جائزہ', approveSave:'منظور کریں اور محفوظ کریں', editManually:'ترمیم کریں',
+      confirmTitle:'کارروائی کی تصدیق کریں', confirmMatch:'مماثلت کی تصدیق کریں', chooseAnother:'دوسری پروڈکٹ منتخب کریں',
+      createNew:'نئی پروڈکٹ بنائیں', possibleMatch:'مجھے ایک ممکنہ مماثل پروڈکٹ ملی ہے:', invoiceItem:'انوائس آئٹم',
+      existingProduct:'موجودہ پروڈکٹ', matchThisProduct:'کیا اس پروڈکٹ کو منتخب کیا جائے؟',
+      totalMismatch:'انوائس کے کل میں فرق پایا گیا ہے۔', aiCalculatedTotal:'AI سے حساب کیا گیا کل',
+      invoiceStatedTotal:'انوائس میں درج کل', difference:'فرق',
+      possibleDuplicate:'یہ انوائس ممکن ہے کہ پہلے ہی سسٹم میں موجود ہو۔',
+      didntUnderstand:'میں اس کمانڈ کو مکمل طور پر سمجھ نہیں سکا۔',
+      unavailable:'AI سروس ابھی دستیاب نہیں ہے — آپ ایپ کو معمول کے مطابق استعمال کر سکتے ہیں۔',
+      confirmDeleteGeneric:'یہ کارروائی خودکار طور پر واپس نہیں کی جا سکتی۔ کیا آپ جاری رکھنا چاہتے ہیں؟',
+      voiceNotSupported:'اس براؤزر میں صوتی ان پٹ دستیاب نہیں ہے۔',
+      invoiceProcessed:'انوائس پر کارروائی مکمل ہو گئی۔', itemsMatched:'میں سے {total} آئٹمز موجودہ پروڈکٹس سے مماثل ہیں۔',
+      needsConfirmation:'آئٹمز کے لیے آپ کی تصدیق درکار ہے۔', invoiceTotalLabel:'انوائس کی کل رقم',
+      createdSuccessfully:'انوائس کامیابی سے محفوظ کر دی گئی ہے۔'
+    },
+    validation: {
+      requiredField:'یہ خانہ پُر کرنا ضروری ہے۔'
+    }
+  }
+};
+
+let currentLanguage = 'en';
+
+function t(key, vars){
+  const parts = key.split('.');
+  let node = TRANSLATIONS[currentLanguage] || TRANSLATIONS.en;
+  for(const p of parts){ node = node && node[p]; }
+  if(node === undefined){
+    // Fallback to English rather than showing a raw key to the user.
+    node = TRANSLATIONS.en;
+    for(const p of parts){ node = node && node[p]; }
+  }
+  let str = (typeof node === 'string') ? node : key;
+  if(vars) Object.keys(vars).forEach(k=>{ str = str.replace('{'+k+'}', vars[k]); });
+  return str;
+}
+
+function applyTranslations(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    el.textContent = t(el.getAttribute('data-i18n'));
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    el.setAttribute('placeholder', t(el.getAttribute('data-i18n-placeholder')));
+  });
+}
+
+function setLanguage(lang){
+  if(lang !== 'en' && lang !== 'ur') lang = 'en';
+  currentLanguage = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'ur') ? 'rtl' : 'ltr';
+  const sel = document.getElementById('langSelect');
+  if(sel) sel.value = lang;
+  applyTranslations();
+  // Per-user preference when logged in, otherwise a device-level default —
+  // stored separately from all business data, per Part 40 of the spec.
+  if(currentUser && currentUser.employeeId){
+    const prefs = load('moto_user_language_prefs') || [];
+    const arr = Array.isArray(prefs) ? prefs : [];
+    const existing = arr.find(p=>p.employeeId===currentUser.employeeId);
+    if(existing) existing.lang = lang; else arr.push({employeeId: currentUser.employeeId, lang});
+    save('moto_user_language_prefs', arr);
+  }
+  localStorage.setItem('moto_device_language', lang);
+}
+
+function getLanguagePreference(){
+  if(currentUser && currentUser.employeeId){
+    const prefs = load('moto_user_language_prefs') || [];
+    const arr = Array.isArray(prefs) ? prefs : [];
+    const mine = arr.find(p=>p.employeeId===currentUser.employeeId);
+    if(mine) return mine.lang;
+  }
+  return localStorage.getItem('moto_device_language') || 'en';
+}
+
+// Locale-aware display formatting. Stored numeric values never change —
+// only how they're displayed (Part 8 of the spec).
+function fmtNumberLocale(n){
+  return new Intl.NumberFormat(currentLanguage==='ur' ? 'ur-PK' : 'en-PK').format(n);
+}
+function fmtDateLocale(isoDate){
+  try{
+    return new Intl.DateTimeFormat(currentLanguage==='ur' ? 'ur-PK' : 'en-GB', {day:'2-digit', month:'short', year:'numeric'}).format(new Date(isoDate));
+  }catch(e){ return isoDate; }
+}
+
+// ==================== FUZZY PRODUCT / SKU MATCHING ====================
+// Deterministic, no AI call needed (Part 37: use application code for
+// matching, not an AI round-trip, so it's instant and offline-safe).
+function normalizeMatchStr(s){
+  return String(s||'').toLowerCase().trim()
+    .replace(/[-_\s]+/g,' ')
+    .replace(/[^\w\s\u0600-\u06FF]/g,'')
+    .trim();
+}
+function levenshtein(a, b){
+  a = a||''; b = b||'';
+  const m = a.length, n = b.length;
+  if(m===0) return n;
+  if(n===0) return m;
+  const dp = Array.from({length:m+1}, (_,i)=>[i, ...Array(n).fill(0)]);
+  for(let j=0;j<=n;j++) dp[0][j]=j;
+  for(let i=1;i<=m;i++){
+    for(let j=1;j<=n;j++){
+      dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+    }
+  }
+  return dp[m][n];
+}
+function stringSimilarity(a, b){
+  a = normalizeMatchStr(a); b = normalizeMatchStr(b);
+  if(!a || !b) return 0;
+  if(a===b) return 1;
+  const dist = levenshtein(a,b);
+  const maxLen = Math.max(a.length, b.length);
+  return Math.max(0, 1 - dist/maxLen);
+}
+function tokenOverlapScore(a, b){
+  const ta = new Set(normalizeMatchStr(a).split(' ').filter(Boolean));
+  const tb = new Set(normalizeMatchStr(b).split(' ').filter(Boolean));
+  if(ta.size===0 || tb.size===0) return 0;
+  let overlap = 0;
+  ta.forEach(tok=>{ if(tb.has(tok)) overlap++; });
+  return overlap / Math.max(ta.size, tb.size);
+}
+
+// Returns candidates ranked by confidence 0-100. `query` may include sku,
+// name and/or aliases extracted from an invoice line or a voice command.
+function findProductMatches(query){
+  const qSku = normalizeMatchStr(query.sku);
+  const qName = query.name || '';
+  const candidates = products.map(p=>{
+    let score = 0;
+    if(qSku && p.sku && normalizeMatchStr(p.sku)===qSku){ score = 100; }
+    else if(qSku && p.sku && normalizeMatchStr(p.sku).replace(/\s/g,'')===qSku.replace(/\s/g,'')){ score = 98; }
+    else {
+      const nameSim = stringSimilarity(qName, p.name) * 100;
+      const tokenSim = tokenOverlapScore(qName, p.name) * 100;
+      const modelSim = p.model ? stringSimilarity(qName, p.name+' '+p.model) * 100 : 0;
+      score = Math.max(nameSim, tokenSim, modelSim);
+      // A shared brand/company token is a meaningful nudge, not proof —
+      // keep it capped well under the high-confidence band on its own.
+      if(p.company && qName.toLowerCase().includes(String(p.company).toLowerCase())) score = Math.min(94, score+8);
+    }
+    return { product: p, confidence: Math.round(score) };
+  }).filter(c=>c.confidence>0)
+    .sort((a,b)=>b.confidence-a.confidence);
+  return candidates.slice(0, 5);
+}
+function confidenceTier(score){
+  if(score>=95) return 'high';
+  if(score>=75) return 'medium';
+  return 'low';
+}
+
+// ==================== AUDIT LOG ====================
+// Every AI action is logged, preserving the ORIGINAL command text (not
+// only a translated version), per Part 28 of the spec.
+function logAIAction(entry){
+  const logArr = load('moto_ai_audit_log') || [];
+  const arr = Array.isArray(logArr) ? logArr : [];
+  arr.push(Object.assign({
+    id: Date.now() + Math.random(),
+    timestamp: new Date().toISOString(),
+    user: currentUser ? currentUser.name : 'unknown',
+    userId: currentUser ? currentUser.employeeId : null,
+    selectedAppLanguage: currentLanguage
+  }, entry));
+  // Keep this bounded so it doesn't grow forever in localStorage.
+  while(arr.length > 500) arr.shift();
+  save('moto_ai_audit_log', arr);
+}
+
+// ==================== PROGRAMMATIC RECORD CREATION ====================
+// Mirrors the exact push/save/render pattern the existing manual Save
+// buttons use (same storage keys, same shape, same re-render calls) so
+// the AI never invents a parallel/duplicate way of writing this data.
+function aiCreateCustomer(data){
+  const rec = Object.assign({id: Date.now()}, {
+    name: data.name, phone: data.phone||'', whatsapp: data.whatsapp||'', bike: data.bike||'',
+    customerType: data.customerType||'retail', address: data.address||'', notes: data.notes||''
+  });
+  customers.push(rec);
+  save('moto_customers', customers);
+  renderCustomers(); renderPos(); renderDashboard();
+  return rec;
+}
+function aiCreateSupplier(name){
+  const rec = { id: Date.now(), name, contact:'', phone:'', whatsapp:'', email:'', address:'', notes:'' };
+  suppliers.push(rec);
+  save('moto_suppliers', suppliers);
+  renderSuppliers(); renderDashboard();
+  return rec;
+}
+function aiCreateProduct(data){
+  const rec = Object.assign({id: Date.now(), stock: 0}, {
+    name: data.name, model: data.model||'', category: data.category||'', sku: data.sku||generateSku(data.category||''),
+    company: data.company||'', cost: Number(data.cost)||0, priceRetail: Number(data.priceRetail)||0,
+    priceWholesale: Number(data.priceWholesale)||0, lowLevel: Number(data.lowLevel)||5, supplierId: data.supplierId||null
+  });
+  products.push(rec);
+  if(data.initialStock){ rec.stock = Number(data.initialStock)||0; logStockChange(rec, rec.stock, 'Initial Stock', 'Added via AI Assistant', ''); }
+  save('moto_products', products);
+  renderInventory(); renderPos(); renderDashboard();
+  return rec;
+}
+// Same effect as the manual "Adjust Stock" modal, so every AI-driven
+// stock change is logged exactly like a manual one (Part 26/28).
+function aiAdjustStock(productId, type, qty, reason, note){
+  const p = products.find(x=>x.id===productId);
+  if(!p) return {ok:false, error:'PRODUCT_NOT_FOUND'};
+  let newStock = p.stock, qtyChange = 0, logType = '';
+  if(type==='add'){ newStock = p.stock + qty; qtyChange = qty; logType = 'AI Assistant Add'; }
+  else if(type==='remove'){ newStock = p.stock - qty; qtyChange = -qty; logType = 'AI Assistant Remove'; }
+  else if(type==='set'){ qtyChange = qty - p.stock; newStock = qty; logType = 'AI Assistant Set'; }
+  if(newStock < 0) return {ok:false, error:'NEGATIVE_STOCK'};
+  p.stock = newStock;
+  logStockChange(p, qtyChange, logType, reason||'AI Assistant', note||'');
+  save('moto_products', products);
+  renderInventory(); renderPos(); renderDashboard();
+  return {ok:true, product:p};
+}
+
+// ==================== BACKEND CALL (server-side API key) ====================
+// The API key never touches the browser — /api/ai.js on Vercel holds it
+// and proxies to the Claude API (Part 33 / Part 38 of the spec).
+async function callAIBackend(payload){
+  try{
+    const res = await fetch('/api/ai', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(Object.assign({lang: currentLanguage}, payload))
+    });
+    if(!res.ok) throw new Error('HTTP_'+res.status);
+    return await res.json();
+  }catch(e){
+    return { error: true, message: e.message };
+  }
+}
+
+// ==================== VOICE (Web Speech API) ====================
+let recognizer = null;
+let isListening = false;
+function speechLangCode(){ return currentLanguage==='ur' ? 'ur-PK' : 'en-US'; }
+
+function toggleVoiceInput(){
+  const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRecognitionCtor){
+    setAIStatus(t('aiAssistant.voiceNotSupported'));
+    return;
+  }
+  if(isListening){ recognizer && recognizer.stop(); return; }
+  recognizer = new SpeechRecognitionCtor();
+  recognizer.lang = speechLangCode();
+  recognizer.interimResults = true;
+  recognizer.maxAlternatives = 1;
+  const micBtn = document.getElementById('aiMicBtn');
+  recognizer.onstart = () => { isListening = true; micBtn.classList.add('listening'); setAIStatus(t('aiAssistant.listening')); };
+  recognizer.onerror = () => { isListening = false; micBtn.classList.remove('listening'); setAIStatus(''); };
+  recognizer.onend = () => { isListening = false; micBtn.classList.remove('listening'); };
+  recognizer.onresult = (event) => {
+    let transcript = '';
+    for(let i=0;i<event.results.length;i++) transcript += event.results[i][0].transcript;
+    document.getElementById('aiTextInput').value = transcript;
+    if(event.results[0].isFinal){ setAIStatus(t('aiAssistant.transcribing')); }
+  };
+  recognizer.start();
+}
+function speak(text){
+  if(!('speechSynthesis' in window)) return; // graceful no-op, Part 32
+  try{
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = speechLangCode();
+    const voices = window.speechSynthesis.getVoices();
+    const match = voices.find(v=>v.lang===utter.lang) || voices.find(v=>v.lang.startsWith(currentLanguage==='ur'?'ur':'en'));
+    if(match) utter.voice = match;
+    window.speechSynthesis.speak(utter);
+  }catch(e){ /* TTS is optional — never break the app if it fails */ }
+}
+
+// ==================== AI ASSISTANT PANEL ====================
+function updateAIFabVisibility(){
+  const fab = document.getElementById('aiFab');
+  if(!fab) return;
+  fab.classList.toggle('hidden', !currentUser);
+}
+function openAIAssistant(){
+  document.getElementById('aiPanel').classList.remove('hidden');
+  if(!document.getElementById('aiMessages').childElementCount){
+    addAIMessage('assistant', currentLanguage==='ur'
+      ? 'السلام علیکم! میں آپ کی کیسے مدد کر سکتا ہوں؟'
+      : "Hi! How can I help you today?");
+  }
+}
+function closeAIAssistant(){
+  document.getElementById('aiPanel').classList.add('hidden');
+}
+function setAIStatus(text){
+  document.getElementById('aiStatusLine').textContent = text;
+}
+function addAIMessage(role, text){
+  const wrap = document.getElementById('aiMessages');
+  const div = document.createElement('div');
+  div.className = 'ai-msg ' + role;
+  div.textContent = text;
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+function aiQuickPrompt(kind){
+  const prompts = {
+    search_customer: currentLanguage==='ur' ? 'کسٹمر تلاش کریں: ' : 'Search customer: ',
+    check_inventory: currentLanguage==='ur' ? 'انوینٹری چیک کریں: ' : 'Check inventory: ',
+    outstanding: currentLanguage==='ur' ? 'تمام بقایا ادائیگیاں دکھائیں۔' : 'Show me all outstanding payments.'
+  };
+  const box = document.getElementById('aiTextInput');
+  box.value = prompts[kind] || '';
+  box.focus();
+  if(kind==='outstanding') sendAITextInput();
+}
+function sendAITextInput(){
+  const box = document.getElementById('aiTextInput');
+  const text = box.value.trim();
+  if(!text) return;
+  box.value = '';
+  sendAIMessage(text, 'text');
+}
+
+// ==================== ACTION ENGINE ====================
+// Structured, stable action names the AI maps natural language onto
+// (Part 26). Anything destructive/financial requires explicit
+// confirmation and is checked against the logged-in user's existing
+// role permissions — voice/text can never bypass what the manual UI
+// already enforces (Part 27).
+const DESTRUCTIVE_ACTIONS = new Set(['delete_invoice','delete_customer','delete_product','process_refund','post_accounting_transaction','submit_payment','cancel_transaction']);
+
+let _aiConfirmResolver = null;
+function aiConfirm(message){
+  document.getElementById('aiConfirmMessage').textContent = message;
+  document.getElementById('aiConfirmModal').classList.remove('hidden');
+  return new Promise(resolve=>{ _aiConfirmResolver = resolve; });
+}
+function aiConfirmResolve(result){
+  document.getElementById('aiConfirmModal').classList.add('hidden');
+  if(_aiConfirmResolver){ _aiConfirmResolver(result); _aiConfirmResolver = null; }
+}
+
+async function executeAIAction(action, originalText){
+  const auditBase = { command: originalText, action: action && action.type, confidence: action && action.confidence };
+  if(!action || !action.type){
+    addAIMessage('assistant', t('aiAssistant.didntUnderstand'));
+    logAIAction(Object.assign({}, auditBase, {success:false}));
+    return;
+  }
+  if(DESTRUCTIVE_ACTIONS.has(action.type)){
+    if(!hasPermission('delete')){
+      denyAccess();
+      logAIAction(Object.assign({}, auditBase, {success:false, error:'PERMISSION_DENIED'}));
+      return;
+    }
+    const ok = await aiConfirm(t('aiAssistant.confirmDeleteGeneric'));
+    if(!ok){ logAIAction(Object.assign({}, auditBase, {success:false, confirmationStatus:'declined'})); addAIMessage('assistant', t('common.cancel')); return; }
+  }
+
+  try{
+    switch(action.type){
+      case 'show_dashboard': goToTab('dashboard'); addAIMessage('assistant', '✅'); break;
+      case 'navigate': if(action.view) goToTab(action.view); addAIMessage('assistant', '✅'); break;
+
+      case 'search_customer': {
+        const q = normalizeMatchStr(action.query||'');
+        const found = customers.filter(c=>normalizeMatchStr(c.name).includes(q) || (c.phone||'').includes(action.query||''));
+        goToTab('customers');
+        addAIMessage('assistant', found.length ? found.map(c=>`${c.name} — ${c.phone||''}`).join('\n') : (currentLanguage==='ur'?'کوئی کسٹمر نہیں ملا۔':'No matching customer found.'));
+        break;
+      }
+      case 'search_product': case 'search_inventory': case 'check_inventory': {
+        const matches = findProductMatches({name: action.query||'', sku: action.sku||''});
+        goToTab('inventory');
+        addAIMessage('assistant', matches.length
+          ? matches.map(m=>`${m.product.name} (SKU ${m.product.sku||'-'}) — stock ${m.product.stock}`).join('\n')
+          : (currentLanguage==='ur'?'کوئی پروڈکٹ نہیں ملا۔':'No matching product found.'));
+        break;
+      }
+      case 'create_customer': {
+        if(!hasPermission('edit')){ denyAccess(); break; }
+        const rec = aiCreateCustomer({name: action.name});
+        addAIMessage('assistant', (currentLanguage==='ur'?'نیا کسٹمر بن گیا: ':'Created new customer: ') + rec.name);
+        break;
+      }
+      case 'update_inventory': {
+        if(!hasPermission('edit')){ denyAccess(); break; }
+        const matches = findProductMatches({name: action.product||'', sku: action.sku||''});
+        const best = matches[0];
+        if(!best || confidenceTier(best.confidence)==='low'){
+          addAIMessage('assistant', currentLanguage==='ur' ? 'مجھے دو ممکنہ پروڈکٹس ملے ہیں۔ آپ کس پروڈکٹ کی بات کر رہے ہیں؟' : 'I found multiple possible products. Which one do you mean?');
+          break;
+        }
+        if(confidenceTier(best.confidence)==='medium'){
+          const ok = await aiConfirm(`${t('aiAssistant.possibleMatch')} ${best.product.name} (SKU ${best.product.sku||'-'})`);
+          if(!ok) break;
+        }
+        const result = aiAdjustStock(best.product.id, 'add', Number(action.quantity)||0, 'Added via AI Assistant', originalText);
+        addAIMessage('assistant', result.ok
+          ? (currentLanguage==='ur' ? `مکمل ہو گیا۔ SKU ${best.product.sku} کے ${action.quantity} یونٹس انوینٹری میں شامل کر دیے گئے ہیں۔` : `Done. Added ${action.quantity} units of SKU ${best.product.sku}.`)
+          : (currentLanguage==='ur' ? 'یہ تبدیلی ممکن نہیں (منفی اسٹاک)۔' : "That change isn't possible (would go negative)."));
+        break;
+      }
+      case 'check_outstanding_balance': {
+        goToTab('customers');
+        addAIMessage('assistant', currentLanguage==='ur' ? 'بقایا جات کسٹمرز ٹیب میں دیکھے جا سکتے ہیں۔' : 'Outstanding balances are shown in the Customers tab.');
+        break;
+      }
+      case 'generate_report': { goToTab('reports'); addAIMessage('assistant', '✅'); break; }
+      case 'set_language': { setLanguage(action.lang==='ur'?'ur':'en'); addAIMessage('assistant', '✅'); break; }
+      case 'get_language_preference': { addAIMessage('assistant', currentLanguage); break; }
+      default:
+        addAIMessage('assistant', t('aiAssistant.didntUnderstand'));
+    }
+    logAIAction(Object.assign({}, auditBase, {success:true, confirmationStatus: DESTRUCTIVE_ACTIONS.has(action.type)?'confirmed':'not_required'}));
+  }catch(e){
+    addAIMessage('assistant', t('aiAssistant.unavailable'));
+    logAIAction(Object.assign({}, auditBase, {success:false, error:String(e)}));
+  }
+}
+
+async function sendAIMessage(text, mode){
+  addAIMessage('user', text);
+  setAIStatus(t('aiAssistant.processing'));
+  const result = await callAIBackend({ mode:'intent', text, context: aiContextSummary() });
+  setAIStatus('');
+  if(result.error){
+    addAIMessage('assistant', t('aiAssistant.unavailable'));
+    logAIAction({ command:text, action:'intent_parse', success:false, error:result.message, detectedLanguage:null, inputMode:mode });
+    return;
+  }
+  if(result.responseText) addAIMessage('assistant', result.responseText);
+  if(result.action) await executeAIAction(result.action, text);
+  if(result.responseText) speak(result.responseText);
+}
+
+// A light, non-sensitive snapshot the backend can use as grounding
+// context — counts only, never full customer/financial records.
+function aiContextSummary(){
+  return {
+    productCount: products.length, customerCount: customers.length,
+    supplierNames: suppliers.slice(0,50).map(s=>s.name)
+  };
+}
+
+// ==================== AI INVOICE READER ====================
+let _aiInvoiceExtraction = null; // holds the last extraction pending review
+
+function triggerInvoiceUpload(){
+  document.getElementById('aiInvoiceUploadInput').click();
+}
+function fileToBase64(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+async function handleInvoiceUpload(file){
+  if(!file) return;
+  if(!hasPermission('edit')){ denyAccess(); return; }
+  openAIAssistant();
+  addAIMessage('user', '📎 ' + file.name);
+  setAIStatus(t('aiAssistant.processing'));
+  const base64 = await fileToBase64(file);
+  const result = await callAIBackend({ mode:'invoice', fileBase64: base64, mediaType: file.type, filename: file.name });
+  setAIStatus('');
+  document.getElementById('aiInvoiceUploadInput').value = '';
+  if(result.error || !result.invoice){
+    addAIMessage('assistant', t('aiAssistant.unavailable'));
+    logAIAction({ command:'[invoice upload] '+file.name, action:'invoice_extraction', success:false, error:result.message });
+    return;
+  }
+  _aiInvoiceExtraction = result.invoice;
+  logAIAction({ command:'[invoice upload] '+file.name, action:'invoice_extraction', success:true, confidence: result.invoice.confidence });
+  renderAIInvoiceReview(result.invoice);
+}
+
+function checkDuplicateInvoice(supplierGuess, invoiceNumber, date, total){
+  return purchases.find(p=>{
+    const sup = suppliers.find(s=>s.id===p.supplierId);
+    const supMatch = sup && supplierGuess && normalizeMatchStr(sup.name)===normalizeMatchStr(supplierGuess);
+    const numMatch = invoiceNumber && p.invoiceNumber && normalizeMatchStr(p.invoiceNumber)===normalizeMatchStr(invoiceNumber);
+    return supMatch && numMatch;
+  });
+}
+
+function renderAIInvoiceReview(inv){
+  // Independently recompute totals rather than trusting the extracted
+  // grand total outright (Part 16).
+  const items = (inv.items||[]).map(it=>{
+    const matches = findProductMatches({name: it.product_name||it.productName||'', sku: it.sku||''});
+    const best = matches[0] || null;
+    return Object.assign({}, it, { _matches: matches, _best: best });
+  });
+  const calcTotal = items.reduce((sum,it)=> sum + (Number(it.quantity)||0) * (Number(it.unit_price||it.unitPrice)||0), 0);
+  const statedTotal = Number(inv.grand_total || inv.grandTotal) || 0;
+  const mismatch = statedTotal>0 && Math.abs(calcTotal-statedTotal) > Math.max(1, statedTotal*0.01);
+
+  const dup = checkDuplicateInvoice(inv.supplier, inv.invoice_number||inv.invoiceNumber, inv.invoice_date||inv.invoiceDate, statedTotal);
+
+  const rowsHtml = items.map((it,idx)=>{
+    const conf = it._best ? it._best.confidence : 0;
+    const tier = confidenceTier(conf);
+    const matchLabel = it._best ? `${it._best.product.name} (${it._best.product.sku||'-'})` : (currentLanguage==='ur'?'کوئی مماثل نہیں':'No match');
+    return `<tr class="ai-review-row" data-idx="${idx}">
+      <td>${escapeHtmlAI(it.product_name||it.productName||'')}</td>
+      <td class="ltr-locked">${escapeHtmlAI(it.sku||'-')}</td>
+      <td>${it.quantity||0}</td>
+      <td>${fmtNumberLocale(it.unit_price||it.unitPrice||0)}</td>
+      <td>${fmtNumberLocale((it.quantity||0)*(it.unit_price||it.unitPrice||0))}</td>
+      <td>${matchLabel} <span class="ai-confidence ${tier}">${conf}%</span></td>
+    </tr>`;
+  }).join('');
+
+  const body = document.getElementById('aiReviewBody');
+  body.innerHTML = `
+    <p style="font-size:13px;"><strong>${escapeHtmlAI(t('common.search'))!=null?'':''}</strong></p>
+    <div class="row" style="gap:16px;flex-wrap:wrap;font-size:13px;">
+      <div><strong>${currentLanguage==='ur'?'سپلائر':'Supplier'}:</strong> ${escapeHtmlAI(inv.supplier||'-')}</div>
+      <div><strong>${currentLanguage==='ur'?'انوائس نمبر':'Invoice No'}:</strong> <span class="ltr-locked">${escapeHtmlAI(inv.invoice_number||inv.invoiceNumber||'-')}</span></div>
+      <div><strong>${currentLanguage==='ur'?'تاریخ':'Date'}:</strong> ${escapeHtmlAI(inv.invoice_date||inv.invoiceDate||'-')}</div>
+    </div>
+    ${dup ? `<div style="background:rgba(214,69,69,.12);color:var(--danger);padding:8px 10px;border-radius:8px;font-size:12.5px;margin-top:8px;">⚠️ ${t('aiAssistant.possibleDuplicate')}</div>` : ''}
+    <table class="ai-review-table">
+      <thead><tr>
+        <th>${currentLanguage==='ur'?'پروڈکٹ':'Product'}</th><th>SKU</th>
+        <th>${currentLanguage==='ur'?'مقدار':'Qty'}</th><th>${currentLanguage==='ur'?'فی یونٹ قیمت':'Unit Price'}</th>
+        <th>${currentLanguage==='ur'?'کل':'Total'}</th><th>${currentLanguage==='ur'?'مماثلت':'Match'}</th>
+      </tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+    <div style="font-size:13px;margin-top:6px;">
+      <div>${t('aiAssistant.aiCalculatedTotal')}: <strong>${fmtNumberLocale(calcTotal)}</strong></div>
+      <div>${t('aiAssistant.invoiceStatedTotal')}: <strong>${fmtNumberLocale(statedTotal)}</strong></div>
+      ${mismatch ? `<div style="color:var(--danger);">⚠️ ${t('aiAssistant.totalMismatch')} (${t('aiAssistant.difference')}: ${fmtNumberLocale(Math.abs(calcTotal-statedTotal))})</div>` : ''}
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:6px;">${currentLanguage==='ur'?'AI اعتماد':'AI Confidence'}: ${inv.confidence!=null ? inv.confidence+'%' : '—'}</div>
+  `;
+  _aiInvoiceExtraction = Object.assign({}, inv, { _items: items, _calcTotal: calcTotal, _dup: !!dup });
+  document.getElementById('aiInvoiceReviewModal').classList.remove('hidden');
+}
+function escapeHtmlAI(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function closeAIInvoiceReview(){
+  document.getElementById('aiInvoiceReviewModal').classList.add('hidden');
+}
+function aiReviewEditManually(){
+  // Hands off to the existing, native Purchases form so the user can
+  // adjust anything by hand before saving — no AI-only save path exists.
+  closeAIInvoiceReview();
+  populatePurchaseFormFromAIInvoice(_aiInvoiceExtraction, false);
+}
+async function approveAIInvoice(){
+  if(!_aiInvoiceExtraction) return;
+  const lowConfidenceItems = (_aiInvoiceExtraction._items||[]).filter(it => !it._best || confidenceTier(it._best.confidence)!=='high');
+  if(lowConfidenceItems.length){
+    const ok = await aiConfirm(currentLanguage==='ur'
+      ? `${lowConfidenceItems.length} آئٹمز کم اعتماد کے ساتھ مماثل ہیں۔ کیا آپ پھر بھی جاری رکھنا چاہتے ہیں؟`
+      : `${lowConfidenceItems.length} item(s) matched with lower confidence. Continue anyway?`);
+    if(!ok) return;
+  }
+  closeAIInvoiceReview();
+  populatePurchaseFormFromAIInvoice(_aiInvoiceExtraction, true);
+}
+
+// Populates the EXISTING native Purchases form + purchaseCart, then
+// either leaves it for manual review or calls the app's own savePurchase()
+// — never a parallel/duplicate save path (Part 31).
+function populatePurchaseFormFromAIInvoice(inv, autoSave){
+  goToTab('purchases'); // also runs renderPurchases(), which fills the supplier dropdown + default date
+  let supplier = suppliers.find(s=>normalizeMatchStr(s.name)===normalizeMatchStr(inv.supplier));
+  if(!supplier && inv.supplier){ supplier = aiCreateSupplier(inv.supplier); }
+  document.getElementById('purSupplier').innerHTML = '<option value="">-- Select supplier --</option>' + suppliers.map(s=>`<option value="${s.id}">${escapeHtmlAI(s.name)}</option>`).join('');
+  if(supplier) document.getElementById('purSupplier').value = supplier.id;
+  document.getElementById('purInvoiceNumber').value = inv.invoice_number || inv.invoiceNumber || '';
+  const isoDate = inv.invoice_date || inv.invoiceDate;
+  if(isoDate && /^\d{4}-\d{2}-\d{2}$/.test(isoDate)) setDateFieldValue('purDate', isoDate);
+
+  purchaseCart.length = 0;
+  (inv._items||[]).forEach(it=>{
+    let product = it._best && confidenceTier(it._best.confidence)!=='low' ? it._best.product : null;
+    if(!product){
+      product = aiCreateProduct({ name: it.product_name||it.productName||'Unnamed item', sku: it.sku||'', cost: it.unit_price||it.unitPrice||0 });
+    }
+    purchaseCart.push({ productId: product.id, name: product.name, qty: Number(it.quantity)||0, cost: Number(it.unit_price||it.unitPrice)||0, discountType:'percent', discountValue:0, gift:'' });
+  });
+  renderPurchaseItems();
+  updatePurchasePreview();
+
+  if(autoSave){
+    savePurchase().then(()=>{
+      addAIMessage('assistant', t('aiAssistant.createdSuccessfully'));
+      logAIAction({ command:'[AI invoice approve]', action:'create_purchase_invoice', success:true, confidence: inv.confidence, recordsAffected: purchaseCart.length });
+      speak(t('aiAssistant.createdSuccessfully'));
+    });
+  }
+}
+
+// ==================== INIT ====================
+// Non-invasive hooks: wrap two existing functions instead of editing
+// their bodies, so login/logout keep working exactly as before and the
+// AI FAB just follows along.
+if(typeof applyRolePermissionsUI === 'function'){
+  const _origApplyRolePermissionsUI = applyRolePermissionsUI;
+  applyRolePermissionsUI = function(){ _origApplyRolePermissionsUI(); updateAIFabVisibility(); };
+}
+if(typeof logout === 'function'){
+  const _origLogout = logout;
+  logout = function(){ _origLogout(); closeAIAssistant(); updateAIFabVisibility(); };
+}
+
+setLanguage(getLanguagePreference());
+updateAIFabVisibility();
+
 </script>
 
 </body>
