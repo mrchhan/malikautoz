@@ -329,12 +329,12 @@
   <!-- DASHBOARD VIEW -->
   <div class="view active" id="view-dashboard">
     <div id="dashNoAccessMsg" class="card hidden" style="text-align:center;color:var(--muted);">
-      <h2 style="color:var(--muted);">🔒 Nothing to show here</h2>
-      <p>Your account doesn't have any dashboard modules assigned. Please see your Manager or Admin if you believe this is wrong.</p>
+      <h2 style="color:var(--muted);" data-i18n="dashboard.noAccessTitle">🔒 Nothing to show here</h2>
+      <p data-i18n="dashboard.noAccessBody">Your account doesn't have any dashboard modules assigned. Please see your Manager or Admin if you believe this is wrong.</p>
     </div>
 
     <div class="card hidden" id="quickAccessCard">
-      <h2 style="margin-bottom:10px;">Quick Access</h2>
+      <h2 style="margin-bottom:10px;" data-i18n="dashboard.quickAccess">Quick Access</h2>
       <div class="quick-grid" id="quickAccessGrid">
         <button class="quick-tile" data-view="pos" onclick="goToTab('pos')"><span class="quick-icon">🧾</span><span data-i18n="navigation.pos">POS</span></button>
         <button class="quick-tile" data-view="sales" onclick="goToTab('sales')"><span class="quick-icon">💰</span><span data-i18n="navigation.sales">Sales</span></button>
@@ -352,7 +352,7 @@
     </div>
 
     <div class="card hidden" id="dashBriefCard">
-      <h2>📋 Daily Brief</h2>
+      <h2 data-i18n="dashboard.dailyBrief">📋 Daily Brief</h2>
       <p id="dashBriefText" style="font-size:14px;line-height:1.6;"></p>
     </div>
 
@@ -360,8 +360,8 @@
          ledger dashboard, built from real sales/purchases/inventory/partners
          /liabilities data instead of the ledger app's seed data. -->
     <div class="card hidden" id="dashLedgerCard">
-      <h2 style="margin-bottom:2px;">🧭 Financial Overview</h2>
-      <p style="font-size:12px;color:var(--muted);margin-top:-4px;">Position of the business as of today, and how it's been trending.</p>
+      <h2 style="margin-bottom:2px;" data-i18n="dashboard.financialOverview">🧭 Financial Overview</h2>
+      <p style="font-size:12px;color:var(--muted);margin-top:-4px;" data-i18n="dashboard.financialOverviewSub">Position of the business as of today, and how it's been trending.</p>
 
       <div id="dashLedgerAlerts" style="margin:10px 0 4px;"></div>
 
@@ -371,26 +371,26 @@
       <div class="grid2" style="margin-top:14px;">
         <div class="box" style="text-align:center;padding:16px;">
           <div id="gaugeEquity"></div>
-          <div class="lbl" style="margin-top:2px;">EQUITY / ASSETS</div>
+          <div class="lbl" style="margin-top:2px;" data-i18n="dashboard.equityAssets">EQUITY / ASSETS</div>
         </div>
         <div class="box" style="text-align:center;padding:16px;">
           <div id="gaugeCash"></div>
-          <div class="lbl" style="margin-top:2px;">CASH VS LIABILITIES</div>
+          <div class="lbl" style="margin-top:2px;" data-i18n="dashboard.cashVsLiabilities">CASH VS LIABILITIES</div>
         </div>
       </div>
 
       <div id="dashPartnerCards" class="kpi" style="margin-top:14px;"></div>
 
-      <h2 style="font-size:14px;margin:18px 0 4px;">📈 Capital Growth</h2>
+      <h2 style="font-size:14px;margin:18px 0 4px;" data-i18n="dashboard.capitalGrowth">📈 Capital Growth</h2>
       <div id="dashCapitalGrowthChart" style="overflow-x:auto;"></div>
 
       <div class="grid2" style="margin-top:18px;">
         <div>
-          <h2 style="font-size:14px;margin-bottom:4px;">💵 Net Cash Flow &amp; Profit Trend (6mo)</h2>
+          <h2 style="font-size:14px;margin-bottom:4px;" data-i18n="dashboard.cashProfitTrend">💵 Net Cash Flow &amp; Profit Trend (6mo)</h2>
           <div id="dashCashProfitChart" style="overflow-x:auto;"></div>
         </div>
         <div>
-          <h2 style="font-size:14px;margin-bottom:4px;">📦 Inventory Value by Category</h2>
+          <h2 style="font-size:14px;margin-bottom:4px;" data-i18n="dashboard.inventoryByCategory">📦 Inventory Value by Category</h2>
           <div class="row" style="align-items:center;gap:20px;">
             <div id="dashInvDonut" style="width:110px;height:110px;border-radius:50%;flex-shrink:0;"></div>
             <div id="dashInvLegend" style="flex:1;font-size:12px;"></div>
@@ -398,7 +398,7 @@
         </div>
       </div>
 
-      <h2 style="font-size:14px;margin:18px 0 4px;">🏧 Partner Drawings</h2>
+      <h2 style="font-size:14px;margin:18px 0 4px;" data-i18n="dashboard.partnerDrawings">🏧 Partner Drawings</h2>
       <div class="barwrap" id="dashDrawingsBars"></div>
     </div>
 
@@ -409,11 +409,11 @@
 
     <div class="grid2">
       <div class="card hidden" id="dashTopProductsCard">
-        <h2>🏆 Top Selling Products (This Month)</h2>
+        <h2 data-i18n="dashboard.topSelling">🏆 Top Selling Products (This Month)</h2>
         <div class="toplist" id="dashTopProducts"></div>
       </div>
       <div class="card hidden" id="dashRecentSalesCard">
-        <h2>🕓 Recent Sales</h2>
+        <h2 data-i18n="dashboard.recentSales">🕓 Recent Sales</h2>
         <div class="toplist" id="dashRecentSales"></div>
       </div>
     </div>
@@ -421,176 +421,176 @@
 
   <!-- POS VIEW -->
   <div class="view" id="view-pos">
-    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;">← Back to Dashboard</button>
+    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;" data-i18n="common.backToDashboard">← Back to Dashboard</button>
     <div class="card">
-      <h2>New Sale</h2>
+      <h2 data-i18n="pos.newSale">New Sale</h2>
       <div class="grid3">
         <div>
-          <label>Customer</label>
-          <select id="posCustomer" onchange="applyCustomerPriceType()"><option value="">Walk-in customer</option></select>
+          <label data-i18n="pos.customer">Customer</label>
+          <select id="posCustomer" onchange="applyCustomerPriceType()"><option value="" data-i18n="pos.walkInCustomer">Walk-in customer</option></select>
         </div>
         <div>
-          <label>Served By (this login — locked)</label>
-          <select id="posEmployee" disabled><option value="">-- Not specified --</option></select>
+          <label data-i18n="pos.servedBy">Served By (this login — locked)</label>
+          <select id="posEmployee" disabled><option value="" data-i18n="pos.notSpecified">-- Not specified --</option></select>
         </div>
         <div>
-          <label>Price Type for New Items</label>
+          <label data-i18n="pos.priceTypeForNewItems">Price Type for New Items</label>
           <div class="pricetype" id="priceTypeButtons" style="margin-bottom:0;">
-            <button type="button" class="selected" onclick="setPriceType('retail')" id="pt-retail">🏷️ Retail</button>
-            <button type="button" onclick="setPriceType('wholesale')" id="pt-wholesale">📦 Wholesale</button>
+            <button type="button" class="selected" onclick="setPriceType('retail')" id="pt-retail" data-i18n="pos.retail">🏷️ Retail</button>
+            <button type="button" onclick="setPriceType('wholesale')" id="pt-wholesale" data-i18n="pos.wholesale">📦 Wholesale</button>
           </div>
         </div>
       </div>
 
-      <label>Find Product (name, company, model, or SKU)</label>
+      <label data-i18n="pos.findProduct">Find Product (name, company, model, or SKU)</label>
       <div class="search-wrap">
-        <input id="posSearch" placeholder="Type to search... (↑↓ to browse, Enter to select)" oninput="renderSearchResults()" onfocus="renderSearchResults()" onkeydown="handlePosSearchKeydown(event)">
+        <input id="posSearch" data-i18n-placeholder="pos.searchPlaceholder" placeholder="Type to search... (↑↓ to browse, Enter to select)" oninput="renderSearchResults()" onfocus="renderSearchResults()" onkeydown="handlePosSearchKeydown(event)">
         <div class="search-results hidden" id="posSearchResults"></div>
       </div>
 
       <div id="cart"></div>
 
       <div class="row" style="margin-top:10px;">
-        <label style="margin:0;flex:1;">Discount</label>
+        <label style="margin:0;flex:1;" data-i18n="pos.discount">Discount</label>
       </div>
       <div class="row">
         <select id="discountType" style="max-width:140px;" onchange="renderCart()">
-          <option value="none">No Discount</option>
-          <option value="percent">% Percent</option>
-          <option value="amount">Rs. Amount</option>
+          <option value="none" data-i18n="pos.noDiscount">No Discount</option>
+          <option value="percent" data-i18n="pos.percent">% Percent</option>
+          <option value="amount" data-i18n="pos.rsAmount">Rs. Amount</option>
         </select>
         <input type="number" id="discountValue" value="0" min="0" style="max-width:120px;" oninput="renderCart()">
       </div>
 
       <div class="row" style="justify-content:space-between;margin-top:10px;flex-direction:column;align-items:stretch;">
-        <div class="row" style="justify-content:space-between;"><span>Subtotal</span><span id="cartSubtotal">Rs. 0</span></div>
-        <div class="row" style="justify-content:space-between;"><span>Item Discounts</span><span id="cartItemDiscounts">- Rs. 0</span></div>
-        <div class="row" style="justify-content:space-between;"><span>Cart Discount</span><span id="cartDiscount">Rs. 0</span></div>
-        <div class="row" style="justify-content:space-between;"><strong>Grand Total</strong><strong id="cartTotal">Rs. 0</strong></div>
+        <div class="row" style="justify-content:space-between;"><span data-i18n="pos.subtotal">Subtotal</span><span id="cartSubtotal">Rs. 0</span></div>
+        <div class="row" style="justify-content:space-between;"><span data-i18n="pos.itemDiscounts">Item Discounts</span><span id="cartItemDiscounts">- Rs. 0</span></div>
+        <div class="row" style="justify-content:space-between;"><span data-i18n="pos.cartDiscount">Cart Discount</span><span id="cartDiscount">Rs. 0</span></div>
+        <div class="row" style="justify-content:space-between;"><strong data-i18n="pos.grandTotal">Grand Total</strong><strong id="cartTotal">Rs. 0</strong></div>
       </div>
 
-      <label style="margin-top:10px;">Payment Method</label>
+      <label style="margin-top:10px;" data-i18n="pos.paymentMethod">Payment Method</label>
       <div class="paymethod" id="payMethodButtons">
-        <button type="button" class="selected" onclick="setPayMethod('Cash')" id="btn-Cash">💵 Cash</button>
-        <button type="button" onclick="setPayMethod('Card')" id="btn-Card">💳 Card</button>
-        <button type="button" onclick="setPayMethod('CashCard')" id="btn-CashCard">💵💳 Cash + Card</button>
-        <button type="button" onclick="setPayMethod('Credit')" id="btn-Credit">📒 Full Credit</button>
-        <button type="button" onclick="setPayMethod('Split')" id="btn-Split">➗ Partial Cash + Credit</button>
+        <button type="button" class="selected" onclick="setPayMethod('Cash')" id="btn-Cash" data-i18n="pos.cash">💵 Cash</button>
+        <button type="button" onclick="setPayMethod('Card')" id="btn-Card" data-i18n="pos.card">💳 Card</button>
+        <button type="button" onclick="setPayMethod('CashCard')" id="btn-CashCard" data-i18n="pos.cashPlusCard">💵💳 Cash + Card</button>
+        <button type="button" onclick="setPayMethod('Credit')" id="btn-Credit" data-i18n="pos.fullCredit">📒 Full Credit</button>
+        <button type="button" onclick="setPayMethod('Split')" id="btn-Split" data-i18n="pos.partialCashCredit">➗ Partial Cash + Credit</button>
       </div>
 
       <div id="cashFields">
-        <label>Cash Tendered by Customer (Rs.)</label>
-        <input type="number" id="cashTendered" placeholder="Amount handed by customer" oninput="updateChange()">
-        <div class="changebox" id="changeBox">Enter cash tendered to calculate change</div>
+        <label data-i18n="pos.cashTendered">Cash Tendered by Customer (Rs.)</label>
+        <input type="number" id="cashTendered" data-i18n-placeholder="pos.amountHanded" placeholder="Amount handed by customer" oninput="updateChange()">
+        <div class="changebox" id="changeBox" data-i18n="pos.enterCashToCalc">Enter cash tendered to calculate change</div>
       </div>
 
       <div id="cashCardFields" class="hidden">
-        <label>Cash Amount (Rs.)</label>
-        <input type="number" id="cashCardCash" placeholder="Cash portion" oninput="updateCashCard()">
-        <label>Card / Bank Amount (Rs.)</label>
-        <input type="number" id="cashCardCard" placeholder="Card or bank transfer portion" oninput="updateCashCard()">
-        <div class="changebox" id="cashCardBox">Enter both amounts — no credit is created, this is fully paid.</div>
+        <label data-i18n="pos.cashAmount">Cash Amount (Rs.)</label>
+        <input type="number" id="cashCardCash" data-i18n-placeholder="pos.cashPortion" placeholder="Cash portion" oninput="updateCashCard()">
+        <label data-i18n="pos.cardBankAmount">Card / Bank Amount (Rs.)</label>
+        <input type="number" id="cashCardCard" data-i18n-placeholder="pos.cardPortion" placeholder="Card or bank transfer portion" oninput="updateCashCard()">
+        <div class="changebox" id="cashCardBox" data-i18n="pos.enterBothAmounts">Enter both amounts — no credit is created, this is fully paid.</div>
       </div>
 
       <div id="splitFields" class="hidden">
-        <label>Cash Received Now (Rs.)</label>
-        <input type="number" id="cashReceivedNow" placeholder="e.g. customer pays half now" oninput="updateSplit()">
-        <div class="changebox" id="splitBox">Enter cash received to see remaining credit</div>
+        <label data-i18n="pos.cashReceivedNow">Cash Received Now (Rs.)</label>
+        <input type="number" id="cashReceivedNow" data-i18n-placeholder="pos.cashReceivedPlaceholder" placeholder="e.g. customer pays half now" oninput="updateSplit()">
+        <div class="changebox" id="splitBox" data-i18n="pos.enterCashToSeeCredit">Enter cash received to see remaining credit</div>
       </div>
 
-      <div id="creditNote" class="hidden" style="font-size:12px;color:var(--muted);margin-bottom:10px;">
+      <div id="creditNote" class="hidden" style="font-size:12px;color:var(--muted);margin-bottom:10px;" data-i18n="pos.creditRequiresCustomer">
         ⚠️ This requires a selected customer (not Walk-in) so the amount owed can be tracked.
       </div>
 
-      <div id="posViewOnlyBanner" class="warn-box hidden">🔒 Your role has view-only access to POS — you can browse products and prices, but making a sale requires a Cashier, Manager, or Admin login.</div>
+      <div id="posViewOnlyBanner" class="warn-box hidden" data-i18n="pos.viewOnlyBanner">🔒 Your role has view-only access to POS — you can browse products and prices, but making a sale requires a Cashier, Manager, or Admin login.</div>
 
       <div class="row">
-        <button class="btn ghost" id="holdSaleBtn" style="flex:1;" onclick="holdSale()">⏸️ Hold Sale</button>
-        <button class="btn ghost" id="resumeSaleBtn" style="flex:1;" onclick="openHeldSales()">▶️ Resume (<span id="heldCount">0</span>/20)</button>
+        <button class="btn ghost" id="holdSaleBtn" style="flex:1;" onclick="holdSale()" data-i18n="pos.holdSale">⏸️ Hold Sale</button>
+        <button class="btn ghost" id="resumeSaleBtn" style="flex:1;" onclick="openHeldSales()"><span data-i18n="pos.resume">▶️ Resume</span> (<span id="heldCount">0</span>/20)</button>
       </div>
-      <button class="btn" id="completeSaleBtn" style="width:100%;margin-top:10px;" onclick="checkout()">✅ Complete Sale</button>
+      <button class="btn" id="completeSaleBtn" style="width:100%;margin-top:10px;" onclick="checkout()" data-i18n="pos.completeSale">✅ Complete Sale</button>
     </div>
   </div>
 
   <!-- INVENTORY VIEW -->
   <div class="view" id="view-inventory">
-    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;">← Back to Dashboard</button>
+    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;" data-i18n="common.backToDashboard">← Back to Dashboard</button>
     <div class="card">
-      <h2 id="invFormTitle">Add Product</h2>
+      <h2 id="invFormTitle" data-i18n="inventory.addProduct">Add Product</h2>
       <input type="hidden" id="pEditId">
       <div class="grid2">
-        <div><label>Product Name</label><input id="pName" placeholder="e.g. Brake Pad Set"></div>
-        <div><label>Model / Bike Fitment</label><input id="pModel" placeholder="e.g. CG125"></div>
-        <div><label>Category</label>
+        <div><label data-i18n="inventory.productName">Product Name</label><input id="pName" data-i18n-placeholder="inventory.productNamePlaceholder" placeholder="e.g. Brake Pad Set"></div>
+        <div><label data-i18n="inventory.modelFitment">Model / Bike Fitment</label><input id="pModel" data-i18n-placeholder="inventory.modelPlaceholder" placeholder="e.g. CG125"></div>
+        <div><label data-i18n="inventory.category">Category</label>
           <select id="pCategory">
-            <option>Engine Parts</option><option>Brakes</option><option>Oils & Lubricants</option>
-            <option>Electrical</option><option>Body Parts</option><option>Tyres & Tubes</option><option>Other</option>
+            <option data-i18n="inventory.catEngineParts">Engine Parts</option><option data-i18n="inventory.catBrakes">Brakes</option><option data-i18n="inventory.catOils">Oils & Lubricants</option>
+            <option data-i18n="inventory.catElectrical">Electrical</option><option data-i18n="inventory.catBodyParts">Body Parts</option><option data-i18n="inventory.catTyres">Tyres & Tubes</option><option data-i18n="inventory.catOther">Other</option>
           </select>
         </div>
         <div>
-          <label>SKU / Product Code</label>
+          <label data-i18n="inventory.skuCode">SKU / Product Code</label>
           <div class="row" style="gap:6px;align-items:flex-start;">
-            <input id="pSku" placeholder="Leave blank to auto-generate" style="flex:1;">
-            <button type="button" class="btn ghost small" id="pSkuAutoBtn" onclick="autoGenerateSku()" style="white-space:nowrap;">🎲 Auto</button>
+            <input id="pSku" data-i18n-placeholder="inventory.skuPlaceholder" placeholder="Leave blank to auto-generate" style="flex:1;">
+            <button type="button" class="btn ghost small" id="pSkuAutoBtn" onclick="autoGenerateSku()" style="white-space:nowrap;" data-i18n="inventory.auto">🎲 Auto</button>
           </div>
         </div>
-        <div><label>Company / Brand</label><input id="pCompany" placeholder="e.g. Honda, Sohrab, Service"></div>
+        <div><label data-i18n="inventory.companyBrand">Company / Brand</label><input id="pCompany" data-i18n-placeholder="inventory.companyPlaceholder" placeholder="e.g. Honda, Sohrab, Service"></div>
         <div>
-          <label>Stock Quantity <span id="pStockHint" style="font-weight:400;"></span></label>
+          <label><span data-i18n="inventory.stockQuantity">Stock Quantity</span> <span id="pStockHint" style="font-weight:400;"></span></label>
           <input id="pStock" type="number" value="0">
         </div>
-        <div><label>Low Stock Alert Level</label><input id="pLowLevel" type="number" value="5"></div>
-        <div><label>Cost Price (Rs.)</label><input id="pCost" type="number" value="0"></div>
-        <div><label>Retail Price (Rs.)</label><input id="pPrice" type="number" value="0"></div>
-        <div><label>Wholesale Price (Rs., optional)</label><input id="pWholesale" type="number" value="0"></div>
-        <div><label>Supplier (optional)</label><select id="pSupplier"><option value="">-- None --</option></select></div>
+        <div><label data-i18n="inventory.lowStockAlert">Low Stock Alert Level</label><input id="pLowLevel" type="number" value="5"></div>
+        <div><label data-i18n="inventory.costPrice">Cost Price (Rs.)</label><input id="pCost" type="number" value="0"></div>
+        <div><label data-i18n="inventory.retailPrice">Retail Price (Rs.)</label><input id="pPrice" type="number" value="0"></div>
+        <div><label data-i18n="inventory.wholesalePrice">Wholesale Price (Rs., optional)</label><input id="pWholesale" type="number" value="0"></div>
+        <div><label data-i18n="inventory.supplierOptional">Supplier (optional)</label><select id="pSupplier"><option value="" data-i18n="inventory.none">-- None --</option></select></div>
       </div>
       <div class="row">
-        <button class="btn" onclick="saveProduct()" id="pSaveBtn">➕ Add Product</button>
-        <button class="btn ghost" id="pCancelBtn" onclick="cancelEditProduct()">🧹 Clear</button>
+        <button class="btn" onclick="saveProduct()" id="pSaveBtn" data-i18n="inventory.addProductBtn">➕ Add Product</button>
+        <button class="btn ghost" id="pCancelBtn" onclick="cancelEditProduct()" data-i18n="inventory.clear">🧹 Clear</button>
       </div>
     </div>
 
     <div class="card">
-      <h2>📥 Bulk Import from Excel / CSV</h2>
-      <p style="font-size:12px;color:var(--muted);margin-top:-6px;">
+      <h2 data-i18n="inventory.bulkImportTitle">📥 Bulk Import from Excel / CSV</h2>
+      <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="inventory.bulkImportBody">
         Add or update many products at once instead of typing them one by one. Download the
         template, fill it in (in Excel, Google Sheets, or Numbers), then upload the file below —
-        <strong>.xlsx</strong> (Excel workbook) and <strong>.csv</strong> files both work directly,
-        no need to convert. Products are matched by <strong>SKU</strong> —
-        matching rows <em>update</em> the existing product, new codes <em>create</em> a new one.
+        .xlsx (Excel workbook) and .csv files both work directly,
+        no need to convert. Products are matched by SKU —
+        matching rows update the existing product, new codes create a new one.
       </p>
       <div class="row">
-        <button class="btn ghost small" onclick="downloadSampleCsv()">⬇️ Download Sample Template (.csv)</button>
-        <button class="btn ghost small" onclick="exportInventoryCsv()">⬇️ Export Current Inventory (.csv)</button>
+        <button class="btn ghost small" onclick="downloadSampleCsv()" data-i18n="inventory.downloadTemplate">⬇️ Download Sample Template (.csv)</button>
+        <button class="btn ghost small" onclick="exportInventoryCsv()" data-i18n="inventory.exportInventory">⬇️ Export Current Inventory (.csv)</button>
       </div>
-      <label style="margin-top:10px;">Upload Excel (.xlsx) or CSV to Import</label>
+      <label style="margin-top:10px;" data-i18n="inventory.uploadToImport">Upload Excel (.xlsx) or CSV to Import</label>
       <input type="file" id="importFileInput" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="importInventoryFile(event)">
       <div id="importSummary"></div>
     </div>
 
     <div class="card">
-      <h2>Product Catalog</h2>
-      <input id="searchProduct" placeholder="🔍 Search by name, model, company, or SKU..." oninput="renderInventory()">
+      <h2 data-i18n="inventory.productCatalog">Product Catalog</h2>
+      <input id="searchProduct" data-i18n-placeholder="inventory.searchCatalog" placeholder="🔍 Search by name, model, company, or SKU..." oninput="renderInventory()">
       <div class="row" id="bulkProductActions" style="margin-bottom:8px;">
-        <button class="btn danger small" id="deleteSelectedBtn" onclick="deleteSelectedProducts()" disabled>🗑️ Delete Selected (0)</button>
-        <button class="btn danger small" onclick="deleteAllProducts()">🗑️ Delete All</button>
+        <button class="btn danger small" id="deleteSelectedBtn" onclick="deleteSelectedProducts()" disabled>🗑️ <span data-i18n="inventory.deleteSelected">Delete Selected</span> (0)</button>
+        <button class="btn danger small" onclick="deleteAllProducts()" data-i18n="inventory.deleteAll">🗑️ Delete All</button>
       </div>
       <div class="table-scroll"><table>
-        <thead><tr><th><input type="checkbox" id="selectAllProducts" onchange="toggleSelectAllProducts(this)"></th><th>Name</th><th>Model</th><th>Company</th><th>Category</th><th>SKU</th><th>Stock</th><th>Cost</th><th>Retail</th><th>Wholesale</th><th></th></tr></thead>
+        <thead><tr><th><input type="checkbox" id="selectAllProducts" onchange="toggleSelectAllProducts(this)"></th><th data-i18n="inventory.thName">Name</th><th data-i18n="inventory.thModel">Model</th><th data-i18n="inventory.thCompany">Company</th><th data-i18n="inventory.thCategory">Category</th><th>SKU</th><th data-i18n="inventory.thStock">Stock</th><th data-i18n="inventory.thCost">Cost</th><th data-i18n="inventory.thRetail">Retail</th><th data-i18n="inventory.thWholesale">Wholesale</th><th></th></tr></thead>
         <tbody id="inventoryTable"></tbody>
       </table></div>
     </div>
 
     <div class="card">
-      <h2>📋 Stock Movement Ledger</h2>
-      <p style="font-size:12px;color:var(--muted);margin-top:-6px;">
+      <h2 data-i18n="inventory.stockLedger">📋 Stock Movement Ledger</h2>
+      <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="inventory.stockLedgerBody">
         Every change to stock — sales, manual adjustments, and imports — is logged here automatically,
         so you always know why a number changed. Stock is never edited silently.
       </p>
-      <input id="searchLedger" placeholder="🔍 Filter by product name..." oninput="renderStockLedger()">
+      <input id="searchLedger" data-i18n-placeholder="inventory.filterByName" placeholder="🔍 Filter by product name..." oninput="renderStockLedger()">
       <div class="table-scroll"><table>
-        <thead><tr><th>Date</th><th>Product</th><th>Type</th><th>Change</th><th>Resulting Stock</th><th>Reason / Note</th></tr></thead>
+        <thead><tr><th data-i18n="inventory.thDate">Date</th><th data-i18n="inventory.thName">Product</th><th data-i18n="inventory.thType">Type</th><th data-i18n="inventory.thChange">Change</th><th data-i18n="inventory.thResultingStock">Resulting Stock</th><th data-i18n="inventory.thReasonNote">Reason / Note</th></tr></thead>
         <tbody id="ledgerTable"></tbody>
       </table></div>
     </div>
@@ -598,29 +598,29 @@
 
   <!-- SUPPLIERS VIEW -->
   <div class="view" id="view-suppliers">
-    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;">← Back to Dashboard</button>
+    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;" data-i18n="common.backToDashboard">← Back to Dashboard</button>
     <div class="card">
-      <h2 id="supFormTitle">Add Supplier</h2>
+      <h2 id="supFormTitle" data-i18n="suppliers.addSupplier">Add Supplier</h2>
       <input type="hidden" id="supEditId">
       <div class="grid2">
-        <div><label>Supplier / Company Name</label><input id="supName" placeholder="e.g. Al-Noor Auto Traders"></div>
-        <div><label>Contact Person</label><input id="supContact" placeholder="Contact person name"></div>
-        <div><label>Phone</label><input id="supPhone" type="tel" inputmode="tel" placeholder="Phone number" oninput="this.value=this.value.replace(/[^0-9+\-\s()]/g,'')"></div>
-        <div><label>WhatsApp</label><input id="supWhatsapp" placeholder="WhatsApp number"></div>
-        <div><label>Email</label><input id="supEmail" placeholder="Email address"></div>
-        <div><label>Address</label><input id="supAddress" placeholder="Shop / warehouse address"></div>
+        <div><label data-i18n="suppliers.supplierName">Supplier / Company Name</label><input id="supName" data-i18n-placeholder="suppliers.supplierNamePlaceholder" placeholder="e.g. Al-Noor Auto Traders"></div>
+        <div><label data-i18n="suppliers.contactPerson">Contact Person</label><input id="supContact" data-i18n-placeholder="suppliers.contactPersonPlaceholder" placeholder="Contact person name"></div>
+        <div><label data-i18n="suppliers.phone">Phone</label><input id="supPhone" type="tel" inputmode="tel" data-i18n-placeholder="suppliers.phonePlaceholder" placeholder="Phone number" oninput="this.value=this.value.replace(/[^0-9+\-\s()]/g,'')"></div>
+        <div><label data-i18n="suppliers.whatsapp">WhatsApp</label><input id="supWhatsapp" data-i18n-placeholder="suppliers.whatsappPlaceholder" placeholder="WhatsApp number"></div>
+        <div><label data-i18n="suppliers.email">Email</label><input id="supEmail" data-i18n-placeholder="suppliers.emailPlaceholder" placeholder="Email address"></div>
+        <div><label data-i18n="suppliers.address">Address</label><input id="supAddress" data-i18n-placeholder="suppliers.addressPlaceholder" placeholder="Shop / warehouse address"></div>
       </div>
-      <label>Notes</label>
-      <textarea id="supNotes" rows="2" placeholder="Payment terms, delivery days, etc."></textarea>
+      <label data-i18n="suppliers.notes">Notes</label>
+      <textarea id="supNotes" rows="2" data-i18n-placeholder="suppliers.notesPlaceholder" placeholder="Payment terms, delivery days, etc."></textarea>
       <div class="row">
-        <button class="btn" onclick="saveSupplier()">➕ Add Supplier</button>
-        <button class="btn ghost" id="supCancelBtn" onclick="cancelEditSupplier()">🧹 Clear</button>
+        <button class="btn" onclick="saveSupplier()" data-i18n="suppliers.addSupplierBtn">➕ Add Supplier</button>
+        <button class="btn ghost" id="supCancelBtn" onclick="cancelEditSupplier()" data-i18n="inventory.clear">🧹 Clear</button>
       </div>
     </div>
     <div class="card">
-      <h2>Supplier List</h2>
+      <h2 data-i18n="suppliers.supplierList">Supplier List</h2>
       <div class="table-scroll"><table>
-        <thead><tr><th>Name</th><th>Contact</th><th>Phone</th><th>Products Supplied</th><th>Total Purchased</th><th>Owed to Supplier</th><th></th></tr></thead>
+        <thead><tr><th data-i18n="inventory.thName">Name</th><th data-i18n="suppliers.thContact">Contact</th><th data-i18n="suppliers.thPhone">Phone</th><th data-i18n="suppliers.thProductsSupplied">Products Supplied</th><th data-i18n="suppliers.thTotalPurchased">Total Purchased</th><th data-i18n="suppliers.thOwed">Owed to Supplier</th><th></th></tr></thead>
         <tbody id="supplierTable"></tbody>
       </table></div>
     </div>
@@ -628,39 +628,39 @@
 
   <!-- CLAIMS VIEW -->
   <div class="view" id="view-claims">
-    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;">← Back to Dashboard</button>
+    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;" data-i18n="common.backToDashboard">← Back to Dashboard</button>
     <div class="card">
-      <h2 id="clmFormTitle">Add Warranty / Part Claim</h2>
+      <h2 id="clmFormTitle" data-i18n="claims.addClaim">Add Warranty / Part Claim</h2>
       <input type="hidden" id="clmEditId">
       <div class="grid2">
-        <div><label>Date</label><div class="date-field-wrap"><input type="text" id="clmDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('clmDate')" onblur="onDateDispBlur('clmDate')" onfocus="openDatePicker('clmDate')"><input type="hidden" id="clmDate"><div class="date-picker-popup hidden" id="clmDate_popup"></div></div></div>
-        <div><label>Product</label><select id="clmProduct"><option value="">-- Select product --</option></select></div>
-        <div><label>Supplier</label><select id="clmSupplier"><option value="">-- Select supplier --</option></select></div>
-        <div><label>Quantity</label><input id="clmQty" type="number" min="1" value="1"></div>
-        <div><label>Status</label>
+        <div><label data-i18n="claims.date">Date</label><div class="date-field-wrap"><input type="text" id="clmDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('clmDate')" onblur="onDateDispBlur('clmDate')" onfocus="openDatePicker('clmDate')"><input type="hidden" id="clmDate"><div class="date-picker-popup hidden" id="clmDate_popup"></div></div></div>
+        <div><label data-i18n="claims.product">Product</label><select id="clmProduct"><option value="" data-i18n="claims.selectProduct">-- Select product --</option></select></div>
+        <div><label data-i18n="suppliers.supplierLabel">Supplier</label><select id="clmSupplier"><option value="" data-i18n="claims.selectSupplier">-- Select supplier --</option></select></div>
+        <div><label data-i18n="claims.quantity">Quantity</label><input id="clmQty" type="number" min="1" value="1"></div>
+        <div><label data-i18n="claims.status">Status</label>
           <select id="clmStatus">
-            <option value="pending">Pending</option>
-            <option value="approved">Approved</option>
-            <option value="rejected">Rejected</option>
-            <option value="replaced">Replaced</option>
-            <option value="refunded">Refunded</option>
+            <option value="pending" data-i18n="claims.pending">Pending</option>
+            <option value="approved" data-i18n="claims.approved">Approved</option>
+            <option value="rejected" data-i18n="claims.rejected">Rejected</option>
+            <option value="replaced" data-i18n="claims.replaced">Replaced</option>
+            <option value="refunded" data-i18n="claims.refunded">Refunded</option>
           </select>
         </div>
-        <div><label>Refund Amount (Rs.) — if applicable</label><input id="clmRefundAmount" type="number" min="0" value="0"></div>
+        <div><label data-i18n="claims.refundAmount">Refund Amount (Rs.) — if applicable</label><input id="clmRefundAmount" type="number" min="0" value="0"></div>
       </div>
-      <label>Reason for Claim</label>
-      <textarea id="clmReason" rows="2" placeholder="e.g. Defective alternator, failed within warranty period"></textarea>
-      <label>Notes</label>
-      <textarea id="clmNotes" rows="2" placeholder="Supplier reference number, follow-up details, etc."></textarea>
+      <label data-i18n="claims.reasonForClaim">Reason for Claim</label>
+      <textarea id="clmReason" rows="2" data-i18n-placeholder="claims.reasonPlaceholder" placeholder="e.g. Defective alternator, failed within warranty period"></textarea>
+      <label data-i18n="suppliers.notes">Notes</label>
+      <textarea id="clmNotes" rows="2" data-i18n-placeholder="claims.notesPlaceholder" placeholder="Supplier reference number, follow-up details, etc."></textarea>
       <div class="row">
-        <button class="btn" onclick="saveClaim()">➕ Add Claim</button>
-        <button class="btn ghost" id="clmCancelBtn" onclick="cancelEditClaim()">🧹 Clear</button>
+        <button class="btn" onclick="saveClaim()" data-i18n="claims.addClaimBtn">➕ Add Claim</button>
+        <button class="btn ghost" id="clmCancelBtn" onclick="cancelEditClaim()" data-i18n="inventory.clear">🧹 Clear</button>
       </div>
     </div>
     <div class="card">
-      <h2>Claim List</h2>
+      <h2 data-i18n="claims.claimList">Claim List</h2>
       <div class="table-scroll"><table>
-        <thead><tr><th>Date</th><th>Product</th><th>Supplier</th><th>Qty</th><th>Reason</th><th>Status</th><th>Refund</th><th></th></tr></thead>
+        <thead><tr><th data-i18n="inventory.thDate">Date</th><th data-i18n="claims.product">Product</th><th data-i18n="suppliers.supplierLabel">Supplier</th><th data-i18n="claims.thQty">Qty</th><th data-i18n="claims.thReason">Reason</th><th data-i18n="claims.status">Status</th><th data-i18n="claims.thRefund">Refund</th><th></th></tr></thead>
         <tbody id="claimTable"></tbody>
       </table></div>
     </div>
@@ -668,10 +668,10 @@
 
   <!-- PURCHASES VIEW -->
   <div class="view" id="view-purchases">
-    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;">← Back to Dashboard</button>
+    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;" data-i18n="common.backToDashboard">← Back to Dashboard</button>
     <div class="card">
-      <h2 id="purFormTitle">Record a Purchase / Supplier Invoice</h2>
-      <div id="purEditNotice" class="warn-box hidden">
+      <h2 id="purFormTitle" data-i18n="purchases.recordPurchase">Record a Purchase / Supplier Invoice</h2>
+      <div id="purEditNotice" class="warn-box hidden" data-i18n="purchases.editNotice">
         ✏️ Editing an existing purchase. Saving will undo this purchase's original effect on stock, then
         re-apply it with whatever you change here. If newer purchases happened for the same product since
         this one, re-saving may reset that product's current cost price back to this invoice's numbers —
@@ -679,25 +679,25 @@
       </div>
       <input type="hidden" id="purEditId">
       <div class="grid4">
-        <div><label>Invoice Number</label><input id="purInvoiceNumber" placeholder="e.g. INV-4521"></div>
-        <div><label>Supplier</label><select id="purSupplier"><option value="">-- Select supplier --</option></select></div>
-        <div><label>Purchase Date</label><div class="date-field-wrap"><input type="text" id="purDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('purDate')" onblur="onDateDispBlur('purDate')" onfocus="openDatePicker('purDate')"><input type="hidden" id="purDate"><div class="date-picker-popup hidden" id="purDate_popup"></div></div></div>
-        <div><label>Payment Status</label>
+        <div><label data-i18n="purchases.invoiceNumber">Invoice Number</label><input id="purInvoiceNumber" data-i18n-placeholder="purchases.invoiceNumberPlaceholder" placeholder="e.g. INV-4521"></div>
+        <div><label data-i18n="suppliers.supplierLabel">Supplier</label><select id="purSupplier"><option value="" data-i18n="claims.selectSupplier">-- Select supplier --</option></select></div>
+        <div><label data-i18n="purchases.purchaseDate">Purchase Date</label><div class="date-field-wrap"><input type="text" id="purDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('purDate')" onblur="onDateDispBlur('purDate')" onfocus="openDatePicker('purDate')"><input type="hidden" id="purDate"><div class="date-picker-popup hidden" id="purDate_popup"></div></div></div>
+        <div><label data-i18n="purchases.paymentStatus">Payment Status</label>
           <select id="purStatus" onchange="updatePurchasePreview()">
-            <option value="paid">Paid in Full</option>
-            <option value="unpaid">Unpaid (fully on credit)</option>
-            <option value="partial">Partially Paid</option>
+            <option value="paid" data-i18n="purchases.paidInFull">Paid in Full</option>
+            <option value="unpaid" data-i18n="purchases.unpaidCredit">Unpaid (fully on credit)</option>
+            <option value="partial" data-i18n="purchases.partiallyPaid">Partially Paid</option>
           </select>
         </div>
       </div>
       <div id="purAmountPaidWrap" class="hidden">
-        <label>Amount Paid Now (Rs.)</label>
+        <label data-i18n="purchases.amountPaidNow">Amount Paid Now (Rs.)</label>
         <input type="number" id="purAmountPaid" min="0" value="0" oninput="updatePurchasePreview()">
       </div>
 
-      <label style="margin-top:6px;">Add Product to This Purchase</label>
+      <label style="margin-top:6px;" data-i18n="purchases.addProductToPurchase">Add Product to This Purchase</label>
       <div class="search-wrap">
-        <input id="purSearch" placeholder="Type product name, model, SKU, or company... (↑↓ to browse, Enter to select)" oninput="renderPurchaseSearchResults()" onfocus="renderPurchaseSearchResults()" onkeydown="handlePurSearchKeydown(event)">
+        <input id="purSearch" data-i18n-placeholder="purchases.purSearchPlaceholder" placeholder="Type product name, model, SKU, or company... (↑↓ to browse, Enter to select)" oninput="renderPurchaseSearchResults()" onfocus="renderPurchaseSearchResults()" onkeydown="handlePurSearchKeydown(event)">
         <div class="search-results hidden" id="purSearchResults"></div>
       </div>
 
@@ -705,75 +705,75 @@
 
       <div class="grid2" style="margin-top:4px;">
         <div>
-          <label>Overall Purchase Discount</label>
+          <label data-i18n="purchases.overallDiscount">Overall Purchase Discount</label>
           <div class="row" style="gap:6px;">
             <input id="purDiscountValue" type="number" min="0" value="0" style="flex:1;" oninput="updatePurchasePreview()">
             <select id="purDiscountType" style="width:auto;" onchange="updatePurchasePreview()">
               <option value="percent">%</option>
-              <option value="amount">Rs.</option>
+              <option value="amount" data-i18n="purchases.rs">Rs.</option>
             </select>
           </div>
-          <p style="font-size:11px;color:var(--muted);margin-top:-6px;">Applied on top of any per-item discounts below, e.g. a flat trade discount from the supplier.</p>
+          <p style="font-size:11px;color:var(--muted);margin-top:-6px;" data-i18n="purchases.overallDiscountNote">Applied on top of any per-item discounts below, e.g. a flat trade discount from the supplier.</p>
         </div>
       </div>
 
-      <label style="margin-top:6px;">🚚 Logistics / Freight Cost (Bilty) — optional</label>
-      <p style="font-size:11px;color:var(--muted);margin-top:-6px;">
+      <label style="margin-top:6px;" data-i18n="purchases.logisticsLabel">🚚 Logistics / Freight Cost (Bilty) — optional</label>
+      <p style="font-size:11px;color:var(--muted);margin-top:-6px;" data-i18n="purchases.logisticsNote">
         Transport/fuel cost for getting this stock delivered. This is recorded as its own business
-        expense — it's <strong>not</strong> added to the supplier's invoice total or what you owe them.
+        expense — it's not added to the supplier's invoice total or what you owe them.
       </p>
       <div class="grid2">
-        <div><label>Bilty Number</label><input id="purBiltyNumber" placeholder="e.g. BLT-4521"></div>
-        <div><label>Bilty Amount (Rs.)</label><input id="purBiltyAmount" type="number" min="0" value="0" oninput="updatePurchasePreview()"></div>
+        <div><label data-i18n="purchases.biltyNumber">Bilty Number</label><input id="purBiltyNumber" data-i18n-placeholder="purchases.biltyNumberPlaceholder" placeholder="e.g. BLT-4521"></div>
+        <div><label data-i18n="purchases.biltyAmount">Bilty Amount (Rs.)</label><input id="purBiltyAmount" type="number" min="0" value="0" oninput="updatePurchasePreview()"></div>
       </div>
-      <label>Bilty / Freight Receipt Image (optional)</label>
+      <label data-i18n="purchases.biltyImage">Bilty / Freight Receipt Image (optional)</label>
       <input type="file" id="purBiltyImage" accept="image/*">
-      <p style="font-size:11px;color:var(--muted);margin-top:-6px;">Keep it under 2 MB, same as the invoice attachment above.</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:-6px;" data-i18n="purchases.biltyImageNote">Keep it under 2 MB, same as the invoice attachment above.</p>
 
-      <div class="changebox" id="purPreview" style="margin-top:10px;">Add at least one item to this purchase.</div>
+      <div class="changebox" id="purPreview" style="margin-top:10px;" data-i18n="purchases.addAtLeastOneItem">Add at least one item to this purchase.</div>
 
-      <label>Notes (optional)</label>
-      <input id="purNotes" placeholder="Delivery details, discrepancies, etc.">
+      <label data-i18n="purchases.notesOptional">Notes (optional)</label>
+      <input id="purNotes" data-i18n-placeholder="purchases.notesPlaceholder" placeholder="Delivery details, discrepancies, etc.">
 
-      <label>Attach Invoice Image/PDF (optional)</label>
+      <label data-i18n="purchases.attachInvoice">Attach Invoice Image/PDF (optional)</label>
       <input type="file" id="purAttachment" accept="image/*,application/pdf">
-      <p style="font-size:11px;color:var(--muted);margin-top:-6px;">Keep it under 2 MB — everything is stored on this device, and large attachments fill up storage quickly. A phone photo of the invoice works fine; try to avoid multi-page scanned PDFs.</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:-6px;" data-i18n="purchases.attachInvoiceNote">Keep it under 2 MB — everything is stored on this device, and large attachments fill up storage quickly. A phone photo of the invoice works fine; try to avoid multi-page scanned PDFs.</p>
 
       <div class="row" style="margin-top:10px;">
-        <button class="btn" style="flex:1;" id="purSaveBtn" onclick="savePurchase()">💾 Save Purchase</button>
-        <button class="btn ghost hidden" id="purCancelEditBtn" onclick="cancelEditPurchase()">✖ Cancel Edit</button>
+        <button class="btn" style="flex:1;" id="purSaveBtn" onclick="savePurchase()" data-i18n="purchases.savePurchase">💾 Save Purchase</button>
+        <button class="btn ghost hidden" id="purCancelEditBtn" onclick="cancelEditPurchase()" data-i18n="purchases.cancelEdit">✖ Cancel Edit</button>
       </div>
     </div>
 
     <div class="card">
-      <h2>📥 Bulk Import Items from Excel / CSV</h2>
-      <p style="font-size:12px;color:var(--muted);margin-top:-6px;">
+      <h2 data-i18n="purchases.bulkImportTitle">📥 Bulk Import Items from Excel / CSV</h2>
+      <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="purchases.bulkImportBody">
         Add many items to this purchase at once instead of searching for each one — shaped to match
         a real supplier "Credit Sale" invoice (Particulars, Qty, Rate, Discount%), so you can
         transcribe a paper/PDF invoice straight into the template. Download it, fill it in
-        (Excel, Google Sheets, or Numbers), then upload — <strong>.xlsx</strong> and <strong>.csv</strong>
+        (Excel, Google Sheets, or Numbers), then upload — .xlsx and .csv
         both work directly, no need to convert.
-        Rows are matched to your catalog by <strong>SKU</strong> if given, otherwise by an exact
-        <strong>Particulars</strong> name match. A row that matches nothing existing creates a new
+        Rows are matched to your catalog by SKU if given, otherwise by an exact
+        Particulars name match. A row that matches nothing existing creates a new
         product automatically (with an auto-generated SKU and default pricing) rather than being
         skipped — since that's usually how a genuinely new part first enters the catalog.
-        An optional <strong>Gift</strong> column takes a "buy+free" scheme like <strong>9+1</strong>
-        or <strong>14+1</strong> — free bonus units get added to stock automatically when the
+        An optional Gift column takes a "buy+free" scheme like 9+1
+        or 14+1 — free bonus units get added to stock automatically when the
         purchase is saved.
       </p>
       <div class="row">
-        <button class="btn ghost small" onclick="downloadPurchaseSampleCsv()">⬇️ Download Sample Template (.csv)</button>
+        <button class="btn ghost small" onclick="downloadPurchaseSampleCsv()" data-i18n="inventory.downloadTemplate">⬇️ Download Sample Template (.csv)</button>
       </div>
-      <label style="margin-top:10px;">Upload Excel (.xlsx) or CSV to Import</label>
+      <label style="margin-top:10px;" data-i18n="inventory.uploadToImport">Upload Excel (.xlsx) or CSV to Import</label>
       <input type="file" id="purchaseImportFileInput" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="importPurchaseItemsFile(event)">
       <div id="purchaseImportSummary"></div>
     </div>
 
     <div class="card">
-      <h2>Purchase History</h2>
-      <input id="searchPurchase" placeholder="🔍 Search by invoice number or supplier..." oninput="renderPurchaseList()">
+      <h2 data-i18n="purchases.purchaseHistory">Purchase History</h2>
+      <input id="searchPurchase" data-i18n-placeholder="purchases.searchPurchase" placeholder="🔍 Search by invoice number or supplier..." oninput="renderPurchaseList()">
       <div class="table-scroll"><table>
-        <thead><tr><th>Date</th><th>Invoice #</th><th>Supplier</th><th>Items</th><th>Discount</th><th>Total</th><th>Paid</th><th>Owed</th><th>Logistics</th><th>Attachment</th><th></th></tr></thead>
+        <thead><tr><th data-i18n="inventory.thDate">Date</th><th data-i18n="purchases.thInvoiceNo">Invoice #</th><th data-i18n="suppliers.supplierLabel">Supplier</th><th data-i18n="purchases.thItems">Items</th><th data-i18n="purchases.thDiscount">Discount</th><th data-i18n="purchases.thTotal">Total</th><th data-i18n="purchases.thPaid">Paid</th><th data-i18n="purchases.thOwed">Owed</th><th data-i18n="purchases.thLogistics">Logistics</th><th data-i18n="purchases.thAttachment">Attachment</th><th></th></tr></thead>
         <tbody id="purchaseTable"></tbody>
       </table></div>
     </div>
@@ -781,42 +781,42 @@
 
   <!-- DEMAND VIEW (purchase requisition drafts, sent to suppliers via WhatsApp) -->
   <div class="view" id="view-demand">
-    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;">← Back to Dashboard</button>
+    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;" data-i18n="common.backToDashboard">← Back to Dashboard</button>
     <div class="card">
-      <h2 id="demFormTitle">📨 New Purchase Demand</h2>
-      <p style="font-size:12px;color:var(--muted);margin-top:-6px;">
+      <h2 id="demFormTitle" data-i18n="demand.newDemand">📨 New Purchase Demand</h2>
+      <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="demand.newDemandBody">
         Build a list of what you need from a supplier, save it as a draft, and send it whenever you're
         ready — no stock or cost changes happen here, that only happens once the actual Purchase is recorded.
       </p>
       <input type="hidden" id="demEditId">
       <div class="grid2">
-        <div><label>Supplier</label><select id="demSupplier" onchange="checkExistingDraftForSupplier()"></select></div>
-        <div><label>Date</label><div class="date-field-wrap"><input type="text" id="demDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('demDate')" onblur="onDateDispBlur('demDate')" onfocus="openDatePicker('demDate')"><input type="hidden" id="demDate"><div class="date-picker-popup hidden" id="demDate_popup"></div></div></div>
+        <div><label data-i18n="suppliers.supplierLabel">Supplier</label><select id="demSupplier" onchange="checkExistingDraftForSupplier()"></select></div>
+        <div><label data-i18n="claims.date">Date</label><div class="date-field-wrap"><input type="text" id="demDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('demDate')" onblur="onDateDispBlur('demDate')" onfocus="openDatePicker('demDate')"><input type="hidden" id="demDate"><div class="date-picker-popup hidden" id="demDate_popup"></div></div></div>
       </div>
       <div id="demExistingDraftNote" class="hidden" style="font-size:12px;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-top:-6px;margin-bottom:10px;"></div>
 
-      <label style="margin-top:6px;">Add Product to This Demand</label>
+      <label style="margin-top:6px;" data-i18n="demand.addProductToDemand">Add Product to This Demand</label>
       <div class="search-wrap">
-        <input id="demSearch" placeholder="Type product name, model, or SKU..." oninput="renderDemandSearchResults()" onfocus="renderDemandSearchResults()">
+        <input id="demSearch" data-i18n-placeholder="demand.demSearchPlaceholder" placeholder="Type product name, model, or SKU..." oninput="renderDemandSearchResults()" onfocus="renderDemandSearchResults()">
         <div class="search-results hidden" id="demSearchResults"></div>
       </div>
 
       <div id="demItems"></div>
 
-      <label>Notes (optional)</label>
-      <input id="demNotes" placeholder="e.g. Delivery by Friday, prefer OEM parts">
+      <label data-i18n="purchases.notesOptional">Notes (optional)</label>
+      <input id="demNotes" data-i18n-placeholder="demand.demNotesPlaceholder" placeholder="e.g. Delivery by Friday, prefer OEM parts">
 
       <div class="row" style="margin-top:10px;">
-        <button class="btn" id="demSaveBtn" style="flex:1;" onclick="saveDemandDraft()">💾 Save as Draft</button>
-        <button class="btn ghost hidden" id="demCancelBtn" onclick="cancelEditDemand()">Cancel Edit</button>
+        <button class="btn" id="demSaveBtn" style="flex:1;" onclick="saveDemandDraft()" data-i18n="demand.saveAsDraft">💾 Save as Draft</button>
+        <button class="btn ghost hidden" id="demCancelBtn" onclick="cancelEditDemand()" data-i18n="demand.cancelEdit">Cancel Edit</button>
       </div>
     </div>
 
     <div class="card">
-      <h2>Demand List</h2>
-      <input id="searchDemand" placeholder="🔍 Search by supplier..." oninput="renderDemandList()">
+      <h2 data-i18n="demand.demandList">Demand List</h2>
+      <input id="searchDemand" data-i18n-placeholder="demand.searchBySupplier" placeholder="🔍 Search by supplier..." oninput="renderDemandList()">
       <div class="table-scroll"><table>
-        <thead><tr><th>Date</th><th>Supplier</th><th>Items</th><th>Status</th><th></th></tr></thead>
+        <thead><tr><th data-i18n="inventory.thDate">Date</th><th data-i18n="suppliers.supplierLabel">Supplier</th><th data-i18n="purchases.thItems">Items</th><th data-i18n="claims.status">Status</th><th></th></tr></thead>
         <tbody id="demandTable"></tbody>
       </table></div>
     </div>
@@ -824,73 +824,73 @@
 
   <!-- REPORTS VIEW -->
   <div class="view" id="view-reports">
-    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;">← Back to Dashboard</button>
+    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;" data-i18n="common.backToDashboard">← Back to Dashboard</button>
     <div class="kpi">
-      <div class="box"><div class="num" id="kpiTodaySales">Rs. 0</div><div class="lbl">Today's Sales</div></div>
-      <div class="box"><div class="num" id="kpiMonthSales">Rs. 0</div><div class="lbl">This Month's Sales</div></div>
-      <div class="box"><div class="num" id="kpiProfit">Rs. 0</div><div class="lbl">This Month's Net Profit</div></div>
-      <div class="box"><div class="num" id="kpiLowStock">0</div><div class="lbl">Low Stock Items</div></div>
+      <div class="box"><div class="num" id="kpiTodaySales">Rs. 0</div><div class="lbl" data-i18n="reports.todaySales">Today's Sales</div></div>
+      <div class="box"><div class="num" id="kpiMonthSales">Rs. 0</div><div class="lbl" data-i18n="reports.monthSales">This Month's Sales</div></div>
+      <div class="box"><div class="num" id="kpiProfit">Rs. 0</div><div class="lbl" data-i18n="reports.monthProfit">This Month's Net Profit</div></div>
+      <div class="box"><div class="num" id="kpiLowStock">0</div><div class="lbl" data-i18n="reports.lowStockItems">Low Stock Items</div></div>
     </div>
 
     <div class="card">
-      <h2>📊 Custom Date-Range Report</h2>
-      <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Pick any date range and a report type — useful for a specific week, a tax period, or checking one customer's or supplier's activity.</p>
+      <h2 data-i18n="reports.customReportTitle">📊 Custom Date-Range Report</h2>
+      <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="reports.customReportBody">Pick any date range and a report type — useful for a specific week, a tax period, or checking one customer's or supplier's activity.</p>
       <div class="grid2">
-        <div><label>From Date</label><div class="date-field-wrap"><input type="text" id="crFrom_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('crFrom')" onblur="onDateDispBlur('crFrom')" onfocus="openDatePicker('crFrom')"><input type="hidden" id="crFrom"><div class="date-picker-popup hidden" id="crFrom_popup"></div></div></div>
-        <div><label>To Date</label><div class="date-field-wrap"><input type="text" id="crTo_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('crTo')" onblur="onDateDispBlur('crTo')" onfocus="openDatePicker('crTo')"><input type="hidden" id="crTo"><div class="date-picker-popup hidden" id="crTo_popup"></div></div></div>
+        <div><label data-i18n="reports.fromDate">From Date</label><div class="date-field-wrap"><input type="text" id="crFrom_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('crFrom')" onblur="onDateDispBlur('crFrom')" onfocus="openDatePicker('crFrom')"><input type="hidden" id="crFrom"><div class="date-picker-popup hidden" id="crFrom_popup"></div></div></div>
+        <div><label data-i18n="reports.toDate">To Date</label><div class="date-field-wrap"><input type="text" id="crTo_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('crTo')" onblur="onDateDispBlur('crTo')" onfocus="openDatePicker('crTo')"><input type="hidden" id="crTo"><div class="date-picker-popup hidden" id="crTo_popup"></div></div></div>
       </div>
-      <label>Report Type</label>
+      <label data-i18n="reports.reportType">Report Type</label>
       <select id="crType">
-        <option value="overall">Overall Sales Summary</option>
-        <option value="customer">Sales by Customer</option>
-        <option value="supplier">Purchases by Supplier</option>
+        <option value="overall" data-i18n="reports.overallSummary">Overall Sales Summary</option>
+        <option value="customer" data-i18n="reports.salesByCustomer">Sales by Customer</option>
+        <option value="supplier" data-i18n="reports.purchasesBySupplier">Purchases by Supplier</option>
       </select>
       <div class="row">
-        <button class="btn" onclick="generateCustomReport()">📈 Generate Report</button>
-        <button class="btn ghost" onclick="exportCustomReportCsv()">⬇️ Export This Report (.csv)</button>
+        <button class="btn" onclick="generateCustomReport()" data-i18n="reports.generateReport">📈 Generate Report</button>
+        <button class="btn ghost" onclick="exportCustomReportCsv()" data-i18n="reports.exportReport">⬇️ Export This Report (.csv)</button>
       </div>
       <div id="customReportOutput" style="margin-top:14px;"></div>
     </div>
 
     <div class="card">
-      <h2>💰 End-of-Day Cash Reconciliation</h2>
-      <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Do this at closing time each day to make sure the cash in your drawer matches what the app recorded.</p>
+      <h2 data-i18n="reports.eodReconciliation">💰 End-of-Day Cash Reconciliation</h2>
+      <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="reports.eodBody">Do this at closing time each day to make sure the cash in your drawer matches what the app recorded.</p>
       <div class="grid2">
-        <div><label>Opening Cash (float you started the day with)</label><input type="number" id="rcOpening" oninput="renderReconciliation()"></div>
-        <div><label>Cash Expenses Today (e.g. fuel, tea, small purchases)</label><input type="number" id="rcExpenses" oninput="renderReconciliation()"></div>
+        <div><label data-i18n="reports.openingCash">Opening Cash (float you started the day with)</label><input type="number" id="rcOpening" oninput="renderReconciliation()"></div>
+        <div><label data-i18n="reports.cashExpensesToday">Cash Expenses Today (e.g. fuel, tea, small purchases)</label><input type="number" id="rcExpenses" oninput="renderReconciliation()"></div>
       </div>
-      <label>Expense Made By (Employee) <span style="font-weight:400;color:var(--muted);">— e.g. the mechanic who spent the cash above</span></label>
-      <select id="rcExpenseEmployee"><option value="">-- Not specified --</option></select>
-      <label>Closed / Counted By (Employee)</label>
-      <select id="rcEmployee"><option value="">-- Not specified --</option></select>
+      <label><span data-i18n="reports.expenseMadeBy">Expense Made By (Employee)</span> <span style="font-weight:400;color:var(--muted);" data-i18n="reports.expenseMadeByNote">— e.g. the mechanic who spent the cash above</span></label>
+      <select id="rcExpenseEmployee"><option value="" data-i18n="pos.notSpecified">-- Not specified --</option></select>
+      <label data-i18n="reports.closedCountedBy">Closed / Counted By (Employee)</label>
+      <select id="rcEmployee"><option value="" data-i18n="pos.notSpecified">-- Not specified --</option></select>
       <div class="kpi" style="margin-top:6px;">
-        <div class="box"><div class="num" id="rcCashSales">Rs. 0</div><div class="lbl">Cash Sales Today (auto)</div></div>
-        <div class="box"><div class="num" id="rcExpected">Rs. 0</div><div class="lbl">Expected Cash in Drawer</div></div>
+        <div class="box"><div class="num" id="rcCashSales">Rs. 0</div><div class="lbl" data-i18n="reports.cashSalesAuto">Cash Sales Today (auto)</div></div>
+        <div class="box"><div class="num" id="rcExpected">Rs. 0</div><div class="lbl" data-i18n="reports.expectedCash">Expected Cash in Drawer</div></div>
       </div>
-      <label>Actual Cash Counted in Drawer</label>
+      <label data-i18n="reports.actualCashCounted">Actual Cash Counted in Drawer</label>
       <input type="number" id="rcActual" oninput="renderReconciliation()">
-      <div id="rcDiff" style="font-size:14px;margin-bottom:10px;">Enter the actual count above to see the difference.</div>
-      <button class="btn" onclick="saveReconciliation()">💾 Save Today's Reconciliation</button>
+      <div id="rcDiff" style="font-size:14px;margin-bottom:10px;" data-i18n="reports.enterActualCount">Enter the actual count above to see the difference.</div>
+      <button class="btn" onclick="saveReconciliation()" data-i18n="reports.saveReconciliation">💾 Save Today's Reconciliation</button>
 
-      <h2 style="margin-top:24px;font-size:14px;">📜 Recent Reconciliation History</h2>
+      <h2 style="margin-top:24px;font-size:14px;" data-i18n="reports.reconciliationHistory">📜 Recent Reconciliation History</h2>
       <div class="table-scroll"><table>
-        <thead><tr><th>Date</th><th>Closed By</th><th>Expense By</th><th>Expected</th><th>Actual</th><th>Difference</th></tr></thead>
+        <thead><tr><th data-i18n="inventory.thDate">Date</th><th data-i18n="reports.thClosedBy">Closed By</th><th data-i18n="reports.thExpenseBy">Expense By</th><th data-i18n="reports.thExpected">Expected</th><th data-i18n="reports.thActual">Actual</th><th data-i18n="reports.thDifference">Difference</th></tr></thead>
         <tbody id="reconciliationHistoryTable"></tbody>
       </table></div>
     </div>
 
     <div class="card">
-      <h2>🧾 Expenses</h2>
-      <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Rent, electricity, salaries, transport, etc. These are subtracted from profit.</p>
+      <h2 data-i18n="reports.expenses">🧾 Expenses</h2>
+      <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="reports.expensesBody">Rent, electricity, salaries, transport, etc. These are subtracted from profit.</p>
       <div class="grid2">
-        <div><label>Date</label><div class="date-field-wrap"><input type="text" id="exDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('exDate')" onblur="onDateDispBlur('exDate')" onfocus="openDatePicker('exDate')"><input type="hidden" id="exDate"><div class="date-picker-popup hidden" id="exDate_popup"></div></div></div>
-        <div><label>Category</label><input id="exCategory" placeholder="e.g. Rent, Utilities, Salary"></div>
-        <div><label>Amount (Rs.)</label><input type="number" id="exAmount"></div>
-        <div><label>Note (optional)</label><input id="exNote" placeholder="Details"></div>
+        <div><label data-i18n="claims.date">Date</label><div class="date-field-wrap"><input type="text" id="exDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('exDate')" onblur="onDateDispBlur('exDate')" onfocus="openDatePicker('exDate')"><input type="hidden" id="exDate"><div class="date-picker-popup hidden" id="exDate_popup"></div></div></div>
+        <div><label data-i18n="inventory.category">Category</label><input id="exCategory" data-i18n-placeholder="reports.categoryPlaceholder" placeholder="e.g. Rent, Utilities, Salary"></div>
+        <div><label data-i18n="reports.amountRs">Amount (Rs.)</label><input type="number" id="exAmount"></div>
+        <div><label data-i18n="reports.noteOptional">Note (optional)</label><input id="exNote" data-i18n-placeholder="reports.detailsPlaceholder" placeholder="Details"></div>
       </div>
-      <button class="btn" onclick="addExpense()">➕ Add Expense</button>
+      <button class="btn" onclick="addExpense()" data-i18n="reports.addExpense">➕ Add Expense</button>
       <div class="table-scroll"><table style="margin-top:10px;">
-        <thead><tr><th>Date</th><th>Category</th><th>Amount</th><th>Note</th><th></th></tr></thead>
+        <thead><tr><th data-i18n="inventory.thDate">Date</th><th data-i18n="inventory.category">Category</th><th data-i18n="reports.thAmount">Amount</th><th data-i18n="reports.thNote">Note</th><th></th></tr></thead>
         <tbody id="expenseTable"></tbody>
       </table></div>
     </div>
@@ -898,21 +898,21 @@
 
   <!-- SALES VIEW (moved out of Reports into its own tab) -->
   <div class="view" id="view-sales">
-    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;">← Back to Dashboard</button>
+    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;" data-i18n="common.backToDashboard">← Back to Dashboard</button>
     <div class="card">
-      <h2>Sales History</h2>
-      <input id="searchSales" placeholder="🔍 Search by customer or item..." oninput="renderSalesView()">
+      <h2 data-i18n="sales.salesHistory">Sales History</h2>
+      <input id="searchSales" data-i18n-placeholder="sales.searchByCustomerItem" placeholder="🔍 Search by customer or item..." oninput="renderSalesView()">
       <div class="table-scroll"><table>
-        <thead><tr><th>Date</th><th>Customer</th><th>Sold By</th><th>Items</th><th>Total</th><th>Payment</th><th></th></tr></thead>
+        <thead><tr><th data-i18n="inventory.thDate">Date</th><th data-i18n="customers.customer">Customer</th><th data-i18n="sales.thSoldBy">Sold By</th><th data-i18n="purchases.thItems">Items</th><th data-i18n="purchases.thTotal">Total</th><th data-i18n="sales.thPayment">Payment</th><th></th></tr></thead>
         <tbody id="salesTable"></tbody>
       </table></div>
     </div>
 
     <div class="card">
-      <h2>↩️ Sales Returns</h2>
-      <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Use the "Return" button on a sale above to process one. Returns automatically restock inventory and adjust reported sales/profit.</p>
+      <h2 data-i18n="sales.salesReturns">↩️ Sales Returns</h2>
+      <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="sales.salesReturnsBody">Use the "Return" button on a sale above to process one. Returns automatically restock inventory and adjust reported sales/profit.</p>
       <div class="table-scroll"><table>
-        <thead><tr><th>Date</th><th>Customer</th><th>Items Returned</th><th>Refund</th><th>Method</th><th>Reason</th></tr></thead>
+        <thead><tr><th data-i18n="inventory.thDate">Date</th><th data-i18n="customers.customer">Customer</th><th data-i18n="sales.thItemsReturned">Items Returned</th><th data-i18n="sales.thRefund">Refund</th><th data-i18n="sales.thMethod">Method</th><th data-i18n="claims.thReason">Reason</th></tr></thead>
         <tbody id="returnsTable"></tbody>
       </table></div>
     </div>
@@ -920,36 +920,36 @@
 
   <!-- CUSTOMERS VIEW -->
   <div class="view" id="view-customers">
-    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;">← Back to Dashboard</button>
+    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;" data-i18n="common.backToDashboard">← Back to Dashboard</button>
     <div class="card">
-      <h2 id="custFormTitle">Add Customer</h2>
+      <h2 id="custFormTitle" data-i18n="customers.addCustomer">Add Customer</h2>
       <input type="hidden" id="cEditId">
       <div class="grid2">
-        <div><label>Name</label><input id="cName" placeholder="Customer name"></div>
-        <div><label>Phone</label><input id="cPhone" type="tel" inputmode="tel" placeholder="Phone number" oninput="this.value=this.value.replace(/[^0-9+\-\s()]/g,'')"></div>
-        <div><label>WhatsApp Number (optional)</label><input id="cWhatsapp" placeholder="Leave blank to use Phone"></div>
-        <div><label>Bike Model (optional)</label><input id="cBike" placeholder="e.g. Honda CG125"></div>
+        <div><label data-i18n="customers.name">Name</label><input id="cName" data-i18n-placeholder="customers.namePlaceholder" placeholder="Customer name"></div>
+        <div><label data-i18n="suppliers.phone">Phone</label><input id="cPhone" type="tel" inputmode="tel" data-i18n-placeholder="suppliers.phonePlaceholder" placeholder="Phone number" oninput="this.value=this.value.replace(/[^0-9+\-\s()]/g,'')"></div>
+        <div><label data-i18n="customers.whatsappOptional">WhatsApp Number (optional)</label><input id="cWhatsapp" data-i18n-placeholder="customers.whatsappPlaceholder" placeholder="Leave blank to use Phone"></div>
+        <div><label data-i18n="customers.bikeModelOptional">Bike Model (optional)</label><input id="cBike" data-i18n-placeholder="customers.bikeModelPlaceholder" placeholder="e.g. Honda CG125"></div>
         <div>
-          <label>Customer Type</label>
+          <label data-i18n="customers.customerType">Customer Type</label>
           <select id="cType">
-            <option value="retail">Retail</option>
-            <option value="wholesale">Wholesale</option>
+            <option value="retail" data-i18n="customers.retail">Retail</option>
+            <option value="wholesale" data-i18n="customers.wholesale">Wholesale</option>
           </select>
         </div>
-        <div><label>Address (optional)</label><input id="cAddress" placeholder="Address"></div>
+        <div><label data-i18n="customers.addressOptional">Address (optional)</label><input id="cAddress" data-i18n-placeholder="customers.addressPlaceholder" placeholder="Address"></div>
       </div>
-      <label>Notes</label>
-      <textarea id="cNotes" rows="2" placeholder="Anything worth remembering about this customer"></textarea>
+      <label data-i18n="suppliers.notes">Notes</label>
+      <textarea id="cNotes" rows="2" data-i18n-placeholder="customers.notesPlaceholder" placeholder="Anything worth remembering about this customer"></textarea>
       <div class="row">
-        <button class="btn" onclick="saveCustomer()">➕ Add Customer</button>
-        <button class="btn ghost" id="cCancelBtn" onclick="cancelEditCustomer()">🧹 Clear</button>
+        <button class="btn" onclick="saveCustomer()" data-i18n="customers.addCustomerBtn">➕ Add Customer</button>
+        <button class="btn ghost" id="cCancelBtn" onclick="cancelEditCustomer()" data-i18n="inventory.clear">🧹 Clear</button>
       </div>
     </div>
     <div class="card">
-      <h2>Customer List</h2>
-      <input id="searchCustomer" placeholder="🔍 Search by name or phone..." oninput="renderCustomers()">
+      <h2 data-i18n="customers.customerList">Customer List</h2>
+      <input id="searchCustomer" data-i18n-placeholder="customers.searchByNamePhone" placeholder="🔍 Search by name or phone..." oninput="renderCustomers()">
       <div class="table-scroll"><table>
-        <thead><tr><th>Name</th><th>Phone</th><th>Type</th><th>Bike</th><th>Purchases</th><th>Total Spent</th><th>Credit Owed</th><th></th></tr></thead>
+        <thead><tr><th data-i18n="customers.name">Name</th><th data-i18n="suppliers.thPhone">Phone</th><th data-i18n="inventory.thType">Type</th><th data-i18n="customers.thBike">Bike</th><th data-i18n="customers.thPurchases">Purchases</th><th data-i18n="customers.thTotalSpent">Total Spent</th><th data-i18n="customers.thCreditOwed">Credit Owed</th><th></th></tr></thead>
         <tbody id="customerTable"></tbody>
       </table></div>
     </div>
@@ -957,48 +957,48 @@
 
   <!-- EMPLOYEES VIEW -->
   <div class="view" id="view-employees">
-    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;">← Back to Dashboard</button>
+    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;" data-i18n="common.backToDashboard">← Back to Dashboard</button>
     <div class="card">
-      <h2 id="empFormTitle">Add Employee</h2>
-      <div id="setupModeBanner" class="warn-box hidden">⚙️ <strong>Setup Mode</strong> — no employees exist yet, so you're temporarily in as Admin. Add your first employee (yourself) as <strong>Admin</strong> with a PIN below, then click Logout in the header and log back in with that PIN.</div>
+      <h2 id="empFormTitle" data-i18n="employees.addEmployee">Add Employee</h2>
+      <div id="setupModeBanner" class="warn-box hidden" data-i18n="employees.setupModeBanner">⚙️ Setup Mode — no employees exist yet, so you're temporarily in as Admin. Add your first employee (yourself) as Admin with a PIN below, then click Logout in the header and log back in with that PIN.</div>
       <input type="hidden" id="empEditId">
       <div class="grid2">
-        <div><label>Full Name</label><input id="empName" placeholder="e.g. Farrukh Ahmed"></div>
-        <div><label>Phone</label><input id="empPhone" type="tel" inputmode="tel" placeholder="Phone number" oninput="this.value=this.value.replace(/[^0-9+\-\s()]/g,'')"></div>
-        <div><label>Position</label>
+        <div><label data-i18n="employees.fullName">Full Name</label><input id="empName" data-i18n-placeholder="employees.fullNamePlaceholder" placeholder="e.g. Farrukh Ahmed"></div>
+        <div><label data-i18n="suppliers.phone">Phone</label><input id="empPhone" type="tel" inputmode="tel" data-i18n-placeholder="suppliers.phonePlaceholder" placeholder="Phone number" oninput="this.value=this.value.replace(/[^0-9+\-\s()]/g,'')"></div>
+        <div><label data-i18n="employees.position">Position</label>
           <select id="empPosition">
-            <option>Cashier</option><option>Mechanic</option><option>Manager</option><option>Helper</option><option>Other</option>
+            <option data-i18n="employees.posCashier">Cashier</option><option data-i18n="employees.posMechanic">Mechanic</option><option data-i18n="employees.posManager">Manager</option><option data-i18n="employees.posHelper">Helper</option><option data-i18n="inventory.catOther">Other</option>
           </select>
         </div>
-        <div><label>Status</label>
+        <div><label data-i18n="claims.status">Status</label>
           <select id="empStatus">
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
+            <option value="active" data-i18n="employees.active">Active</option>
+            <option value="inactive" data-i18n="employees.inactive">Inactive</option>
           </select>
         </div>
-        <div><label>Access Role</label>
+        <div><label data-i18n="employees.accessRole">Access Role</label>
           <select id="empRole">
-            <option value="mechanic">Mechanic — view only</option>
-            <option value="cashier">Other — view + POS (make sales)</option>
-            <option value="manager">Manager — view + add/edit, no delete</option>
-            <option value="admin">Admin — full access incl. delete</option>
+            <option value="mechanic" data-i18n="employees.roleMechanic">Mechanic — view only</option>
+            <option value="cashier" data-i18n="employees.roleCashier">Other — view + POS (make sales)</option>
+            <option value="manager" data-i18n="employees.roleManager">Manager — view + add/edit, no delete</option>
+            <option value="admin" data-i18n="employees.roleAdmin">Admin — full access incl. delete</option>
           </select>
         </div>
-        <div><label>Login PIN (4+ digits)</label><input id="empPin" type="password" inputmode="numeric" placeholder="Used to log in on this device"></div>
+        <div><label data-i18n="employees.loginPin">Login PIN (4+ digits)</label><input id="empPin" type="password" inputmode="numeric" data-i18n-placeholder="employees.loginPinPlaceholder" placeholder="Used to log in on this device"></div>
       </div>
-      <label>Notes</label>
-      <textarea id="empNotes" rows="2" placeholder="Anything worth remembering about this employee"></textarea>
+      <label data-i18n="suppliers.notes">Notes</label>
+      <textarea id="empNotes" rows="2" data-i18n-placeholder="employees.notesPlaceholder" placeholder="Anything worth remembering about this employee"></textarea>
       <div class="row">
-        <button class="btn" onclick="saveEmployee()" id="empSaveBtn">➕ Add Employee</button>
-        <button class="btn ghost hidden" id="empCancelBtn" onclick="cancelEditEmployee()">Cancel Edit</button>
+        <button class="btn" onclick="saveEmployee()" id="empSaveBtn" data-i18n="employees.addEmployeeBtn">➕ Add Employee</button>
+        <button class="btn ghost hidden" id="empCancelBtn" onclick="cancelEditEmployee()" data-i18n="demand.cancelEdit">Cancel Edit</button>
       </div>
     </div>
     <div class="card">
-      <h2>Employee List</h2>
-      <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Only <strong>Active</strong> employees appear in the POS "Served By" dropdown and the Login screen. Set someone to Inactive instead of deleting them to keep their sales history intact.</p>
-      <p style="font-size:11px;color:var(--muted);margin-top:-6px;">⚠️ PINs are a practical deterrent and an accountability log (who did what), not bank-grade security — this app has no server, so anyone with deep technical knowledge and access to this device could bypass it. Don't rely on it alone for sensitive access control.</p>
+      <h2 data-i18n="employees.employeeList">Employee List</h2>
+      <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="employees.activeNote">Only Active employees appear in the POS "Served By" dropdown and the Login screen. Set someone to Inactive instead of deleting them to keep their sales history intact.</p>
+      <p style="font-size:11px;color:var(--muted);margin-top:-6px;" data-i18n="employees.pinSecurityNote">⚠️ PINs are a practical deterrent and an accountability log (who did what), not bank-grade security — this app has no server, so anyone with deep technical knowledge and access to this device could bypass it. Don't rely on it alone for sensitive access control.</p>
       <div class="table-scroll"><table>
-        <thead><tr><th>Name</th><th>Phone</th><th>Position</th><th>Access Role</th><th>Status</th><th>Sales (This Month)</th><th></th></tr></thead>
+        <thead><tr><th data-i18n="customers.name">Name</th><th data-i18n="suppliers.thPhone">Phone</th><th data-i18n="employees.position">Position</th><th data-i18n="employees.accessRole">Access Role</th><th data-i18n="claims.status">Status</th><th data-i18n="employees.thSalesMonth">Sales (This Month)</th><th></th></tr></thead>
         <tbody id="employeeTable"></tbody>
       </table></div>
     </div>
@@ -1006,50 +1006,50 @@
 
   <!-- BACKUP VIEW -->
   <div class="view" id="view-backup">
-    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;">← Back to Dashboard</button>
+    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;" data-i18n="common.backToDashboard">← Back to Dashboard</button>
     <div class="card">
-      <h2>📲 WhatsApp Settings</h2>
-      <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Used when sending a digital receipt — customer numbers saved without a country code (e.g. starting with 0) are completed using this.</p>
-      <label>Default Country Code (no + sign)</label>
-      <input id="settingsCountryCode" placeholder="e.g. 92 for Pakistan, 91 for India" oninput="saveShopSettings()">
+      <h2 data-i18n="backup.whatsappSettings">📲 WhatsApp Settings</h2>
+      <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="backup.whatsappSettingsBody">Used when sending a digital receipt — customer numbers saved without a country code (e.g. starting with 0) are completed using this.</p>
+      <label data-i18n="backup.defaultCountryCode">Default Country Code (no + sign)</label>
+      <input id="settingsCountryCode" data-i18n-placeholder="backup.countryCodePlaceholder" placeholder="e.g. 92 for Pakistan, 91 for India" oninput="saveShopSettings()">
     </div>
 
     <div class="card" id="syncCard">
-      <h2>🔗 Multi-Device Sync</h2>
-      <p style="font-size:13px;color:var(--muted);margin-top:-6px;">Share live data (sales, inventory, customers, etc.) between this device and others — desktop, browser, or phone. Off by default; every device must be connected with the same sync code before its data is shared.</p>
+      <h2 data-i18n="backup.multiDeviceSync">🔗 Multi-Device Sync</h2>
+      <p style="font-size:13px;color:var(--muted);margin-top:-6px;" data-i18n="backup.syncBody">Share live data (sales, inventory, customers, etc.) between this device and others — desktop, browser, or phone. Off by default; every device must be connected with the same sync code before its data is shared.</p>
       <div id="syncNotConnectedBox">
-        <p style="font-size:12px;color:var(--muted);">This device is <b>not connected</b>. Generate a code on your main device, then enter that same code on every other device.</p>
+        <p style="font-size:12px;color:var(--muted);" data-i18n="backup.notConnected">This device is not connected. Generate a code on your main device, then enter that same code on every other device.</p>
         <div class="row">
-          <button class="btn accent" onclick="generateSyncKey()">✨ Generate New Sync Code (first device)</button>
+          <button class="btn accent" onclick="generateSyncKey()" data-i18n="backup.generateSyncCode">✨ Generate New Sync Code (first device)</button>
         </div>
         <div class="row" style="margin-top:10px;align-items:flex-end;">
           <div style="flex:1;">
-            <label>Sync Code from another device</label>
-            <input id="syncKeyInput" placeholder="Paste the code shown on your other device">
+            <label data-i18n="backup.syncCodeFromOther">Sync Code from another device</label>
+            <input id="syncKeyInput" data-i18n-placeholder="backup.pasteCode" placeholder="Paste the code shown on your other device">
           </div>
-          <button class="btn" onclick="connectSyncKey()">🔗 Connect</button>
+          <button class="btn" onclick="connectSyncKey()" data-i18n="backup.connect">🔗 Connect</button>
         </div>
       </div>
       <div id="syncConnectedBox" class="hidden">
-        <p style="font-size:12px;color:var(--muted);">This device is <b>connected</b>. Enter this exact code on every other device you want sharing the same data.</p>
+        <p style="font-size:12px;color:var(--muted);" data-i18n="backup.connected">This device is connected. Enter this exact code on every other device you want sharing the same data.</p>
         <div class="row" style="align-items:center;">
           <input id="syncKeyDisplay" readonly style="font-family:monospace;">
-          <button class="btn ghost small" onclick="copySyncKey()">📋 Copy</button>
-          <button class="btn danger small" onclick="disconnectSync()">Disconnect This Device</button>
+          <button class="btn ghost small" onclick="copySyncKey()" data-i18n="backup.copy">📋 Copy</button>
+          <button class="btn danger small" onclick="disconnectSync()" data-i18n="backup.disconnectDevice">Disconnect This Device</button>
         </div>
-        <p style="font-size:11px;color:var(--muted);margin-top:6px;">⚠️ Anyone with this code can read and write this shop's data — share it only with your own devices, the same way you'd protect a password.</p>
+        <p style="font-size:11px;color:var(--muted);margin-top:6px;" data-i18n="backup.shareCodeWarning">⚠️ Anyone with this code can read and write this shop's data — share it only with your own devices, the same way you'd protect a password.</p>
       </div>
     </div>
 
     <div class="card" id="backupCard">
-      <h2>🗂️ Backup &amp; Restore</h2>
+      <h2 data-i18n="backup.backupRestore">🗂️ Backup &amp; Restore</h2>
       <p style="font-size:13px;color:var(--muted);">Even with Multi-Device Sync connected, keep exporting backups regularly (e.g. daily) and keep the file somewhere safe (email it to yourself, save to USB/Google Drive/etc). Sync protects you from devices disagreeing with each other — it doesn't protect you from a mistaken erase or a lost internet connection. If sync isn't set up on this device, this is your only protection: unbacked-up data cannot be recovered if this device is lost, damaged, or its browser data is cleared.</p>
       <p id="backupRestrictedNote" class="warn-box hidden">🔒 Backup, restore, and erase are restricted to Admin accounts — a backup file contains everything, including employee login PINs, and restoring/erasing replaces all data on this device.</p>
       <div class="row" id="backupActionButtons">
-        <button class="btn accent" onclick="exportBackup()">⬇️ Export Backup (.json)</button>
-        <button class="btn accent" onclick="exportHtmlBackup()">⬇️ Export Full App Backup (.html)</button>
+        <button class="btn accent" onclick="exportBackup()" data-i18n="backup.exportBackup">⬇️ Export Backup (.json)</button>
+        <button class="btn accent" onclick="exportHtmlBackup()" data-i18n="backup.exportFullBackup">⬇️ Export Full App Backup (.html)</button>
         <label class="btn ghost" style="text-align:center;cursor:pointer;">
-          ⬆️ Import Backup
+          <span data-i18n="backup.importBackup">⬆️ Import Backup</span>
           <input type="file" id="importFile" accept="application/json" class="hidden" onchange="importBackup(event)">
         </label>
       </div>
@@ -1058,9 +1058,9 @@
         open it directly (double-click, or drag into a browser) and it works immediately, no import step needed.
         The .json backup is smaller and is what "Import Backup" above expects.
       </p>
-      <button class="btn danger" id="clearSalesBtn" style="margin-top:10px;" onclick="clearSalesRestoreInventory()">🔄 Clear Sales &amp; Restore Inventory (Fresh Start)</button>
-      <button class="btn danger" id="clearDataBtn" style="margin-top:10px;" onclick="clearAllData()">🗑️ Erase All Data on This Device</button>
-      <button class="btn danger" id="resetEverythingBtn" style="margin-top:10px;" onclick="resetAllAppData()">🔁 Reset Everything to Zero (incl. Accounting &amp; Partners)</button>
+      <button class="btn danger" id="clearSalesBtn" style="margin-top:10px;" onclick="clearSalesRestoreInventory()" data-i18n="backup.clearSales">🔄 Clear Sales &amp; Restore Inventory (Fresh Start)</button>
+      <button class="btn danger" id="clearDataBtn" style="margin-top:10px;" onclick="clearAllData()" data-i18n="backup.eraseAllData">🗑️ Erase All Data on This Device</button>
+      <button class="btn danger" id="resetEverythingBtn" style="margin-top:10px;" onclick="resetAllAppData()" data-i18n="backup.resetEverything">🔁 Reset Everything to Zero (incl. Accounting &amp; Partners)</button>
       <p style="font-size:11px;color:var(--muted);margin-top:6px;">
         "Erase All Data" and "Reset Everything" now do the exact same complete wipe — every module, including
         Accounting &amp; Partners, Claims, and shop settings, goes back to zero. If Multi-Device Sync is connected,
@@ -1068,7 +1068,7 @@
       </p>
 
       <div id="autoBackupSection" class="hidden" style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
-        <h3 style="margin:0 0 4px;">⏱️ Auto-Backup</h3>
+        <h3 style="margin:0 0 4px;" data-i18n="backup.autoBackup">⏱️ Auto-Backup</h3>
         <p style="font-size:12px;color:var(--muted);margin-top:0;">
           Automatically downloads a backup once the interval below has passed — but only while this app is actually
           open in a browser tab; it can't run in the background or while the device is off/closed. Your browser may
@@ -1076,18 +1076,18 @@
         </p>
         <div class="grid2">
           <div>
-            <label>Auto-backup frequency</label>
+            <label data-i18n="backup.autoBackupFrequency">Auto-backup frequency</label>
             <select id="autoBackupFrequency" onchange="saveAutoBackupSettings()">
-              <option value="off">Off</option>
-              <option value="session">Every time I open the app</option>
-              <option value="daily">Once a day</option>
-              <option value="weekly">Once a week</option>
+              <option value="off" data-i18n="backup.off">Off</option>
+              <option value="session" data-i18n="backup.everyTimeOpen">Every time I open the app</option>
+              <option value="daily" data-i18n="backup.onceDay">Once a day</option>
+              <option value="weekly" data-i18n="backup.onceWeek">Once a week</option>
             </select>
           </div>
           <div style="display:flex;align-items:flex-end;padding-bottom:10px;">
             <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;margin:0;">
               <input type="checkbox" id="autoBackupIncludeHtml" onchange="saveAutoBackupSettings()" style="width:auto;margin:0;">
-              Also include the full .html backup (not just .json)
+              <span data-i18n="backup.includeHtmlBackup">Also include the full .html backup (not just .json)</span>
             </label>
           </div>
         </div>
@@ -1095,7 +1095,7 @@
       </div>
 
       <div id="storageUsageSection" class="hidden" style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
-        <h3 style="margin:0 0 4px;">📊 Storage Usage</h3>
+        <h3 style="margin:0 0 4px;" data-i18n="backup.storageUsage">📊 Storage Usage</h3>
         <p style="font-size:12px;color:var(--muted);margin-top:0;">
           Two separate limits matter here: this browser's own local storage (roughly 5-10MB, varies by browser,
           holds everything on this device) and — if Multi-Device Sync above is connected — a 5MB ceiling per
@@ -1103,11 +1103,11 @@
           next save may fail to reach the cloud (it still saves on this device either way) until something's freed up.
         </p>
         <div id="storageUsageOutput"></div>
-        <button class="btn ghost small" onclick="renderStorageUsage()" style="margin-top:8px;">🔄 Refresh</button>
+        <button class="btn ghost small" onclick="renderStorageUsage()" style="margin-top:8px;" data-i18n="backup.refresh">🔄 Refresh</button>
       </div>
 
       <div id="accessCodeSection" class="hidden" style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
-        <h3 style="margin:0 0 4px;">🔒 App Access Code</h3>
+        <h3 style="margin:0 0 4px;" data-i18n="backup.appAccessCode">🔒 App Access Code</h3>
         <p style="font-size:12px;color:var(--muted);margin-top:0;">
           An extra lock screen shown before anyone — even before the employee login screen — can see or use this
           app at all. Useful if you're worried about the link or file reaching someone it wasn't meant for.
@@ -1117,15 +1117,15 @@
           is what actually controls who can log in and what they can do, and stays in effect either way.
         </p>
         <div class="row">
-          <input type="password" id="newAccessCode" placeholder="New access code (leave blank to remove the lock)" style="flex:1;">
-          <button class="btn" onclick="setAccessCode()">Save</button>
+          <input type="password" id="newAccessCode" data-i18n-placeholder="backup.newAccessCodePlaceholder" placeholder="New access code (leave blank to remove the lock)" style="flex:1;">
+          <button class="btn" onclick="setAccessCode()" data-i18n="common.save">Save</button>
         </div>
         <div id="accessCodeStatus" style="font-size:12px;color:var(--muted);margin-top:6px;"></div>
       </div>
     </div>
     <div class="card">
-      <h2>📲 Install as an App</h2>
-      <p style="font-size:13px;color:var(--muted);">If this page is hosted online (not opened as a local file), you can install it to your phone or laptop home screen for a full offline app experience. Look for the "Install" button in the header, or use your browser's "Add to Home Screen" / "Install App" menu option.</p>
+      <h2 data-i18n="backup.installAsApp">📲 Install as an App</h2>
+      <p style="font-size:13px;color:var(--muted);" data-i18n="backup.installAsAppBody">If this page is hosted online (not opened as a local file), you can install it to your phone or laptop home screen for a full offline app experience. Look for the "Install" button in the header, or use your browser's "Add to Home Screen" / "Install App" menu option.</p>
     </div>
   </div>
 
@@ -1134,33 +1134,33 @@
     <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;">← Back to Dashboard</button>
 
     <div class="subnav" id="accSubnav">
-      <button data-sub="pl" class="selected" onclick="goAccSubTab('pl')">📄 Profit &amp; Loss</button>
-      <button data-sub="balance" onclick="goAccSubTab('balance')">📊 Balance Sheet</button>
-      <button data-sub="partners" onclick="goAccSubTab('partners')">🤝 Partners &amp; Capital</button>
-      <button data-sub="profit" onclick="goAccSubTab('profit')">💵 Profit Distribution</button>
-      <button data-sub="drawings" onclick="goAccSubTab('drawings')">🏧 Drawings</button>
-      <button data-sub="liabilities" onclick="goAccSubTab('liabilities')">🏦 Liabilities &amp; Assets</button>
-      <button data-sub="cashflow" onclick="goAccSubTab('cashflow')">💧 Cash Flow</button>
-      <button data-sub="coa" onclick="goAccSubTab('coa')">📚 Chart of Accounts</button>
-      <button data-sub="journal" onclick="goAccSubTab('journal')">📝 Journal Entries</button>
-      <button data-sub="ledger" onclick="goAccSubTab('ledger')">📖 General Ledger</button>
-      <button data-sub="trial" onclick="goAccSubTab('trial')">⚖️ Trial Balance</button>
-      <button data-sub="bank" onclick="goAccSubTab('bank')">🏛️ Bank Feed</button>
+      <button data-sub="pl" class="selected" onclick="goAccSubTab('pl')" data-i18n="accounting.subPL">📄 Profit &amp; Loss</button>
+      <button data-sub="balance" onclick="goAccSubTab('balance')" data-i18n="accounting.subBalance">📊 Balance Sheet</button>
+      <button data-sub="partners" onclick="goAccSubTab('partners')" data-i18n="accounting.subPartners">🤝 Partners &amp; Capital</button>
+      <button data-sub="profit" onclick="goAccSubTab('profit')" data-i18n="accounting.subProfit">💵 Profit Distribution</button>
+      <button data-sub="drawings" onclick="goAccSubTab('drawings')" data-i18n="accounting.subDrawings">🏧 Drawings</button>
+      <button data-sub="liabilities" onclick="goAccSubTab('liabilities')" data-i18n="accounting.subLiabilities">🏦 Liabilities &amp; Assets</button>
+      <button data-sub="cashflow" onclick="goAccSubTab('cashflow')" data-i18n="accounting.subCashflow">💧 Cash Flow</button>
+      <button data-sub="coa" onclick="goAccSubTab('coa')" data-i18n="accounting.subCoa">📚 Chart of Accounts</button>
+      <button data-sub="journal" onclick="goAccSubTab('journal')" data-i18n="accounting.subJournal">📝 Journal Entries</button>
+      <button data-sub="ledger" onclick="goAccSubTab('ledger')" data-i18n="accounting.subLedger">📖 General Ledger</button>
+      <button data-sub="trial" onclick="goAccSubTab('trial')" data-i18n="accounting.subTrial">⚖️ Trial Balance</button>
+      <button data-sub="bank" onclick="goAccSubTab('bank')" data-i18n="accounting.subBank">🏛️ Bank Feed</button>
     </div>
 
     <!-- P&L -->
     <div class="acc-subview active" id="acc-pl">
       <div class="card">
-        <h2>💰 Profit &amp; Loss Statement</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Pick a date range to generate a proper P&amp;L: Revenue → Cost of Goods Sold → Gross Profit → Operating Expenses (by category) → Net Profit.</p>
+        <h2 data-i18n="accounting.plStatement">💰 Profit &amp; Loss Statement</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.plBody">Pick a date range to generate a proper P&amp;L: Revenue → Cost of Goods Sold → Gross Profit → Operating Expenses (by category) → Net Profit.</p>
         <div class="grid2">
-          <div><label>From Date</label><div class="date-field-wrap"><input type="text" id="plFrom_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('plFrom')" onblur="onDateDispBlur('plFrom')" onfocus="openDatePicker('plFrom')"><input type="hidden" id="plFrom"><div class="date-picker-popup hidden" id="plFrom_popup"></div></div></div>
-          <div><label>To Date</label><div class="date-field-wrap"><input type="text" id="plTo_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('plTo')" onblur="onDateDispBlur('plTo')" onfocus="openDatePicker('plTo')"><input type="hidden" id="plTo"><div class="date-picker-popup hidden" id="plTo_popup"></div></div></div>
+          <div><label data-i18n="reports.fromDate">From Date</label><div class="date-field-wrap"><input type="text" id="plFrom_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('plFrom')" onblur="onDateDispBlur('plFrom')" onfocus="openDatePicker('plFrom')"><input type="hidden" id="plFrom"><div class="date-picker-popup hidden" id="plFrom_popup"></div></div></div>
+          <div><label data-i18n="reports.toDate">To Date</label><div class="date-field-wrap"><input type="text" id="plTo_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('plTo')" onblur="onDateDispBlur('plTo')" onfocus="openDatePicker('plTo')"><input type="hidden" id="plTo"><div class="date-picker-popup hidden" id="plTo_popup"></div></div></div>
         </div>
         <div class="row">
-          <button class="btn" onclick="generatePL()">📄 Generate P&amp;L Statement</button>
-          <button class="btn ghost" onclick="setPLRangeAllTime()">⏱️ All-Time</button>
-          <button class="btn ghost" onclick="exportPLCsv()">⬇️ Export Statement (.csv)</button>
+          <button class="btn" onclick="generatePL()" data-i18n="accounting.generatePL">📄 Generate P&amp;L Statement</button>
+          <button class="btn ghost" onclick="setPLRangeAllTime()" data-i18n="accounting.allTime">⏱️ All-Time</button>
+          <button class="btn ghost" onclick="exportPLCsv()" data-i18n="accounting.exportStatement">⬇️ Export Statement (.csv)</button>
         </div>
         <div id="plOutput" style="margin-top:14px;"></div>
       </div>
@@ -1169,19 +1169,19 @@
     <!-- BALANCE SHEET -->
     <div class="acc-subview" id="acc-balance">
       <div class="card">
-        <h2>📊 Balance Sheet (as of today)</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">
+        <h2 data-i18n="accounting.balanceSheetTitle">📊 Balance Sheet (as of today)</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.balanceSheetBody">
           Built from real sales, purchases, inventory, registered fixed assets, and recorded liabilities.
-          <strong>Cash on Hand</strong> defaults to your most recent saved cash reconciliation; adjust it if today's count is different.
+          Cash on Hand defaults to your most recent saved cash reconciliation; adjust it if today's count is different.
         </p>
-        <label>Cash on Hand (Rs.)</label>
+        <label data-i18n="accounting.cashOnHand">Cash on Hand (Rs.)</label>
         <input type="number" id="bsCash" oninput="renderBalanceSheet()">
         <div id="balanceSheetOutput" style="margin-top:10px;"></div>
-        <button class="btn ghost" style="margin-top:10px;" onclick="exportBalanceSheetCsv()">⬇️ Export Balance Sheet (.csv)</button>
+        <button class="btn ghost" style="margin-top:10px;" onclick="exportBalanceSheetCsv()" data-i18n="accounting.exportBalanceSheet">⬇️ Export Balance Sheet (.csv)</button>
       </div>
       <div class="card">
-        <h2>🧮 Partner Equity Breakdown</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">How total owner's equity above is split across partners, based on capital contributed, drawings taken, and distributed-but-unwithdrawn profit.</p>
+        <h2 data-i18n="accounting.partnerEquityBreakdown">🧮 Partner Equity Breakdown</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.partnerEquityBody">How total owner's equity above is split across partners, based on capital contributed, drawings taken, and distributed-but-unwithdrawn profit.</p>
         <div id="equityBreakdownOutput"></div>
       </div>
     </div>
@@ -1189,29 +1189,29 @@
     <!-- PARTNERS & CAPITAL -->
     <div class="acc-subview" id="acc-partners">
       <div class="card">
-        <h2>🤝 Partners</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Ownership shares are used to split distributed profit. Shares must add up to 100%.</p>
+        <h2 data-i18n="accounting.partners">🤝 Partners</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.partnersBody">Ownership shares are used to split distributed profit. Shares must add up to 100%.</p>
         <div id="partnersList"></div>
         <div class="grid2" style="margin-top:10px;">
-          <div><label>Partner Name</label><input id="partnerName" placeholder="e.g. Asad Malik"></div>
-          <div><label>Ownership Share (%)</label><input id="pShare" type="number" min="0" max="100" step="0.1"></div>
+          <div><label data-i18n="accounting.partnerName">Partner Name</label><input id="partnerName" data-i18n-placeholder="accounting.partnerNamePlaceholder" placeholder="e.g. Asad Malik"></div>
+          <div><label data-i18n="accounting.ownershipShare">Ownership Share (%)</label><input id="pShare" type="number" min="0" max="100" step="0.1"></div>
         </div>
-        <button class="btn" onclick="savePartner()">➕ Add Partner</button>
+        <button class="btn" onclick="savePartner()" data-i18n="accounting.addPartner">➕ Add Partner</button>
         <div id="partnerShareWarning" style="font-size:12px;color:var(--danger);margin-top:6px;"></div>
       </div>
       <div class="card">
-        <h2>💼 Capital Contributions</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Record money or assets a partner has put into the business.</p>
+        <h2 data-i18n="accounting.capitalContributions">💼 Capital Contributions</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.capitalContributionsBody">Record money or assets a partner has put into the business.</p>
         <div class="grid2">
-          <div><label>Partner</label><select id="capPartner"></select></div>
-          <div><label>Amount (Rs.)</label><input id="capAmount" type="number" min="0"></div>
+          <div><label data-i18n="accounting.partner">Partner</label><select id="capPartner"></select></div>
+          <div><label data-i18n="reports.amountRs">Amount (Rs.)</label><input id="capAmount" type="number" min="0"></div>
         </div>
         <div class="grid2">
-          <div><label>Date</label><div class="date-field-wrap"><input type="text" id="capDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('capDate')" onblur="onDateDispBlur('capDate')" onfocus="openDatePicker('capDate')"><input type="hidden" id="capDate"><div class="date-picker-popup hidden" id="capDate_popup"></div></div></div>
-          <div><label>Note (optional)</label><input id="capNote" placeholder="e.g. Opening capital"></div>
+          <div><label data-i18n="claims.date">Date</label><div class="date-field-wrap"><input type="text" id="capDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('capDate')" onblur="onDateDispBlur('capDate')" onfocus="openDatePicker('capDate')"><input type="hidden" id="capDate"><div class="date-picker-popup hidden" id="capDate_popup"></div></div></div>
+          <div><label data-i18n="reports.noteOptional">Note (optional)</label><input id="capNote" data-i18n-placeholder="accounting.openingCapitalPlaceholder" placeholder="e.g. Opening capital"></div>
         </div>
-        <button class="btn" onclick="addCapitalEntry()">💼 Record Capital Contribution</button>
-        <button class="btn ghost small" onclick="exportCapitalCsv()">⬇️ Export (.csv)</button>
+        <button class="btn" onclick="addCapitalEntry()" data-i18n="accounting.recordCapital">💼 Record Capital Contribution</button>
+        <button class="btn ghost small" onclick="exportCapitalCsv()" data-i18n="accounting.exportCsv">⬇️ Export (.csv)</button>
         <div id="capitalLogOutput" style="margin-top:12px;"></div>
         <div id="capitalChart" class="barwrap"></div>
       </div>
@@ -1220,27 +1220,27 @@
     <!-- PROFIT DISTRIBUTION -->
     <div class="acc-subview" id="acc-profit">
       <div class="card">
-        <h2>💵 Distribute Profit</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Available profit is calculated as all-time Net Profit (from the P&amp;L) minus profit already distributed.</p>
+        <h2 data-i18n="accounting.distributeProfit">💵 Distribute Profit</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.distributeProfitBody">Available profit is calculated as all-time Net Profit (from the P&amp;L) minus profit already distributed.</p>
         <div class="kpi" style="margin-bottom:10px;">
-          <div class="box"><div class="lbl">All-Time Net Profit</div><div class="num" id="apAllTime">—</div></div>
-          <div class="box"><div class="lbl">Already Distributed</div><div class="num" id="apDistributed">—</div></div>
-          <div class="box"><div class="lbl">Available to Distribute</div><div class="num" id="apAvailable">—</div></div>
+          <div class="box"><div class="lbl" data-i18n="accounting.allTimeNetProfit">All-Time Net Profit</div><div class="num" id="apAllTime">—</div></div>
+          <div class="box"><div class="lbl" data-i18n="accounting.alreadyDistributed">Already Distributed</div><div class="num" id="apDistributed">—</div></div>
+          <div class="box"><div class="lbl" data-i18n="accounting.availableToDistribute">Available to Distribute</div><div class="num" id="apAvailable">—</div></div>
         </div>
         <div class="grid2">
-          <div><label>Amount to Distribute (Rs.)</label><input id="distAmount" type="number" min="0"></div>
-          <div><label>Date</label><div class="date-field-wrap"><input type="text" id="distDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('distDate')" onblur="onDateDispBlur('distDate')" onfocus="openDatePicker('distDate')"><input type="hidden" id="distDate"><div class="date-picker-popup hidden" id="distDate_popup"></div></div></div>
+          <div><label data-i18n="accounting.amountToDistribute">Amount to Distribute (Rs.)</label><input id="distAmount" type="number" min="0"></div>
+          <div><label data-i18n="claims.date">Date</label><div class="date-field-wrap"><input type="text" id="distDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('distDate')" onblur="onDateDispBlur('distDate')" onfocus="openDatePicker('distDate')"><input type="hidden" id="distDate"><div class="date-picker-popup hidden" id="distDate_popup"></div></div></div>
         </div>
         <div id="distSharePreview" style="font-size:12px;color:var(--muted);margin-bottom:10px;"></div>
-        <button class="btn" onclick="distributeProfitAction()">💵 Distribute by Ownership Share</button>
+        <button class="btn" onclick="distributeProfitAction()" data-i18n="accounting.distributeByShare">💵 Distribute by Ownership Share</button>
       </div>
       <div class="card">
-        <h2>🧾 Partner Current Accounts</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Distributed profit sits here until a partner withdraws it as cash (drawings) or reinvests it as capital.</p>
+        <h2 data-i18n="accounting.partnerCurrentAccounts">🧾 Partner Current Accounts</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.partnerCurrentAccountsBody">Distributed profit sits here until a partner withdraws it as cash (drawings) or reinvests it as capital.</p>
         <div id="currentAccountsOutput"></div>
       </div>
       <div class="card">
-        <h2>📜 Distribution History</h2>
+        <h2 data-i18n="accounting.distributionHistory">📜 Distribution History</h2>
         <div id="distributionHistoryOutput"></div>
       </div>
     </div>
@@ -1248,29 +1248,29 @@
     <!-- DRAWINGS -->
     <div class="acc-subview" id="acc-drawings">
       <div class="card">
-        <h2>🏧 Record a Drawing</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Cash or assets a partner has taken out of the business for personal use — separate from a salary/wage.</p>
+        <h2 data-i18n="accounting.recordDrawing">🏧 Record a Drawing</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.recordDrawingBody">Cash or assets a partner has taken out of the business for personal use — separate from a salary/wage.</p>
         <div class="grid2">
-          <div><label>Partner</label><select id="drawPartner"></select></div>
-          <div><label>Amount (Rs.)</label><input id="drawAmount" type="number" min="0"></div>
+          <div><label data-i18n="accounting.partner">Partner</label><select id="drawPartner"></select></div>
+          <div><label data-i18n="reports.amountRs">Amount (Rs.)</label><input id="drawAmount" type="number" min="0"></div>
         </div>
         <div class="grid2">
-          <div><label>Date</label><div class="date-field-wrap"><input type="text" id="drawDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('drawDate')" onblur="onDateDispBlur('drawDate')" onfocus="openDatePicker('drawDate')"><input type="hidden" id="drawDate"><div class="date-picker-popup hidden" id="drawDate_popup"></div></div></div>
-          <div><label>Method</label>
-            <select id="drawMethod"><option>Cash</option><option>Bank Transfer</option><option>Goods/Stock</option><option>Other</option></select>
+          <div><label data-i18n="claims.date">Date</label><div class="date-field-wrap"><input type="text" id="drawDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('drawDate')" onblur="onDateDispBlur('drawDate')" onfocus="openDatePicker('drawDate')"><input type="hidden" id="drawDate"><div class="date-picker-popup hidden" id="drawDate_popup"></div></div></div>
+          <div><label data-i18n="sales.thMethod">Method</label>
+            <select id="drawMethod"><option data-i18n="pos.cashPlain">Cash</option><option data-i18n="accounting.bankTransfer">Bank Transfer</option><option data-i18n="accounting.goodsStock">Goods/Stock</option><option data-i18n="inventory.catOther">Other</option></select>
           </div>
         </div>
-        <label>Note (optional)</label>
-        <input id="drawNote" placeholder="e.g. Personal expense">
-        <button class="btn" onclick="addDrawingEntry()">🏧 Record Drawing</button>
-        <button class="btn ghost small" onclick="exportDrawingsCsv()">⬇️ Export (.csv)</button>
+        <label data-i18n="reports.noteOptional">Note (optional)</label>
+        <input id="drawNote" data-i18n-placeholder="accounting.personalExpensePlaceholder" placeholder="e.g. Personal expense">
+        <button class="btn" onclick="addDrawingEntry()" data-i18n="accounting.recordDrawingBtn">🏧 Record Drawing</button>
+        <button class="btn ghost small" onclick="exportDrawingsCsv()" data-i18n="accounting.exportCsv">⬇️ Export (.csv)</button>
       </div>
       <div class="card">
-        <h2>📊 Drawings by Partner</h2>
+        <h2 data-i18n="accounting.drawingsByPartner">📊 Drawings by Partner</h2>
         <div id="drawingsChart" class="barwrap"></div>
       </div>
       <div class="card">
-        <h2>📜 Drawings History</h2>
+        <h2 data-i18n="accounting.drawingsHistory">📜 Drawings History</h2>
         <div id="drawingsHistoryOutput"></div>
       </div>
     </div>
@@ -1278,37 +1278,37 @@
     <!-- LIABILITIES & ASSETS -->
     <div class="acc-subview" id="acc-liabilities">
       <div class="card">
-        <h2>🏦 Other Liabilities</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Bank loans, partner loans, taxes payable — anything owed beyond ordinary supplier invoices (those are tracked automatically under Purchases).</p>
+        <h2 data-i18n="accounting.otherLiabilities">🏦 Other Liabilities</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.otherLiabilitiesBody">Bank loans, partner loans, taxes payable — anything owed beyond ordinary supplier invoices (those are tracked automatically under Purchases).</p>
         <div class="grid2">
-          <div><label>Name</label><input id="liabName" placeholder="e.g. Bank Loan — HBL"></div>
-          <div><label>Category</label>
-            <select id="liabCategory"><option>Bank Loan</option><option>Partner Loan</option><option>Taxes Payable</option><option>Other</option></select>
+          <div><label data-i18n="accounting.nameLabel">Name</label><input id="liabName" data-i18n-placeholder="accounting.liabNamePlaceholder" placeholder="e.g. Bank Loan — HBL"></div>
+          <div><label data-i18n="inventory.category">Category</label>
+            <select id="liabCategory"><option data-i18n="accounting.bankLoan">Bank Loan</option><option data-i18n="accounting.partnerLoan">Partner Loan</option><option data-i18n="accounting.taxesPayable">Taxes Payable</option><option data-i18n="inventory.catOther">Other</option></select>
           </div>
         </div>
         <div class="grid2">
-          <div><label>Amount (Rs.)</label><input id="liabAmount" type="number" min="0"></div>
-          <div><label>Due Date</label><div class="date-field-wrap"><input type="text" id="liabDue_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('liabDue')" onblur="onDateDispBlur('liabDue')" onfocus="openDatePicker('liabDue')"><input type="hidden" id="liabDue"><div class="date-picker-popup hidden" id="liabDue_popup"></div></div></div>
+          <div><label data-i18n="reports.amountRs">Amount (Rs.)</label><input id="liabAmount" type="number" min="0"></div>
+          <div><label data-i18n="accounting.dueDate">Due Date</label><div class="date-field-wrap"><input type="text" id="liabDue_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('liabDue')" onblur="onDateDispBlur('liabDue')" onfocus="openDatePicker('liabDue')"><input type="hidden" id="liabDue"><div class="date-picker-popup hidden" id="liabDue_popup"></div></div></div>
         </div>
-        <label>Note (optional)</label>
-        <input id="liabNote" placeholder="Any extra detail">
-        <button class="btn" onclick="addLiabilityEntry()">🏦 Add Liability</button>
+        <label data-i18n="reports.noteOptional">Note (optional)</label>
+        <input id="liabNote" data-i18n-placeholder="accounting.anyExtraDetail" placeholder="Any extra detail">
+        <button class="btn" onclick="addLiabilityEntry()" data-i18n="accounting.addLiability">🏦 Add Liability</button>
         <div id="liabilitiesOutput" style="margin-top:12px;"></div>
       </div>
       <div class="card">
-        <h2>🏗️ Fixed Assets</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Equipment, vehicles, furniture — non-inventory assets owned by the business, tracked at cost.</p>
+        <h2 data-i18n="accounting.fixedAssets">🏗️ Fixed Assets</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.fixedAssetsBody">Equipment, vehicles, furniture — non-inventory assets owned by the business, tracked at cost.</p>
         <div class="grid2">
-          <div><label>Name</label><input id="assetName" placeholder="e.g. Workshop counter"></div>
-          <div><label>Category</label>
-            <select id="assetCategory"><option>Equipment</option><option>Vehicles</option><option>Furniture</option><option>Other</option></select>
+          <div><label data-i18n="accounting.nameLabel">Name</label><input id="assetName" data-i18n-placeholder="accounting.assetNamePlaceholder" placeholder="e.g. Workshop counter"></div>
+          <div><label data-i18n="inventory.category">Category</label>
+            <select id="assetCategory"><option data-i18n="accounting.equipment">Equipment</option><option data-i18n="accounting.vehicles">Vehicles</option><option data-i18n="accounting.furniture">Furniture</option><option data-i18n="inventory.catOther">Other</option></select>
           </div>
         </div>
         <div class="grid2">
-          <div><label>Value (Rs.)</label><input id="assetValue" type="number" min="0"></div>
-          <div><label>Purchase Date</label><div class="date-field-wrap"><input type="text" id="assetDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('assetDate')" onblur="onDateDispBlur('assetDate')" onfocus="openDatePicker('assetDate')"><input type="hidden" id="assetDate"><div class="date-picker-popup hidden" id="assetDate_popup"></div></div></div>
+          <div><label data-i18n="accounting.valueRs">Value (Rs.)</label><input id="assetValue" type="number" min="0"></div>
+          <div><label data-i18n="accounting.purchaseDate">Purchase Date</label><div class="date-field-wrap"><input type="text" id="assetDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('assetDate')" onblur="onDateDispBlur('assetDate')" onfocus="openDatePicker('assetDate')"><input type="hidden" id="assetDate"><div class="date-picker-popup hidden" id="assetDate_popup"></div></div></div>
         </div>
-        <button class="btn" onclick="addFixedAssetEntry()">🏗️ Add Fixed Asset</button>
+        <button class="btn" onclick="addFixedAssetEntry()" data-i18n="accounting.addFixedAsset">🏗️ Add Fixed Asset</button>
         <div id="fixedAssetsOutput" style="margin-top:12px;"></div>
       </div>
     </div>
@@ -1316,11 +1316,11 @@
     <!-- CASH FLOW -->
     <div class="acc-subview" id="acc-cashflow">
       <div class="card">
-        <h2>💧 Cash Flow Statement</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Cash actually collected and paid out in a date range, grouped as Operating, Investing, and Financing — reuses the same From/To range as the P&amp;L tab.</p>
+        <h2 data-i18n="accounting.cashFlowStatement">💧 Cash Flow Statement</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.cashFlowBody">Cash actually collected and paid out in a date range, grouped as Operating, Investing, and Financing — reuses the same From/To range as the P&amp;L tab.</p>
         <div class="row">
-          <button class="btn" onclick="renderCashFlow()">💧 Generate Cash Flow</button>
-          <button class="btn ghost" onclick="exportCashFlowCsv()">⬇️ Export (.csv)</button>
+          <button class="btn" onclick="renderCashFlow()" data-i18n="accounting.generateCashFlow">💧 Generate Cash Flow</button>
+          <button class="btn ghost" onclick="exportCashFlowCsv()" data-i18n="accounting.exportCsv">⬇️ Export (.csv)</button>
         </div>
         <div id="cashFlowOutput" style="margin-top:14px;"></div>
       </div>
@@ -1329,26 +1329,26 @@
     <!-- CHART OF ACCOUNTS -->
     <div class="acc-subview" id="acc-coa">
       <div class="card">
-        <h2>📚 Chart of Accounts</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">The list of accounts Journal Entries post to. Seeded with a standard set — add, rename, or deactivate as your books need.</p>
+        <h2 data-i18n="accounting.chartOfAccounts">📚 Chart of Accounts</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.coaBody">The list of accounts Journal Entries post to. Seeded with a standard set — add, rename, or deactivate as your books need.</p>
         <div id="coaList"></div>
       </div>
       <div class="card">
-        <h2>➕ Add Account</h2>
+        <h2 data-i18n="accounting.addAccount">➕ Add Account</h2>
         <input type="hidden" id="coaEditId">
         <div class="grid2">
-          <div><label>Code</label><input id="coaCode" placeholder="e.g. 1050"></div>
-          <div><label>Name</label><input id="coaName" placeholder="e.g. Petty Cash"></div>
+          <div><label data-i18n="accounting.code">Code</label><input id="coaCode" data-i18n-placeholder="accounting.codePlaceholder" placeholder="e.g. 1050"></div>
+          <div><label data-i18n="customers.name">Name</label><input id="coaName" data-i18n-placeholder="accounting.accountNamePlaceholder" placeholder="e.g. Petty Cash"></div>
         </div>
-        <label>Type</label>
+        <label data-i18n="inventory.thType">Type</label>
         <select id="coaType">
-          <option>Asset</option><option>Liability</option><option>Equity</option><option>Revenue</option><option>Expense</option>
+          <option data-i18n="accounting.typeAsset">Asset</option><option data-i18n="accounting.typeLiability">Liability</option><option data-i18n="accounting.typeEquity">Equity</option><option data-i18n="accounting.typeRevenue">Revenue</option><option data-i18n="accounting.typeExpense">Expense</option>
         </select>
-        <label>Opening Balance (Rs.)</label>
+        <label data-i18n="accounting.openingBalance">Opening Balance (Rs.)</label>
         <input type="number" id="coaOpening" value="0">
         <div class="row" style="margin-top:6px;">
-          <button class="btn" id="coaSaveBtn" onclick="saveAccount()">➕ Add Account</button>
-          <button class="btn ghost" id="coaCancelBtn" onclick="cancelEditAccount()">🧹 Clear</button>
+          <button class="btn" id="coaSaveBtn" onclick="saveAccount()" data-i18n="accounting.addAccount">➕ Add Account</button>
+          <button class="btn ghost" id="coaCancelBtn" onclick="cancelEditAccount()" data-i18n="inventory.clear">🧹 Clear</button>
         </div>
       </div>
     </div>
@@ -1356,26 +1356,26 @@
     <!-- JOURNAL ENTRIES -->
     <div class="acc-subview" id="acc-journal">
       <div class="card">
-        <h2 id="jeFormTitle">📝 New Journal Entry</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Every entry must balance — total debits must equal total credits before it can be saved.</p>
+        <h2 id="jeFormTitle" data-i18n="accounting.newJournalEntry">📝 New Journal Entry</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.journalEntryBody">Every entry must balance — total debits must equal total credits before it can be saved.</p>
         <input type="hidden" id="jeEditId">
         <div class="grid2">
-          <div><label>Date</label><div class="date-field-wrap"><input type="text" id="jeDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('jeDate')" onblur="onDateDispBlur('jeDate')" onfocus="openDatePicker('jeDate')"><input type="hidden" id="jeDate"><div class="date-picker-popup hidden" id="jeDate_popup"></div></div></div>
-          <div><label>Reference (optional)</label><input id="jeReference" placeholder="e.g. Invoice #1042"></div>
+          <div><label data-i18n="claims.date">Date</label><div class="date-field-wrap"><input type="text" id="jeDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('jeDate')" onblur="onDateDispBlur('jeDate')" onfocus="openDatePicker('jeDate')"><input type="hidden" id="jeDate"><div class="date-picker-popup hidden" id="jeDate_popup"></div></div></div>
+          <div><label data-i18n="accounting.referenceOptional">Reference (optional)</label><input id="jeReference" data-i18n-placeholder="accounting.referencePlaceholder" placeholder="e.g. Invoice #1042"></div>
         </div>
-        <label>Memo</label>
-        <input id="jeMemo" placeholder="What is this entry for?">
+        <label data-i18n="accounting.memo">Memo</label>
+        <input id="jeMemo" data-i18n-placeholder="accounting.memoPlaceholder" placeholder="What is this entry for?">
         <div id="jeLines" style="margin-top:10px;"></div>
-        <button class="btn ghost small" onclick="addJournalLine()">➕ Add Line</button>
-        <div id="jeBalanceBox" class="changebox" style="margin-top:10px;">Debits: Rs. 0 &nbsp;|&nbsp; Credits: Rs. 0 &nbsp;|&nbsp; Difference: Rs. 0</div>
+        <button class="btn ghost small" onclick="addJournalLine()" data-i18n="accounting.addLine">➕ Add Line</button>
+        <div id="jeBalanceBox" class="changebox" style="margin-top:10px;"><span data-i18n="accounting.debits">Debits</span>: Rs. 0 &nbsp;|&nbsp; <span data-i18n="accounting.credits">Credits</span>: Rs. 0 &nbsp;|&nbsp; <span data-i18n="accounting.difference">Difference</span>: Rs. 0</div>
         <div class="row" style="margin-top:6px;">
-          <button class="btn" id="jeSaveBtn" onclick="saveJournalEntry()">💾 Post Entry</button>
-          <button class="btn ghost" id="jeCancelBtn" onclick="cancelEditJournalEntry()">🧹 Clear</button>
+          <button class="btn" id="jeSaveBtn" onclick="saveJournalEntry()" data-i18n="accounting.postEntry">💾 Post Entry</button>
+          <button class="btn ghost" id="jeCancelBtn" onclick="cancelEditJournalEntry()" data-i18n="inventory.clear">🧹 Clear</button>
         </div>
       </div>
       <div class="card">
-        <h2>📜 Journal History</h2>
-        <input id="searchJournal" placeholder="🔍 Search by memo or reference..." oninput="renderJournalList()">
+        <h2 data-i18n="accounting.journalHistory">📜 Journal History</h2>
+        <input id="searchJournal" data-i18n-placeholder="accounting.searchJournal" placeholder="🔍 Search by memo or reference..." oninput="renderJournalList()">
         <div id="journalList"></div>
       </div>
     </div>
@@ -1383,9 +1383,9 @@
     <!-- GENERAL LEDGER -->
     <div class="acc-subview" id="acc-ledger">
       <div class="card">
-        <h2>📖 General Ledger</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Every posting to one account, in order, with a running balance.</p>
-        <label>Account</label>
+        <h2 data-i18n="accounting.generalLedger">📖 General Ledger</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.generalLedgerBody">Every posting to one account, in order, with a running balance.</p>
+        <label data-i18n="accounting.account">Account</label>
         <select id="ledgerAccount" onchange="renderGeneralLedger()"></select>
         <div id="ledgerOutput" style="margin-top:10px;"></div>
       </div>
@@ -1394,11 +1394,11 @@
     <!-- TRIAL BALANCE -->
     <div class="acc-subview" id="acc-trial">
       <div class="card">
-        <h2>⚖️ Trial Balance</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">Every account's balance as of today. Total debits and total credits must match — that's what makes it a trial balance.</p>
+        <h2 data-i18n="accounting.trialBalance">⚖️ Trial Balance</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.trialBalanceBody">Every account's balance as of today. Total debits and total credits must match — that's what makes it a trial balance.</p>
         <div class="row">
-          <button class="btn" onclick="renderTrialBalance()">⚖️ Generate Trial Balance</button>
-          <button class="btn ghost" onclick="exportTrialBalanceCsv()">⬇️ Export (.csv)</button>
+          <button class="btn" onclick="renderTrialBalance()" data-i18n="accounting.generateTrialBalance">⚖️ Generate Trial Balance</button>
+          <button class="btn ghost" onclick="exportTrialBalanceCsv()" data-i18n="accounting.exportCsv">⬇️ Export (.csv)</button>
         </div>
         <div id="trialBalanceOutput" style="margin-top:14px;"></div>
       </div>
@@ -1407,27 +1407,27 @@
     <!-- BANK FEED -->
     <div class="acc-subview" id="acc-bank">
       <div class="card">
-        <h2>🏛️ Bank Feed</h2>
-        <p style="font-size:12px;color:var(--muted);margin-top:-6px;">
+        <h2 data-i18n="accounting.bankFeed">🏛️ Bank Feed</h2>
+        <p style="font-size:12px;color:var(--muted);margin-top:-6px;" data-i18n="accounting.bankFeedBody">
           Bring in your bank statement, then categorize each line against a Chart of Accounts entry — that's all it
           takes. Categorizing immediately posts a balanced Journal Entry against your Bank Account, so it flows
           straight into the General Ledger and Trial Balance, and into the Profit &amp; Loss if it's Revenue or
           Expense. Clearing a category removes that entry again.
         </p>
         <div class="grid2">
-          <div><label>Date</label><div class="date-field-wrap"><input type="text" id="bankTxnDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('bankTxnDate')" onblur="onDateDispBlur('bankTxnDate')" onfocus="openDatePicker('bankTxnDate')"><input type="hidden" id="bankTxnDate"><div class="date-picker-popup hidden" id="bankTxnDate_popup"></div></div></div>
-          <div><label>Amount (Rs., use negative for withdrawals)</label><input type="number" id="bankTxnAmount"></div>
+          <div><label data-i18n="claims.date">Date</label><div class="date-field-wrap"><input type="text" id="bankTxnDate_disp" class="date-disp-input" placeholder="DD/MM/YYYY" autocomplete="off" oninput="onDateDispInput('bankTxnDate')" onblur="onDateDispBlur('bankTxnDate')" onfocus="openDatePicker('bankTxnDate')"><input type="hidden" id="bankTxnDate"><div class="date-picker-popup hidden" id="bankTxnDate_popup"></div></div></div>
+          <div><label data-i18n="accounting.amountNegativeWithdrawals">Amount (Rs., use negative for withdrawals)</label><input type="number" id="bankTxnAmount"></div>
         </div>
-        <label>Description</label>
-        <input id="bankTxnDesc" placeholder="e.g. Cheque deposit, ATM withdrawal">
-        <label>Category (optional)</label>
+        <label data-i18n="accounting.description">Description</label>
+        <input id="bankTxnDesc" data-i18n-placeholder="accounting.descriptionPlaceholder" placeholder="e.g. Cheque deposit, ATM withdrawal">
+        <label data-i18n="accounting.categoryOptional">Category (optional)</label>
         <select id="bankTxnCategory"></select>
-        <button class="btn" onclick="addBankTransaction()">➕ Add Transaction</button>
+        <button class="btn" onclick="addBankTransaction()" data-i18n="accounting.addTransaction">➕ Add Transaction</button>
 
-        <h2 style="font-size:14px;margin:18px 0 6px;">📥 Upload Bank Statement (.csv)</h2>
-        <p style="font-size:11px;color:var(--muted);margin-top:-4px;">
-          Three columns, in this order: <strong>Date, Description, Amount</strong> (negative for withdrawals). A
-          4th optional column, <strong>Category</strong>, can match an account name or code from your Chart of
+        <h2 style="font-size:14px;margin:18px 0 6px;" data-i18n="accounting.uploadBankStatement">📥 Upload Bank Statement (.csv)</h2>
+        <p style="font-size:11px;color:var(--muted);margin-top:-4px;" data-i18n="accounting.uploadBankStatementBody">
+          Three columns, in this order: Date, Description, Amount (negative for withdrawals). A
+          4th optional column, Category, can match an account name or code from your Chart of
           Accounts to categorize rows automatically as they're imported. Most banks' exports can be rearranged
           into this in Excel in a minute or two.
         </p>
@@ -1435,10 +1435,10 @@
         <div id="bankImportSummary" style="margin-top:8px;"></div>
       </div>
       <div class="card">
-        <h2>📋 Transactions</h2>
-        <input id="searchBankFeed" placeholder="🔍 Search description..." oninput="renderBankFeed()">
+        <h2 data-i18n="accounting.transactions">📋 Transactions</h2>
+        <input id="searchBankFeed" data-i18n-placeholder="accounting.searchDescription" placeholder="🔍 Search description..." oninput="renderBankFeed()">
         <div class="table-scroll"><table>
-          <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Category</th><th>Status</th><th></th></tr></thead>
+          <thead><tr><th data-i18n="inventory.thDate">Date</th><th data-i18n="accounting.description">Description</th><th data-i18n="reports.thAmount">Amount</th><th data-i18n="inventory.category">Category</th><th data-i18n="claims.status">Status</th><th></th></tr></thead>
           <tbody id="bankFeedTable"></tbody>
         </table></div>
       </div>
@@ -8333,7 +8333,7 @@ const TRANSLATIONS = {
     common: {
       save:'Save', cancel:'Cancel', confirm:'Confirm', search:'Search', edit:'Edit',
       delete:'Delete', approve:'Approve', reject:'Reject', close:'Close', yes:'Yes', no:'No',
-      loading:'Loading…', retry:'Retry'
+      loading:'Loading…', retry:'Retry', backToDashboard:'← Back to Dashboard'
     },
     navigation: {
       dashboard:'Dashboard', pos:'POS', sales:'Sales', inventory:'Inventory', suppliers:'Suppliers',
@@ -8344,26 +8344,184 @@ const TRANSLATIONS = {
       welcome:'👋 Welcome! Ready to start the day?', instructions:'Select your name and enter your PIN to sign in.',
       employee:'Employee', pin:'PIN', pinPlaceholder:'Your login PIN', logIn:'🔓 Log In'
     },
+    accounting: {
+      account:'Account', accountNamePlaceholder:'e.g. Petty Cash', addAccount:'➕ Add Account', addFixedAsset:'🏗️ Add Fixed Asset', 
+      addLiability:'🏦 Add Liability', addLine:'➕ Add Line', addPartner:'➕ Add Partner', addTransaction:'➕ Add Transaction', 
+      allTime:'⏱️ All-Time', allTimeNetProfit:'All-Time Net Profit', alreadyDistributed:'Already Distributed', 
+      amountNegativeWithdrawals:'Amount (Rs., use negative for withdrawals)', amountToDistribute:'Amount to Distribute (Rs.)', 
+      anyExtraDetail:'Any extra detail', assetNamePlaceholder:'e.g. Workshop counter', availableToDistribute:'Available to Distribute', 
+      balanceSheetBody:'Built from real sales, purchases, inventory, registered fixed assets, and recorded liabilities. Cash on Hand defaults to your most recent saved cash reconciliation; adjust it if today\'s count is different.', 
+      balanceSheetTitle:'📊 Balance Sheet (as of today)', bankFeed:'🏛️ Bank Feed', bankFeedBody:'Bring in your bank statement, then categorize each line against a Chart of Accounts entry — that\'s all it takes. Categorizing immediately posts a balanced Journal Entry against your Bank Account, so it flows straight into the General Ledger and Trial Balance, and into the Profit & Loss if it\'s Revenue or Expense. Clearing a category removes that entry again.', 
+      bankLoan:'Bank Loan', bankTransfer:'Bank Transfer', capitalContributions:'💼 Capital Contributions', capitalContributionsBody:'Record money or assets a partner has put into the business.', 
+      cashFlowBody:'Cash actually collected and paid out in a date range, grouped as Operating, Investing, and Financing — reuses the same From/To range as the P&L tab.', 
+      cashFlowStatement:'💧 Cash Flow Statement', cashOnHand:'Cash on Hand (Rs.)', categoryOptional:'Category (optional)', 
+      chartOfAccounts:'📚 Chart of Accounts', coaBody:'The list of accounts Journal Entries post to. Seeded with a standard set — add, rename, or deactivate as your books need.', 
+      code:'Code', codePlaceholder:'e.g. 1050', credits:'Credits', debits:'Debits', description:'Description', 
+      descriptionPlaceholder:'e.g. Cheque deposit, ATM withdrawal', difference:'Difference', distributeByShare:'💵 Distribute by Ownership Share', 
+      distributeProfit:'💵 Distribute Profit', distributeProfitBody:'Available profit is calculated as all-time Net Profit (from the P&L) minus profit already distributed.', 
+      distributionHistory:'📜 Distribution History', drawingsByPartner:'📊 Drawings by Partner', drawingsHistory:'📜 Drawings History', 
+      dueDate:'Due Date', equipment:'Equipment', exportBalanceSheet:'⬇️ Export Balance Sheet (.csv)', exportCsv:'⬇️ Export (.csv)', 
+      exportStatement:'⬇️ Export Statement (.csv)', fixedAssets:'🏗️ Fixed Assets', fixedAssetsBody:'Equipment, vehicles, furniture — non-inventory assets owned by the business, tracked at cost.', 
+      furniture:'Furniture', generalLedger:'📖 General Ledger', generalLedgerBody:'Every posting to one account, in order, with a running balance.', 
+      generateCashFlow:'💧 Generate Cash Flow', generatePL:'📄 Generate P&L Statement', generateTrialBalance:'⚖️ Generate Trial Balance', 
+      goodsStock:'Goods/Stock', journalEntryBody:'Every entry must balance — total debits must equal total credits before it can be saved.', 
+      journalHistory:'📜 Journal History', liabNamePlaceholder:'e.g. Bank Loan — HBL', memo:'Memo', memoPlaceholder:'What is this entry for?', 
+      nameLabel:'Name', newJournalEntry:'📝 New Journal Entry', openingBalance:'Opening Balance (Rs.)', openingCapitalPlaceholder:'e.g. Opening capital', 
+      otherLiabilities:'🏦 Other Liabilities', otherLiabilitiesBody:'Bank loans, partner loans, taxes payable — anything owed beyond ordinary supplier invoices (those are tracked automatically under Purchases).', 
+      ownershipShare:'Ownership Share (%)', partner:'Partner', partnerCurrentAccounts:'🧾 Partner Current Accounts', 
+      partnerCurrentAccountsBody:'Distributed profit sits here until a partner withdraws it as cash (drawings) or reinvests it as capital.', 
+      partnerEquityBody:'How total owner\'s equity above is split across partners, based on capital contributed, drawings taken, and distributed-but-unwithdrawn profit.', 
+      partnerEquityBreakdown:'🧮 Partner Equity Breakdown', partnerLoan:'Partner Loan', partnerName:'Partner Name', 
+      partnerNamePlaceholder:'e.g. Asad Malik', partners:'🤝 Partners', partnersBody:'Ownership shares are used to split distributed profit. Shares must add up to 100%.', 
+      personalExpensePlaceholder:'e.g. Personal expense', plBody:'Pick a date range to generate a proper P&L: Revenue → Cost of Goods Sold → Gross Profit → Operating Expenses (by category) → Net Profit.', 
+      plStatement:'💰 Profit & Loss Statement', postEntry:'💾 Post Entry', purchaseDate:'Purchase Date', recordCapital:'💼 Record Capital Contribution', 
+      recordDrawing:'🏧 Record a Drawing', recordDrawingBody:'Cash or assets a partner has taken out of the business for personal use — separate from a salary/wage.', 
+      recordDrawingBtn:'🏧 Record Drawing', referenceOptional:'Reference (optional)', referencePlaceholder:'e.g. Invoice #1042', 
+      searchDescription:'🔍 Search description...', searchJournal:'🔍 Search by memo or reference...', subBalance:'📊 Balance Sheet', 
+      subBank:'🏛️ Bank Feed', subCashflow:'💧 Cash Flow', subCoa:'📚 Chart of Accounts', subDrawings:'🏧 Drawings', 
+      subJournal:'📝 Journal Entries', subLedger:'📖 General Ledger', subLiabilities:'🏦 Liabilities & Assets', 
+      subPL:'📄 Profit & Loss', subPartners:'🤝 Partners & Capital', subProfit:'💵 Profit Distribution', subTrial:'⚖️ Trial Balance', 
+      taxesPayable:'Taxes Payable', transactions:'📋 Transactions', trialBalance:'⚖️ Trial Balance', trialBalanceBody:'Every account\'s balance as of today. Total debits and total credits must match — that\'s what makes it a trial balance.', 
+      typeAsset:'Asset', typeEquity:'Equity', typeExpense:'Expense', typeLiability:'Liability', typeRevenue:'Revenue', 
+      uploadBankStatement:'📥 Upload Bank Statement (.csv)', uploadBankStatementBody:'Three columns, in this order: Date, Description, Amount (negative for withdrawals). A 4th optional column, Category, can match an account name or code from your Chart of Accounts to categorize rows automatically as they\'re imported. Most banks\' exports can be rearranged into this in Excel in a minute or two.', 
+      valueRs:'Value (Rs.)', vehicles:'Vehicles'
+    },
     aiAssistant: {
-      title:'AI Assistant', inputPlaceholder:'Ask anything or give me a command...',
-      quickReadInvoice:'📄 Read Invoice', quickSearchCustomer:'👤 Search Customer',
-      quickCheckInventory:'📦 Check Inventory', quickOutstanding:'💰 Outstanding',
-      processing:'Processing…', listening:'Listening…', transcribing:'Transcribing…',
-      languageDetected:'Language detected', completed:'Completed', failed:'Failed',
-      reviewTitle:'AI Invoice Review', approveSave:'Approve & Save', editManually:'Edit',
-      confirmTitle:'Confirm Action', confirmMatch:'Confirm Match', chooseAnother:'Choose Another Product',
-      createNew:'Create New Product', possibleMatch:'I found a possible match:', invoiceItem:'Invoice item',
-      existingProduct:'Existing product', matchThisProduct:'Match this product?',
-      totalMismatch:'Invoice total mismatch detected.', aiCalculatedTotal:'AI Calculated Total',
-      invoiceStatedTotal:'Invoice Stated Total', difference:'Difference',
-      possibleDuplicate:'This invoice may already exist in the system.',
-      didntUnderstand:"I didn't fully understand that command.",
-      unavailable:"The AI service isn't reachable right now — you can still use the app normally.",
-      confirmDeleteGeneric:'This action cannot be automatically undone. Do you want to continue?',
-      voiceNotSupported:'Voice input is not supported in this browser.',
-      invoiceProcessed:'Invoice processed.', itemsMatched:'of {total} items matched existing products.',
-      needsConfirmation:'item(s) require your confirmation.', invoiceTotalLabel:'Invoice total',
-      createdSuccessfully:'Invoice created successfully.'
+      approveSave:'Approve & Save', confirmTitle:'⚠️ Confirm Action', editManually:'Edit', inputPlaceholder:'Ask anything or give me a command...', 
+      quickCheckInventory:'📦 Check Inventory', quickOutstanding:'💰 Outstanding', quickReadInvoice:'📄 Read Invoice', 
+      quickSearchCustomer:'👤 Search Customer', reviewTitle:'🧾 AI Invoice Review', title:'🤖 AI Assistant'
+    },
+    backup: {
+      appAccessCode:'🔒 App Access Code', autoBackup:'⏱️ Auto-Backup', autoBackupFrequency:'Auto-backup frequency', 
+      backupRestore:'🗂️ Backup & Restore', clearSales:'🔄 Clear Sales & Restore Inventory (Fresh Start)', connect:'🔗 Connect', 
+      connected:'This device is connected. Enter this exact code on every other device you want sharing the same data.', 
+      copy:'📋 Copy', countryCodePlaceholder:'e.g. 92 for Pakistan, 91 for India', defaultCountryCode:'Default Country Code (no + sign)', 
+      disconnectDevice:'Disconnect This Device', eraseAllData:'🗑️ Erase All Data on This Device', everyTimeOpen:'Every time I open the app', 
+      exportBackup:'⬇️ Export Backup (.json)', exportFullBackup:'⬇️ Export Full App Backup (.html)', generateSyncCode:'✨ Generate New Sync Code (first device)', 
+      importBackup:'⬆️ Import Backup', includeHtmlBackup:'Also include the full .html backup (not just .json)', 
+      installAsApp:'📲 Install as an App', installAsAppBody:'If this page is hosted online (not opened as a local file), you can install it to your phone or laptop home screen for a full offline app experience. Look for the "Install" button in the header, or use your browser\'s "Add to Home Screen" / "Install App" menu option.', 
+      multiDeviceSync:'🔗 Multi-Device Sync', newAccessCodePlaceholder:'New access code (leave blank to remove the lock)', 
+      notConnected:'This device is not connected. Generate a code on your main device, then enter that same code on every other device.', 
+      off:'Off', onceDay:'Once a day', onceWeek:'Once a week', pasteCode:'Paste the code shown on your other device', 
+      refresh:'🔄 Refresh', resetEverything:'🔁 Reset Everything to Zero (incl. Accounting & Partners)', shareCodeWarning:'⚠️ Anyone with this code can read and write this shop\'s data — share it only with your own devices, the same way you\'d protect a password.', 
+      storageUsage:'📊 Storage Usage', syncBody:'Share live data (sales, inventory, customers, etc.) between this device and others — desktop, browser, or phone. Off by default; every device must be connected with the same sync code before its data is shared.', 
+      syncCodeFromOther:'Sync Code from another device', whatsappSettings:'📲 WhatsApp Settings', whatsappSettingsBody:'Used when sending a digital receipt — customer numbers saved without a country code (e.g. starting with 0) are completed using this.'
+    },
+    claims: {
+      addClaim:'Add Warranty / Part Claim', addClaimBtn:'➕ Add Claim', approved:'Approved', claimList:'Claim List', 
+      date:'Date', notesPlaceholder:'Supplier reference number, follow-up details, etc.', pending:'Pending', 
+      product:'Product', quantity:'Quantity', reasonForClaim:'Reason for Claim', reasonPlaceholder:'e.g. Defective alternator, failed within warranty period', 
+      refundAmount:'Refund Amount (Rs.) — if applicable', refunded:'Refunded', rejected:'Rejected', replaced:'Replaced', 
+      selectProduct:'-- Select product --', selectSupplier:'-- Select supplier --', status:'Status', thQty:'Qty', 
+      thReason:'Reason', thRefund:'Refund'
+    },
+    customers: {
+      addCustomer:'Add Customer', addCustomerBtn:'➕ Add Customer', addressOptional:'Address (optional)', addressPlaceholder:'Address', 
+      bikeModelOptional:'Bike Model (optional)', bikeModelPlaceholder:'e.g. Honda CG125', customer:'Customer', 
+      customerList:'Customer List', customerType:'Customer Type', name:'Name', namePlaceholder:'Customer name', 
+      notesPlaceholder:'Anything worth remembering about this customer', retail:'Retail', searchByNamePhone:'🔍 Search by name or phone...', 
+      thBike:'Bike', thCreditOwed:'Credit Owed', thPurchases:'Purchases', thTotalSpent:'Total Spent', whatsappOptional:'WhatsApp Number (optional)', 
+      whatsappPlaceholder:'Leave blank to use Phone', wholesale:'Wholesale'
+    },
+    dashboard: {
+      capitalGrowth:'📈 Capital Growth', cashProfitTrend:'💵 Net Cash Flow & Profit Trend (6mo)', cashVsLiabilities:'CASH VS LIABILITIES', 
+      dailyBrief:'📋 Daily Brief', equityAssets:'EQUITY / ASSETS', financialOverview:'🧭 Financial Overview', 
+      financialOverviewSub:'Position of the business as of today, and how it\'s been trending.', inventoryByCategory:'📦 Inventory Value by Category', 
+      noAccessBody:'Your account doesn\'t have any dashboard modules assigned. Please see your Manager or Admin if you believe this is wrong.', 
+      noAccessTitle:'🔒 Nothing to show here', partnerDrawings:'🏧 Partner Drawings', quickAccess:'Quick Access', 
+      recentSales:'🕓 Recent Sales', topSelling:'🏆 Top Selling Products (This Month)'
+    },
+    demand: {
+      addProductToDemand:'Add Product to This Demand', cancelEdit:'Cancel Edit', demNotesPlaceholder:'e.g. Delivery by Friday, prefer OEM parts', 
+      demSearchPlaceholder:'Type product name, model, or SKU...', demandList:'Demand List', newDemand:'📨 New Purchase Demand', 
+      newDemandBody:'Build a list of what you need from a supplier, save it as a draft, and send it whenever you\'re ready — no stock or cost changes happen here, that only happens once the actual Purchase is recorded.', 
+      saveAsDraft:'💾 Save as Draft', searchBySupplier:'🔍 Search by supplier...'
+    },
+    employees: {
+      accessRole:'Access Role', active:'Active', activeNote:'Only Active employees appear in the POS "Served By" dropdown and the Login screen. Set someone to Inactive instead of deleting them to keep their sales history intact.', 
+      addEmployee:'Add Employee', addEmployeeBtn:'➕ Add Employee', employeeList:'Employee List', fullName:'Full Name', 
+      fullNamePlaceholder:'e.g. Farrukh Ahmed', inactive:'Inactive', loginPin:'Login PIN (4+ digits)', loginPinPlaceholder:'Used to log in on this device', 
+      notesPlaceholder:'Anything worth remembering about this employee', pinSecurityNote:'⚠️ PINs are a practical deterrent and an accountability log (who did what), not bank-grade security — this app has no server, so anyone with deep technical knowledge and access to this device could bypass it. Don\'t rely on it alone for sensitive access control.', 
+      posCashier:'Cashier', posHelper:'Helper', posManager:'Manager', posMechanic:'Mechanic', position:'Position', 
+      roleAdmin:'Admin — full access incl. delete', roleCashier:'Other — view + POS (make sales)', roleManager:'Manager — view + add/edit, no delete', 
+      roleMechanic:'Mechanic — view only', setupModeBanner:'⚙️', thSalesMonth:'Sales (This Month)'
+    },
+    inventory: {
+      addProduct:'Add Product', addProductBtn:'➕ Add Product', auto:'🎲 Auto', bulkImportBody:'Add or update many products at once instead of typing them one by one. Download the template, fill it in (in Excel, Google Sheets, or Numbers), then upload the file below — .xlsx (Excel workbook) and .csv files both work directly, no need to convert. Products are matched by SKU — matching rows update the existing product, new codes create a new one.', 
+      bulkImportTitle:'📥 Bulk Import from Excel / CSV', catBodyParts:'Body Parts', catBrakes:'Brakes', catElectrical:'Electrical', 
+      catEngineParts:'Engine Parts', catOils:'Oils & Lubricants', catOther:'Other', catTyres:'Tyres & Tubes', 
+      category:'Category', clear:'🧹 Clear', companyBrand:'Company / Brand', companyPlaceholder:'e.g. Honda, Sohrab, Service', 
+      costPrice:'Cost Price (Rs.)', deleteAll:'🗑️ Delete All', deleteSelected:'Delete Selected', downloadTemplate:'⬇️ Download Sample Template (.csv)', 
+      exportInventory:'⬇️ Export Current Inventory (.csv)', filterByName:'🔍 Filter by product name...', lowStockAlert:'Low Stock Alert Level', 
+      modelFitment:'Model / Bike Fitment', modelPlaceholder:'e.g. CG125', none:'-- None --', productCatalog:'Product Catalog', 
+      productName:'Product Name', productNamePlaceholder:'e.g. Brake Pad Set', retailPrice:'Retail Price (Rs.)', 
+      searchCatalog:'🔍 Search by name, model, company, or SKU...', skuCode:'SKU / Product Code', skuPlaceholder:'Leave blank to auto-generate', 
+      stockLedger:'📋 Stock Movement Ledger', stockLedgerBody:'Every change to stock — sales, manual adjustments, and imports — is logged here automatically, so you always know why a number changed. Stock is never edited silently.', 
+      stockQuantity:'Stock Quantity', supplierOptional:'Supplier (optional)', thCategory:'Category', thChange:'Change', 
+      thCompany:'Company', thCost:'Cost', thDate:'Date', thModel:'Model', thName:'Name', thReasonNote:'Reason / Note', 
+      thResultingStock:'Resulting Stock', thRetail:'Retail', thStock:'Stock', thType:'Type', thWholesale:'Wholesale', 
+      uploadToImport:'Upload Excel (.xlsx) or CSV to Import', wholesalePrice:'Wholesale Price (Rs., optional)'
+    },
+    pos: {
+      amountHanded:'Amount handed by customer', card:'💳 Card', cardBankAmount:'Card / Bank Amount (Rs.)', cardPortion:'Card or bank transfer portion', 
+      cartDiscount:'Cart Discount', cash:'💵 Cash', cashAmount:'Cash Amount (Rs.)', cashPlain:'Cash', cashPlusCard:'💵💳 Cash + Card', 
+      cashPortion:'Cash portion', cashReceivedNow:'Cash Received Now (Rs.)', cashReceivedPlaceholder:'e.g. customer pays half now', 
+      cashTendered:'Cash Tendered by Customer (Rs.)', completeSale:'✅ Complete Sale', creditRequiresCustomer:'⚠️ This requires a selected customer (not Walk-in) so the amount owed can be tracked.', 
+      customer:'Customer', discount:'Discount', enterBothAmounts:'Enter both amounts — no credit is created, this is fully paid.', 
+      enterCashToCalc:'Enter cash tendered to calculate change', enterCashToSeeCredit:'Enter cash received to see remaining credit', 
+      findProduct:'Find Product (name, company, model, or SKU)', fullCredit:'📒 Full Credit', grandTotal:'Grand Total', 
+      holdSale:'⏸️ Hold Sale', itemDiscounts:'Item Discounts', newSale:'New Sale', noDiscount:'No Discount', 
+      notSpecified:'-- Not specified --', partialCashCredit:'➗ Partial Cash + Credit', paymentMethod:'Payment Method', 
+      percent:'% Percent', priceTypeForNewItems:'Price Type for New Items', resume:'▶️ Resume', retail:'🏷️ Retail', 
+      rsAmount:'Rs. Amount', searchPlaceholder:'Type to search... (↑↓ to browse, Enter to select)', servedBy:'Served By (this login — locked)', 
+      subtotal:'Subtotal', viewOnlyBanner:'🔒 Your role has view-only access to POS — you can browse products and prices, but making a sale requires a Cashier, Manager, or Admin login.', 
+      walkInCustomer:'Walk-in customer', wholesale:'📦 Wholesale'
+    },
+    purchases: {
+      addAtLeastOneItem:'Add at least one item to this purchase.', addProductToPurchase:'Add Product to This Purchase', 
+      amountPaidNow:'Amount Paid Now (Rs.)', attachInvoice:'Attach Invoice Image/PDF (optional)', attachInvoiceNote:'Keep it under 2 MB — everything is stored on this device, and large attachments fill up storage quickly. A phone photo of the invoice works fine; try to avoid multi-page scanned PDFs.', 
+      biltyAmount:'Bilty Amount (Rs.)', biltyImage:'Bilty / Freight Receipt Image (optional)', biltyImageNote:'Keep it under 2 MB, same as the invoice attachment above.', 
+      biltyNumber:'Bilty Number', biltyNumberPlaceholder:'e.g. BLT-4521', bulkImportBody:'Add many items to this purchase at once instead of searching for each one — shaped to match a real supplier "Credit Sale" invoice (Particulars, Qty, Rate, Discount%), so you can transcribe a paper/PDF invoice straight into the template. Download it, fill it in (Excel, Google Sheets, or Numbers), then upload — .xlsx and .csv both work directly, no need to convert. Rows are matched to your catalog by SKU if given, otherwise by an exact Particulars name match. A row that matches nothing existing creates a new product automatically (with an auto-generated SKU and default pricing) rather than being skipped — since that\'s usually how a genuinely new part first enters the catalog. An optional Gift column takes a "buy+free" scheme like 9+1 or 14+1 — free bonus units get added to stock automatically when the purchase is saved.', 
+      bulkImportTitle:'📥 Bulk Import Items from Excel / CSV', cancelEdit:'✖ Cancel Edit', editNotice:'✏️ Editing an existing purchase. Saving will undo this purchase\'s original effect on stock, then re-apply it with whatever you change here. If newer purchases happened for the same product since this one, re-saving may reset that product\'s current cost price back to this invoice\'s numbers — worth a quick check in Inventory afterward.', 
+      invoiceNumber:'Invoice Number', invoiceNumberPlaceholder:'e.g. INV-4521', logisticsLabel:'🚚 Logistics / Freight Cost (Bilty) — optional', 
+      logisticsNote:'Transport/fuel cost for getting this stock delivered. This is recorded as its own business expense — it\'s not added to the supplier\'s invoice total or what you owe them.', 
+      notesOptional:'Notes (optional)', notesPlaceholder:'Delivery details, discrepancies, etc.', overallDiscount:'Overall Purchase Discount', 
+      overallDiscountNote:'Applied on top of any per-item discounts below, e.g. a flat trade discount from the supplier.', 
+      paidInFull:'Paid in Full', partiallyPaid:'Partially Paid', paymentStatus:'Payment Status', purSearchPlaceholder:'Type product name, model, SKU, or company... (↑↓ to browse, Enter to select)', 
+      purchaseDate:'Purchase Date', purchaseHistory:'Purchase History', recordPurchase:'Record a Purchase / Supplier Invoice', 
+      rs:'Rs.', savePurchase:'💾 Save Purchase', searchPurchase:'🔍 Search by invoice number or supplier...', 
+      thAttachment:'Attachment', thDiscount:'Discount', thInvoiceNo:'Invoice #', thItems:'Items', thLogistics:'Logistics', 
+      thOwed:'Owed', thPaid:'Paid', thTotal:'Total', unpaidCredit:'Unpaid (fully on credit)'
+    },
+    reports: {
+      actualCashCounted:'Actual Cash Counted in Drawer', addExpense:'➕ Add Expense', amountRs:'Amount (Rs.)', 
+      cashExpensesToday:'Cash Expenses Today (e.g. fuel, tea, small purchases)', cashSalesAuto:'Cash Sales Today (auto)', 
+      categoryPlaceholder:'e.g. Rent, Utilities, Salary', closedCountedBy:'Closed / Counted By (Employee)', 
+      customReportBody:'Pick any date range and a report type — useful for a specific week, a tax period, or checking one customer\'s or supplier\'s activity.', 
+      customReportTitle:'📊 Custom Date-Range Report', detailsPlaceholder:'Details', enterActualCount:'Enter the actual count above to see the difference.', 
+      eodBody:'Do this at closing time each day to make sure the cash in your drawer matches what the app recorded.', 
+      eodReconciliation:'💰 End-of-Day Cash Reconciliation', expectedCash:'Expected Cash in Drawer', expenseMadeBy:'Expense Made By (Employee)', 
+      expenseMadeByNote:'— e.g. the mechanic who spent the cash above', expenses:'🧾 Expenses', expensesBody:'Rent, electricity, salaries, transport, etc. These are subtracted from profit.', 
+      exportReport:'⬇️ Export This Report (.csv)', fromDate:'From Date', generateReport:'📈 Generate Report', 
+      lowStockItems:'Low Stock Items', monthProfit:'This Month\'s Net Profit', monthSales:'This Month\'s Sales', 
+      noteOptional:'Note (optional)', openingCash:'Opening Cash (float you started the day with)', overallSummary:'Overall Sales Summary', 
+      purchasesBySupplier:'Purchases by Supplier', reconciliationHistory:'📜 Recent Reconciliation History', 
+      reportType:'Report Type', salesByCustomer:'Sales by Customer', saveReconciliation:'💾 Save Today\'s Reconciliation', 
+      thActual:'Actual', thAmount:'Amount', thClosedBy:'Closed By', thDifference:'Difference', thExpected:'Expected', 
+      thExpenseBy:'Expense By', thNote:'Note', toDate:'To Date', todaySales:'Today\'s Sales'
+    },
+    sales: {
+      salesHistory:'Sales History', salesReturns:'↩️ Sales Returns', salesReturnsBody:'Use the "Return" button on a sale above to process one. Returns automatically restock inventory and adjust reported sales/profit.', 
+      searchByCustomerItem:'🔍 Search by customer or item...', thItemsReturned:'Items Returned', thMethod:'Method', 
+      thPayment:'Payment', thRefund:'Refund', thSoldBy:'Sold By'
+    },
+    suppliers: {
+      addSupplier:'Add Supplier', addSupplierBtn:'➕ Add Supplier', address:'Address', addressPlaceholder:'Shop / warehouse address', 
+      contactPerson:'Contact Person', contactPersonPlaceholder:'Contact person name', email:'Email', emailPlaceholder:'Email address', 
+      notes:'Notes', notesPlaceholder:'Payment terms, delivery days, etc.', phone:'Phone', phonePlaceholder:'Phone number', 
+      supplierLabel:'Supplier', supplierList:'Supplier List', supplierName:'Supplier / Company Name', supplierNamePlaceholder:'e.g. Al-Noor Auto Traders', 
+      thContact:'Contact', thOwed:'Owed to Supplier', thPhone:'Phone', thProductsSupplied:'Products Supplied', 
+      thTotalPurchased:'Total Purchased', whatsapp:'WhatsApp', whatsappPlaceholder:'WhatsApp number'
     },
     validation: {
       requiredField:'This field is required.'
@@ -8373,7 +8531,7 @@ const TRANSLATIONS = {
     common: {
       save:'محفوظ کریں', cancel:'منسوخ کریں', confirm:'تصدیق کریں', search:'تلاش کریں', edit:'ترمیم کریں',
       delete:'حذف کریں', approve:'منظور کریں', reject:'مسترد کریں', close:'بند کریں', yes:'جی ہاں', no:'نہیں',
-      loading:'لوڈ ہو رہا ہے…', retry:'دوبارہ کوشش کریں'
+      loading:'لوڈ ہو رہا ہے…', retry:'دوبارہ کوشش کریں', backToDashboard:'← ڈیش بورڈ پر واپس جائیں'
     },
     navigation: {
       dashboard:'ڈیش بورڈ', pos:'POS', sales:'سیلز', inventory:'انوینٹری', suppliers:'سپلائرز',
@@ -8383,6 +8541,180 @@ const TRANSLATIONS = {
     login: {
       welcome:'👋 خوش آمدید! کیا آپ دن کا آغاز کرنے کے لیے تیار ہیں؟', instructions:'سائن ان کرنے کے لیے اپنا نام منتخب کریں اور اپنا PIN درج کریں۔',
       employee:'ملازم', pin:'PIN', pinPlaceholder:'آپ کا لاگ ان PIN', logIn:'🔓 لاگ ان کریں'
+    },
+    accounting: {
+      account:'اکاؤنٹ', accountNamePlaceholder:'مثلاً پیٹی کیش', addAccount:'➕ اکاؤنٹ شامل کریں', addFixedAsset:'🏗️ فکسڈ ایسٹ شامل کریں', 
+      addLiability:'🏦 ذمہ داری شامل کریں', addLine:'➕ لائن شامل کریں', addPartner:'➕ پارٹنر شامل کریں', addTransaction:'➕ ٹرانزیکشن شامل کریں', 
+      allTime:'⏱️ تمام وقت', allTimeNetProfit:'کل وقت کا خالص منافع', alreadyDistributed:'پہلے ہی تقسیم شدہ', 
+      amountNegativeWithdrawals:'رقم (روپے، نکلوانے کے لیے منفی استعمال کریں)', amountToDistribute:'تقسیم کے لیے رقم (روپے)', 
+      anyExtraDetail:'کوئی اضافی تفصیل', assetNamePlaceholder:'مثلاً ورکشاپ کاؤنٹر', availableToDistribute:'تقسیم کے لیے دستیاب', 
+      balanceSheetBody:'حقیقی سیلز، خریداری، انوینٹری، رجسٹرڈ فکسڈ ایسٹس، اور درج شدہ ذمہ داریوں سے بنایا گیا ہے۔ ہاتھ میں نقدی خودکار طور پر آپ کی حالیہ محفوظ شدہ کیش ری کنسیلی ایشن سے لی جاتی ہے؛ اگر آج کی گنتی مختلف ہے تو اسے تبدیل کریں۔', 
+      balanceSheetTitle:'📊 بیلنس شیٹ (آج تک)', bankFeed:'🏛️ بینک فیڈ', bankFeedBody:'اپنا بینک اسٹیٹمنٹ لائیں، پھر ہر لائن کو چارٹ آف اکاؤنٹس کی کسی انٹری کے خلاف درجہ بندی کریں — بس یہی کرنا ہے۔ درجہ بندی کرتے ہی آپ کے بینک اکاؤنٹ کے خلاف ایک متوازن جرنل انٹری فوری پوسٹ ہو جاتی ہے، جو سیدھی جنرل لیجر اور ٹرائل بیلنس میں، اور اگر آمدنی یا خرچہ ہو تو پرافٹ اینڈ لاس میں بھی شامل ہو جاتی ہے۔ کیٹیگری ہٹانے سے وہ انٹری دوبارہ ختم ہو جاتی ہے۔', 
+      bankLoan:'بینک قرض', bankTransfer:'بینک ٹرانسفر', capitalContributions:'💼 سرمایہ کاری', capitalContributionsBody:'کاروبار میں پارٹنر کی جانب سے ڈالی گئی رقم یا اثاثے ریکارڈ کریں۔', 
+      cashFlowBody:'منتخب تاریخوں کی حد میں حقیقتاً وصول اور ادا کی گئی نقدی، آپریٹنگ، انویسٹنگ، اور فنانسنگ میں تقسیم کی گئی — یہ وہی From/To حد استعمال کرتا ہے جو P&L ٹیب میں ہے۔', 
+      cashFlowStatement:'💧 کیش فلو اسٹیٹمنٹ', cashOnHand:'ہاتھ میں نقدی (روپے)', categoryOptional:'کیٹیگری (اختیاری)', 
+      chartOfAccounts:'📚 چارٹ آف اکاؤنٹس', coaBody:'ان اکاؤنٹس کی فہرست جن میں جرنل انٹریز پوسٹ ہوتی ہیں۔ ایک معیاری سیٹ کے ساتھ شروع کیا گیا ہے — اپنی ضرورت کے مطابق شامل کریں، نام تبدیل کریں، یا غیرفعال کریں۔', 
+      code:'کوڈ', codePlaceholder:'مثلاً 1050', credits:'کریڈٹ', debits:'ڈیبٹ', description:'تفصیل', descriptionPlaceholder:'مثلاً چیک جمع، اے ٹی ایم نکلوانا', 
+      difference:'فرق', distributeByShare:'💵 ملکیتی حصے کے مطابق تقسیم کریں', distributeProfit:'💵 منافع تقسیم کریں', 
+      distributeProfitBody:'دستیاب منافع کا حساب کل وقت کے خالص منافع (P&L سے) میں سے پہلے سے تقسیم شدہ منافع نکال کر کیا جاتا ہے۔', 
+      distributionHistory:'📜 تقسیم کی تاریخ', drawingsByPartner:'📊 پارٹنر کے مطابق نکلوائی', drawingsHistory:'📜 نکلوائی کی تاریخ', 
+      dueDate:'ادائیگی کی تاریخ', equipment:'آلات', exportBalanceSheet:'⬇️ بیلنس شیٹ ایکسپورٹ کریں (.csv)', 
+      exportCsv:'⬇️ ایکسپورٹ کریں (.csv)', exportStatement:'⬇️ اسٹیٹمنٹ ایکسپورٹ کریں (.csv)', fixedAssets:'🏗️ فکسڈ ایسٹس', 
+      fixedAssetsBody:'آلات، گاڑیاں، فرنیچر — کاروبار کے غیر انوینٹری اثاثے، لاگت پر ٹریک کیے گئے۔', furniture:'فرنیچر', 
+      generalLedger:'📖 جنرل لیجر', generalLedgerBody:'ایک اکاؤنٹ میں ہر پوسٹنگ، ترتیب سے، ایک چلتے بیلنس کے ساتھ۔', 
+      generateCashFlow:'💧 کیش فلو بنائیں', generatePL:'📄 P&L اسٹیٹمنٹ بنائیں', generateTrialBalance:'⚖️ ٹرائل بیلنس بنائیں', 
+      goodsStock:'سامان/اسٹاک', journalEntryBody:'ہر انٹری کا توازن ہونا ضروری ہے — محفوظ کرنے سے پہلے کل ڈیبٹ کل کریڈٹ کے برابر ہونا چاہیے۔', 
+      journalHistory:'📜 جرنل کی تاریخ', liabNamePlaceholder:'مثلاً بینک قرض — ایچ بی ایل', memo:'میمو', memoPlaceholder:'یہ انٹری کس لیے ہے؟', 
+      nameLabel:'نام', newJournalEntry:'📝 نئی جرنل انٹری', openingBalance:'ابتدائی بیلنس (روپے)', openingCapitalPlaceholder:'مثلاً ابتدائی سرمایہ', 
+      otherLiabilities:'🏦 دیگر ذمہ داریاں', otherLiabilitiesBody:'بینک قرضے، پارٹنر قرضے، قابلِ ادا ٹیکس — عام سپلائر انوائسز کے علاوہ جو کچھ واجب الادا ہے (وہ خودکار طور پر خریداری کے تحت ٹریک ہوتے ہیں)۔', 
+      ownershipShare:'ملکیتی حصہ (%)', partner:'پارٹنر', partnerCurrentAccounts:'🧾 پارٹنر کرنٹ اکاؤنٹس', partnerCurrentAccountsBody:'تقسیم شدہ منافع یہاں رہتا ہے جب تک پارٹنر اسے نقدی (نکلوائی) کے طور پر نہ نکالے یا سرمائے کے طور پر دوبارہ لگائے۔', 
+      partnerEquityBody:'اوپر کل مالکانہ ایکویٹی پارٹنرز میں کیسے تقسیم ہے، سرمائے، لی گئی نکلوائی، اور تقسیم شدہ مگر ناکالی گئی منافع کی بنیاد پر۔', 
+      partnerEquityBreakdown:'🧮 پارٹنر ایکویٹی کی تفصیل', partnerLoan:'پارٹنر قرض', partnerName:'پارٹنر کا نام', 
+      partnerNamePlaceholder:'مثلاً اسد ملک', partners:'🤝 پارٹنرز', partnersBody:'ملکیتی حصے تقسیم شدہ منافع بانٹنے کے لیے استعمال ہوتے ہیں۔ حصوں کا مجموعہ 100% ہونا چاہیے۔', 
+      personalExpensePlaceholder:'مثلاً ذاتی خرچہ', plBody:'ایک مناسب P&L بنانے کے لیے تاریخوں کی حد منتخب کریں: آمدنی → لاگتِ فروخت → مجموعی منافع → آپریٹنگ اخراجات (کیٹیگری کے مطابق) → خالص منافع۔', 
+      plStatement:'💰 منافع و نقصان کا بیان', postEntry:'💾 انٹری پوسٹ کریں', purchaseDate:'خریداری کی تاریخ', 
+      recordCapital:'💼 سرمایہ کاری ریکارڈ کریں', recordDrawing:'🏧 نکلوائی ریکارڈ کریں', recordDrawingBody:'نقدی یا اثاثے جو پارٹنر نے ذاتی استعمال کے لیے کاروبار سے نکالے ہیں — تنخواہ/اجرت سے الگ۔', 
+      recordDrawingBtn:'🏧 نکلوائی ریکارڈ کریں', referenceOptional:'حوالہ (اختیاری)', referencePlaceholder:'مثلاً انوائس #1042', 
+      searchDescription:'🔍 تفصیل تلاش کریں...', searchJournal:'🔍 میمو یا حوالے سے تلاش کریں...', subBalance:'📊 بیلنس شیٹ', 
+      subBank:'🏛️ بینک فیڈ', subCashflow:'💧 کیش فلو', subCoa:'📚 چارٹ آف اکاؤنٹس', subDrawings:'🏧 نکلوائی', 
+      subJournal:'📝 جرنل انٹریز', subLedger:'📖 جنرل لیجر', subLiabilities:'🏦 ذمہ داریاں اور اثاثے', subPL:'📄 منافع و نقصان', 
+      subPartners:'🤝 پارٹنرز اور سرمایہ', subProfit:'💵 منافع کی تقسیم', subTrial:'⚖️ ٹرائل بیلنس', taxesPayable:'قابلِ ادا ٹیکس', 
+      transactions:'📋 ٹرانزیکشنز', trialBalance:'⚖️ ٹرائل بیلنس', trialBalanceBody:'آج تک ہر اکاؤنٹ کا بیلنس۔ کل ڈیبٹ اور کل کریڈٹ کا مماثل ہونا ضروری ہے — یہی چیز اسے ٹرائل بیلنس بناتی ہے۔', 
+      typeAsset:'اثاثہ', typeEquity:'ایکویٹی', typeExpense:'خرچہ', typeLiability:'ذمہ داری', typeRevenue:'آمدنی', 
+      uploadBankStatement:'📥 بینک اسٹیٹمنٹ اپ لوڈ کریں (.csv)', uploadBankStatementBody:'اس ترتیب میں تین کالم: تاریخ، تفصیل، رقم (نکلوانے کے لیے منفی)۔ ایک چوتھا اختیاری کالم، کیٹیگری، آپ کے چارٹ آف اکاؤنٹس سے کسی اکاؤنٹ کے نام یا کوڈ سے میچ کر کے امپورٹ کے دوران خودکار درجہ بندی کر سکتا ہے۔ زیادہ تر بینکوں کی ایکسپورٹس کو ایکسل میں چند منٹوں میں اس شکل میں ترتیب دیا جا سکتا ہے۔', 
+      valueRs:'قیمت (روپے)', vehicles:'گاڑیاں'
+    },
+    backup: {
+      appAccessCode:'🔒 ایپ ایکسیس کوڈ', autoBackup:'⏱️ خودکار بیک اپ', autoBackupFrequency:'خودکار بیک اپ کی تعدد', 
+      backupRestore:'🗂️ بیک اپ اور بحالی', clearSales:'🔄 سیلز صاف کریں اور انوینٹری بحال کریں (نئی شروعات)', 
+      connect:'🔗 کنیکٹ کریں', connected:'یہ ڈیوائس کنیکٹڈ ہے۔ ہر دوسری ڈیوائس پر یہی درست کوڈ درج کریں جس کے ساتھ آپ ایک ہی ڈیٹا شیئر کرنا چاہتے ہیں۔', 
+      copy:'📋 کاپی کریں', countryCodePlaceholder:'مثلاً پاکستان کے لیے 92، انڈیا کے لیے 91', defaultCountryCode:'ڈیفالٹ کنٹری کوڈ (+ کے بغیر)', 
+      disconnectDevice:'اس ڈیوائس کو ڈسکنیکٹ کریں', eraseAllData:'🗑️ اس ڈیوائس پر تمام ڈیٹا مٹائیں', everyTimeOpen:'ہر بار جب میں ایپ کھولوں', 
+      exportBackup:'⬇️ بیک اپ ایکسپورٹ کریں (.json)', exportFullBackup:'⬇️ مکمل ایپ بیک اپ ایکسپورٹ کریں (.html)', 
+      generateSyncCode:'✨ نیا سنک کوڈ بنائیں (پہلی ڈیوائس)', importBackup:'⬆️ بیک اپ امپورٹ کریں', includeHtmlBackup:'مکمل .html بیک اپ بھی شامل کریں (صرف .json نہیں)', 
+      installAsApp:'📲 بطور ایپ انسٹال کریں', installAsAppBody:'اگر یہ صفحہ آن لائن ہوسٹ ہے (لوکل فائل کے طور پر نہیں کھولا گیا)، تو آپ اسے مکمل آف لائن ایپ تجربے کے لیے اپنے فون یا لیپ ٹاپ کی ہوم اسکرین پر انسٹال کر سکتے ہیں۔ ہیڈر میں "Install" بٹن تلاش کریں، یا اپنے براؤزر کا "Add to Home Screen" / "Install App" مینو آپشن استعمال کریں۔', 
+      multiDeviceSync:'🔗 ملٹی ڈیوائس سنک', newAccessCodePlaceholder:'نیا ایکسیس کوڈ (لاک ہٹانے کے لیے خالی چھوڑیں)', 
+      notConnected:'یہ ڈیوائس کنیکٹڈ نہیں ہے۔ اپنی مرکزی ڈیوائس پر ایک کوڈ بنائیں، پھر ہر دوسری ڈیوائس پر وہی کوڈ درج کریں۔', 
+      off:'بند', onceDay:'دن میں ایک بار', onceWeek:'ہفتے میں ایک بار', pasteCode:'اپنی دوسری ڈیوائس پر دکھایا گیا کوڈ پیسٹ کریں', 
+      refresh:'🔄 ریفریش کریں', resetEverything:'🔁 سب کچھ صفر پر ری سیٹ کریں (اکاؤنٹنگ اور پارٹنرز سمیت)', shareCodeWarning:'⚠️ یہ کوڈ رکھنے والا کوئی بھی اس دکان کا ڈیٹا پڑھ اور لکھ سکتا ہے — اسے صرف اپنی ڈیوائسز کے ساتھ شیئر کریں، بالکل اسی طرح جیسے آپ پاس ورڈ کی حفاظت کرتے ہیں۔', 
+      storageUsage:'📊 اسٹوریج کا استعمال', syncBody:'اس ڈیوائس اور دیگر — ڈیسک ٹاپ، براؤزر، یا فون — کے درمیان لائیو ڈیٹا (سیلز، انوینٹری، کسٹمرز وغیرہ) شیئر کریں۔ ڈیفالٹ طور پر بند؛ ہر ڈیوائس کا ڈیٹا شیئر ہونے سے پہلے اسے اسی سنک کوڈ سے کنیکٹ ہونا ضروری ہے۔', 
+      syncCodeFromOther:'کسی دوسری ڈیوائس سے سنک کوڈ', whatsappSettings:'📲 واٹس ایپ سیٹنگز', whatsappSettingsBody:'ڈیجیٹل رسید بھیجتے وقت استعمال ہوتا ہے — کنٹری کوڈ کے بغیر محفوظ کیے گئے کسٹمر نمبرز (مثلاً 0 سے شروع ہونے والے) اس کے ذریعے مکمل کیے جاتے ہیں۔'
+    },
+    claims: {
+      addClaim:'وارنٹی / پرزہ کلیم شامل کریں', addClaimBtn:'➕ کلیم شامل کریں', approved:'منظور شدہ', claimList:'کلیمز کی فہرست', 
+      date:'تاریخ', notesPlaceholder:'سپلائر ریفرنس نمبر، فالو اپ کی تفصیلات وغیرہ۔', pending:'زیرِ التوا', 
+      product:'پروڈکٹ', quantity:'مقدار', reasonForClaim:'کلیم کی وجہ', reasonPlaceholder:'مثلاً خراب آلٹرنیٹر، وارنٹی مدت میں ناکام ہوا', 
+      refundAmount:'رقم واپسی (روپے) — اگر لاگو ہو', refunded:'رقم واپس کر دی گئی', rejected:'مسترد', replaced:'تبدیل کر دیا گیا', 
+      selectProduct:'-- پروڈکٹ منتخب کریں --', selectSupplier:'-- سپلائر منتخب کریں --', status:'حیثیت', thQty:'مقدار', 
+      thReason:'وجہ', thRefund:'واپسی'
+    },
+    customers: {
+      addCustomer:'کسٹمر شامل کریں', addCustomerBtn:'➕ کسٹمر شامل کریں', addressOptional:'پتہ (اختیاری)', addressPlaceholder:'پتہ', 
+      bikeModelOptional:'بائیک ماڈل (اختیاری)', bikeModelPlaceholder:'مثلاً ہونڈا CG125', customer:'کسٹمر', 
+      customerList:'کسٹمرز کی فہرست', customerType:'کسٹمر کی قسم', name:'نام', namePlaceholder:'کسٹمر کا نام', 
+      notesPlaceholder:'اس کسٹمر کے بارے میں یاد رکھنے کی کوئی بات', retail:'ریٹیل', searchByNamePhone:'🔍 نام یا فون نمبر سے تلاش کریں...', 
+      thBike:'بائیک', thCreditOwed:'واجب الادا کریڈٹ', thPurchases:'خریداریاں', thTotalSpent:'کل خرچ', whatsappOptional:'واٹس ایپ نمبر (اختیاری)', 
+      whatsappPlaceholder:'فون نمبر استعمال کرنے کے لیے خالی چھوڑیں', wholesale:'ہول سیل'
+    },
+    dashboard: {
+      capitalGrowth:'📈 سرمائے کی نمو', cashProfitTrend:'💵 خالص کیش فلو اور منافع کا رجحان (6 ماہ)', cashVsLiabilities:'نقدی بمقابلہ ذمہ داریاں', 
+      dailyBrief:'📋 روزانہ کا خلاصہ', equityAssets:'ایکویٹی / اثاثے', financialOverview:'🧭 مالی جائزہ', financialOverviewSub:'کاروبار کی آج کی پوزیشن، اور اس کا رجحان کیسا رہا ہے۔', 
+      inventoryByCategory:'📦 کیٹیگری کے مطابق انوینٹری کی مالیت', noAccessBody:'آپ کے اکاؤنٹ کو کوئی ڈیش بورڈ ماڈیول تفویض نہیں کیا گیا۔ اگر آپ کو لگتا ہے کہ یہ غلط ہے تو اپنے مینیجر یا ایڈمن سے رابطہ کریں۔', 
+      noAccessTitle:'🔒 یہاں دکھانے کے لیے کچھ نہیں', partnerDrawings:'🏧 پارٹنر کی نکلوائی', quickAccess:'فوری رسائی', 
+      recentSales:'🕓 حالیہ سیلز', topSelling:'🏆 سب سے زیادہ بکنے والی پروڈکٹس (اس مہینے)'
+    },
+    demand: {
+      addProductToDemand:'اس ڈیمانڈ میں پروڈکٹ شامل کریں', cancelEdit:'ترمیم منسوخ کریں', demNotesPlaceholder:'مثلاً جمعہ تک ڈیلیوری، اوریجنل پرزے ترجیح دیں', 
+      demSearchPlaceholder:'پروڈکٹ کا نام، ماڈل، یا SKU لکھیں...', demandList:'ڈیمانڈز کی فہرست', newDemand:'📨 نئی خریداری ڈیمانڈ', 
+      newDemandBody:'سپلائر سے جو کچھ درکار ہے اس کی فہرست بنائیں، اسے ڈرافٹ کے طور پر محفوظ کریں، اور جب تیار ہوں بھیج دیں — یہاں کوئی اسٹاک یا لاگت میں تبدیلی نہیں ہوتی، وہ صرف اصل خریداری ریکارڈ ہونے پر ہوتی ہے۔', 
+      saveAsDraft:'💾 ڈرافٹ کے طور پر محفوظ کریں', searchBySupplier:'🔍 سپلائر کے مطابق تلاش کریں...'
+    },
+    employees: {
+      accessRole:'رسائی کا کردار', active:'فعال', activeNote:'صرف فعال ملازمین POS کے "Served By" ڈراپ ڈاؤن اور لاگ ان اسکرین میں دکھائی دیتے ہیں۔ کسی کو حذف کرنے کے بجائے غیرفعال کریں تاکہ ان کی سیلز ہسٹری برقرار رہے۔', 
+      addEmployee:'ملازم شامل کریں', addEmployeeBtn:'➕ ملازم شامل کریں', employeeList:'ملازمین کی فہرست', fullName:'پورا نام', 
+      fullNamePlaceholder:'مثلاً فرخ احمد', inactive:'غیرفعال', loginPin:'لاگ ان پن (4+ ہندسے)', loginPinPlaceholder:'اس ڈیوائس پر لاگ ان کرنے کے لیے استعمال ہوتا ہے', 
+      notesPlaceholder:'اس ملازم کے بارے میں یاد رکھنے کی کوئی بات', pinSecurityNote:'⚠️ پن ایک عملی رکاوٹ اور جوابدہی کا ریکارڈ ہے (کس نے کیا کیا)، بینک جیسی سیکیورٹی نہیں — اس ایپ کا کوئی سرور نہیں، اس لیے گہری تکنیکی معلومات اور اس ڈیوائس تک رسائی رکھنے والا کوئی بھی اسے نظرانداز کر سکتا ہے۔ حساس رسائی کنٹرول کے لیے صرف اسی پر انحصار نہ کریں۔', 
+      posCashier:'کیشیئر', posHelper:'ہیلپر', posManager:'مینیجر', posMechanic:'مکینک', position:'عہدہ', roleAdmin:'ایڈمن — مکمل رسائی بشمول حذف کرنا', 
+      roleCashier:'دیگر — دیکھنا + POS (سیل کرنا)', roleManager:'مینیجر — دیکھنا + شامل/ترمیم، حذف نہیں', roleMechanic:'مکینک — صرف دیکھنا', 
+      setupModeBanner:'⚙️ سیٹ اپ موڈ — ابھی تک کوئی ملازم موجود نہیں، اس لیے آپ عارضی طور پر بطور ایڈمن لاگ ان ہیں۔ نیچے پن کے ساتھ اپنے پہلے ملازم (خود) کو ایڈمن کے طور پر شامل کریں، پھر ہیڈر میں لاگ آؤٹ پر کلک کریں اور اس پن کے ساتھ دوبارہ لاگ ان کریں۔', 
+      thSalesMonth:'سیلز (اس مہینے)'
+    },
+    inventory: {
+      addProduct:'پروڈکٹ شامل کریں', addProductBtn:'➕ پروڈکٹ شامل کریں', auto:'🎲 خودکار', bulkImportBody:'ایک ایک کر کے ٹائپ کرنے کے بجائے ایک ساتھ کئی پروڈکٹس شامل یا اپ ڈیٹ کریں۔ ٹیمپلیٹ ڈاؤن لوڈ کریں، اسے (ایکسل، گوگل شیٹس، یا نمبرز میں) پُر کریں، پھر نیچے فائل اپ لوڈ کریں — .xlsx (ایکسل ورک بک) اور .csv دونوں فائلیں براہ راست کام کرتی ہیں، تبدیل کرنے کی ضرورت نہیں۔ پروڈکٹس SKU سے میچ کی جاتی ہیں — میچ ہونے والی قطاریں موجودہ پروڈکٹ کو اپ ڈیٹ کرتی ہیں، نئے کوڈز نئی پروڈکٹ بناتے ہیں۔', 
+      bulkImportTitle:'📥 ایکسل / CSV سے بلک امپورٹ', catBodyParts:'باڈی پارٹس', catBrakes:'بریکس', catElectrical:'الیکٹریکل', 
+      catEngineParts:'انجن پارٹس', catOils:'آئل اور لیوبریکنٹس', catOther:'دیگر', catTyres:'ٹائرز اور ٹیوبز', 
+      category:'کیٹیگری', clear:'🧹 صاف کریں', companyBrand:'کمپنی / برانڈ', companyPlaceholder:'مثلاً ہونڈا، سوہراب، سروس', 
+      costPrice:'لاگت قیمت (روپے)', deleteAll:'🗑️ سب حذف کریں', deleteSelected:'منتخب حذف کریں', downloadTemplate:'⬇️ نمونہ ٹیمپلیٹ ڈاؤن لوڈ کریں (.csv)', 
+      exportInventory:'⬇️ موجودہ انوینٹری ایکسپورٹ کریں (.csv)', filterByName:'🔍 پروڈکٹ کے نام سے فلٹر کریں...', 
+      lowStockAlert:'کم اسٹاک الرٹ لیول', modelFitment:'ماڈل / بائیک فٹمنٹ', modelPlaceholder:'مثلاً CG125', 
+      none:'-- کوئی نہیں --', productCatalog:'پروڈکٹ کیٹلاگ', productName:'پروڈکٹ کا نام', productNamePlaceholder:'مثلاً بریک پیڈ سیٹ', 
+      retailPrice:'ریٹیل قیمت (روپے)', searchCatalog:'🔍 نام، ماڈل، کمپنی، یا SKU سے تلاش کریں...', skuCode:'SKU / پروڈکٹ کوڈ', 
+      skuPlaceholder:'خودکار بنانے کے لیے خالی چھوڑیں', stockLedger:'📋 اسٹاک موومنٹ لیجر', stockLedgerBody:'اسٹاک میں ہر تبدیلی — سیلز، دستی ایڈجسٹمنٹس، اور امپورٹس — یہاں خودکار طور پر لاگ ہوتی ہے، تاکہ آپ کو ہمیشہ معلوم رہے کہ نمبر کیوں تبدیل ہوا۔ اسٹاک کبھی خاموشی سے ترمیم نہیں کیا جاتا۔', 
+      stockQuantity:'اسٹاک مقدار', supplierOptional:'سپلائر (اختیاری)', thCategory:'کیٹیگری', thChange:'تبدیلی', 
+      thCompany:'کمپنی', thCost:'لاگت', thDate:'تاریخ', thModel:'ماڈل', thName:'نام', thReasonNote:'وجہ / نوٹ', 
+      thResultingStock:'نتیجتاً اسٹاک', thRetail:'ریٹیل', thStock:'اسٹاک', thType:'قسم', thWholesale:'ہول سیل', 
+      uploadToImport:'امپورٹ کے لیے ایکسل (.xlsx) یا CSV اپ لوڈ کریں', wholesalePrice:'ہول سیل قیمت (روپے، اختیاری)'
+    },
+    pos: {
+      amountHanded:'کسٹمر کی جانب سے دی گئی رقم', card:'💳 کارڈ', cardBankAmount:'کارڈ / بینک رقم (روپے)', cardPortion:'کارڈ کا حصہ', 
+      cartDiscount:'کارٹ ڈسکاؤنٹ', cash:'💵 نقد', cashAmount:'نقد رقم (روپے)', cashPlain:'نقد', cashPlusCard:'💵💳 نقد + کارڈ', 
+      cashPortion:'نقد کا حصہ', cashReceivedNow:'ابھی موصول ہونے والی نقدی (روپے)', cashReceivedPlaceholder:'مثلاً کسٹمر آدھی رقم ابھی دیتا ہے', 
+      cashTendered:'کسٹمر کی جانب سے دی گئی نقدی (روپے)', completeSale:'✅ سیل مکمل کریں', creditRequiresCustomer:'⚠️ اس کے لیے ایک منتخب کسٹمر درکار ہے (واک اِن نہیں) تاکہ واجب الادا رقم ٹریک کی جا سکے۔', 
+      customer:'کسٹمر', discount:'ڈسکاؤنٹ', enterBothAmounts:'دونوں رقمیں درج کریں — کوئی کریڈٹ نہیں بنتا، یہ مکمل ادا شدہ ہے۔', 
+      enterCashToCalc:'بقایا رقم کا حساب لگانے کے لیے دی گئی نقدی درج کریں', enterCashToSeeCredit:'باقی کریڈٹ دیکھنے کے لیے موصول شدہ نقدی درج کریں', 
+      findProduct:'پروڈکٹ تلاش کریں (نام، کمپنی، ماڈل، یا SKU)', fullCredit:'📒 مکمل کریڈٹ', grandTotal:'کل رقم', 
+      holdSale:'⏸️ سیل ہولڈ کریں', itemDiscounts:'آئٹم ڈسکاؤنٹس', newSale:'نئی سیل', noDiscount:'کوئی ڈسکاؤنٹ نہیں', 
+      notSpecified:'-- متعین نہیں --', partialCashCredit:'➗ جزوی نقد + کریڈٹ', paymentMethod:'ادائیگی کا طریقہ', 
+      percent:'% فیصد', priceTypeForNewItems:'نئے آئٹمز کے لیے قیمت کی قسم', resume:'▶️ دوبارہ شروع کریں', 
+      retail:'🏷️ ریٹیل', rsAmount:'روپے کی رقم', searchPlaceholder:'تلاش کے لیے ٹائپ کریں... (↑↓ سے دیکھیں، Enter سے منتخب کریں)', 
+      servedBy:'خدمت فراہم کنندہ (یہ لاگ ان — مقفل)', subtotal:'سب ٹوٹل', viewOnlyBanner:'🔒 آپ کے کردار کو POS تک صرف دیکھنے کی رسائی حاصل ہے — آپ پروڈکٹس اور قیمتیں دیکھ سکتے ہیں، مگر سیل کرنے کے لیے کیشیئر، مینیجر، یا ایڈمن لاگ ان درکار ہے۔', 
+      walkInCustomer:'واک اِن کسٹمر', wholesale:'📦 ہول سیل'
+    },
+    purchases: {
+      addAtLeastOneItem:'اس خریداری میں کم از کم ایک آئٹم شامل کریں۔', addProductToPurchase:'اس خریداری میں پروڈکٹ شامل کریں', 
+      amountPaidNow:'ابھی ادا کی گئی رقم (روپے)', attachInvoice:'انوائس تصویر/PDF منسلک کریں (اختیاری)', attachInvoiceNote:'اسے 2 MB سے کم رکھیں — سب کچھ اس ڈیوائس پر محفوظ ہوتا ہے، اور بڑی فائلیں جلدی جگہ بھر دیتی ہیں۔ انوائس کی فون تصویر ٹھیک کام کرتی ہے؛ کئی صفحوں کی اسکین شدہ PDF سے گریز کریں۔', 
+      biltyAmount:'بلٹی رقم (روپے)', biltyImage:'بلٹی / فریٹ رسید کی تصویر (اختیاری)', biltyImageNote:'اسے بھی 2 MB سے کم رکھیں، بالکل اوپر والے انوائس اٹیچمنٹ کی طرح۔', 
+      biltyNumber:'بلٹی نمبر', biltyNumberPlaceholder:'مثلاً BLT-4521', bulkImportBody:'ہر آئٹم الگ سے تلاش کرنے کے بجائے اس خریداری میں ایک ساتھ کئی آئٹمز شامل کریں — یہ ایک حقیقی سپلائر "Credit Sale" انوائس (تفصیلات، مقدار، ریٹ، ڈسکاؤنٹ%) سے میل کھاتا ہے، تاکہ آپ کاغذی/PDF انوائس کو سیدھا ٹیمپلیٹ میں منتقل کر سکیں۔ ڈاؤن لوڈ کریں، پُر کریں (ایکسل، گوگل شیٹس، یا نمبرز)، پھر اپ لوڈ کریں — .xlsx اور .csv دونوں براہ راست کام کرتی ہیں، تبدیل کرنے کی ضرورت نہیں۔ قطاریں SKU سے میچ کی جاتی ہیں اگر دیا گیا ہو، ورنہ عین تفصیلات کے نام سے۔ جو قطار کسی موجودہ چیز سے میل نہیں کھاتی وہ خودکار طور پر (خودکار SKU اور ڈیفالٹ قیمتوں کے ساتھ) نئی پروڈکٹ بنا دیتی ہے بجائے چھوڑے جانے کے — کیونکہ عام طور پر ایک نیا پرزہ کیٹلاگ میں اسی طرح پہلی بار داخل ہوتا ہے۔ ایک اختیاری "Gift" کالم 9+1 یا 14+1 جیسی "خریدیں+مفت" اسکیم لیتا ہے — مفت بونس یونٹس خریداری محفوظ ہونے پر خودکار طور پر اسٹاک میں شامل ہو جاتی ہیں۔', 
+      bulkImportTitle:'📥 ایکسل / CSV سے آئٹمز بلک امپورٹ کریں', cancelEdit:'✖ ترمیم منسوخ کریں', editNotice:'✏️ موجودہ خریداری میں ترمیم کی جا رہی ہے۔ محفوظ کرنے سے اس خریداری کا اسٹاک پر اصل اثر واپس ہو جائے گا، پھر جو کچھ آپ یہاں تبدیل کریں گے وہ دوبارہ لاگو ہوگا۔ اگر اسی پروڈکٹ کے لیے اس کے بعد نئی خریداریاں ہوئی ہیں، تو دوبارہ محفوظ کرنے سے اس پروڈکٹ کی موجودہ لاگت قیمت اس انوائس کے نمبروں پر واپس آ سکتی ہے — بعد میں انوینٹری میں ایک بار چیک کر لیں۔', 
+      invoiceNumber:'انوائس نمبر', invoiceNumberPlaceholder:'مثلاً INV-4521', logisticsLabel:'🚚 لاجسٹکس / فریٹ لاگت (بلٹی) — اختیاری', 
+      logisticsNote:'اس اسٹاک کی ڈیلیوری کے لیے ٹرانسپورٹ/ایندھن کی لاگت۔ یہ اپنے الگ کاروباری خرچے کے طور پر ریکارڈ ہوتی ہے — یہ سپلائر کے انوائس ٹوٹل یا آپ کے واجب الادا میں شامل نہیں ہوتی۔', 
+      notesOptional:'نوٹس (اختیاری)', notesPlaceholder:'ڈیلیوری کی تفصیلات، تضادات وغیرہ۔', overallDiscount:'مجموعی خریداری ڈسکاؤنٹ', 
+      overallDiscountNote:'نیچے دیے گئے فی آئٹم ڈسکاؤنٹس کے اوپر لاگو ہوتا ہے، مثلاً سپلائر کی جانب سے ایک فلیٹ ٹریڈ ڈسکاؤنٹ۔', 
+      paidInFull:'مکمل ادا شدہ', partiallyPaid:'جزوی ادا شدہ', paymentStatus:'ادائیگی کی حیثیت', purSearchPlaceholder:'پروڈکٹ کا نام، ماڈل، SKU، یا کمپنی لکھیں... (↑↓ سے دیکھیں، Enter سے منتخب کریں)', 
+      purchaseDate:'خریداری کی تاریخ', purchaseHistory:'خریداری کی تاریخ', recordPurchase:'خریداری / سپلائر انوائس ریکارڈ کریں', 
+      rs:'روپے', savePurchase:'💾 خریداری محفوظ کریں', searchPurchase:'🔍 انوائس نمبر یا سپلائر سے تلاش کریں...', 
+      thAttachment:'اٹیچمنٹ', thDiscount:'ڈسکاؤنٹ', thInvoiceNo:'انوائس #', thItems:'آئٹمز', thLogistics:'لاجسٹکس', 
+      thOwed:'واجب الادا', thPaid:'ادا شدہ', thTotal:'کل', unpaidCredit:'غیر ادا شدہ (مکمل کریڈٹ پر)'
+    },
+    reports: {
+      actualCashCounted:'دراز میں گنی گئی اصل نقدی', addExpense:'➕ خرچہ شامل کریں', amountRs:'رقم (روپے)', 
+      cashExpensesToday:'آج کے نقد اخراجات (مثلاً ایندھن، چائے، چھوٹی خریداریاں)', cashSalesAuto:'آج کی نقد سیلز (خودکار)', 
+      categoryPlaceholder:'مثلاً کرایہ، یوٹیلیٹیز، تنخواہ', closedCountedBy:'بند / گنتی کرنے والا (ملازم)', 
+      customReportBody:'کوئی بھی تاریخوں کی حد اور رپورٹ کی قسم منتخب کریں — کسی مخصوص ہفتے، ٹیکس مدت، یا کسی ایک کسٹمر یا سپلائر کی سرگرمی چیک کرنے کے لیے مفید۔', 
+      customReportTitle:'📊 کسٹم تاریخ کی حد کی رپورٹ', detailsPlaceholder:'تفصیلات', enterActualCount:'فرق دیکھنے کے لیے اوپر اصل گنتی درج کریں۔', 
+      eodBody:'روزانہ بند ہوتے وقت یہ کریں تاکہ یقینی بنایا جا سکے کہ آپ کے دراز کی نقدی ایپ میں درج ریکارڈ سے مماثل ہے۔', 
+      eodReconciliation:'💰 دن کے اختتام پر نقدی مصالحت', expectedCash:'دراز میں متوقع نقدی', expenseMadeBy:'خرچہ کرنے والا (ملازم)', 
+      expenseMadeByNote:'— مثلاً وہ مکینک جس نے اوپر کی نقدی خرچ کی', expenses:'🧾 اخراجات', expensesBody:'کرایہ، بجلی، تنخواہیں، ٹرانسپورٹ وغیرہ۔ یہ منافع میں سے منہا کیے جاتے ہیں۔', 
+      exportReport:'⬇️ یہ رپورٹ ایکسپورٹ کریں (.csv)', fromDate:'شروع تاریخ', generateReport:'📈 رپورٹ بنائیں', 
+      lowStockItems:'کم اسٹاک آئٹمز', monthProfit:'اس مہینے کا خالص منافع', monthSales:'اس مہینے کی سیلز', 
+      noteOptional:'نوٹ (اختیاری)', openingCash:'ابتدائی نقدی (وہ فلوٹ جس سے آپ نے دن شروع کیا)', overallSummary:'مجموعی سیلز کا خلاصہ', 
+      purchasesBySupplier:'سپلائر کے مطابق خریداریاں', reconciliationHistory:'📜 حالیہ مصالحت کی تاریخ', reportType:'رپورٹ کی قسم', 
+      salesByCustomer:'کسٹمر کے مطابق سیلز', saveReconciliation:'💾 آج کی مصالحت محفوظ کریں', thActual:'اصل', 
+      thAmount:'رقم', thClosedBy:'بند کنندہ', thDifference:'فرق', thExpected:'متوقع', thExpenseBy:'خرچہ کنندہ', 
+      thNote:'نوٹ', toDate:'آخری تاریخ', todaySales:'آج کی سیلز'
+    },
+    sales: {
+      salesHistory:'سیلز کی تاریخ', salesReturns:'↩️ سیلز واپسی', salesReturnsBody:'اوپر کسی سیل پر "Return" بٹن استعمال کر کے واپسی کریں۔ واپسی خودکار طور پر انوینٹری میں دوبارہ اسٹاک شامل کرتی ہے اور رپورٹ شدہ سیلز/منافع ایڈجسٹ کرتی ہے۔', 
+      searchByCustomerItem:'🔍 کسٹمر یا آئٹم سے تلاش کریں...', thItemsReturned:'واپس کیے گئے آئٹمز', thMethod:'طریقہ', 
+      thPayment:'ادائیگی', thRefund:'واپسی رقم', thSoldBy:'فروخت کنندہ'
+    },
+    suppliers: {
+      addSupplier:'سپلائر شامل کریں', addSupplierBtn:'➕ سپلائر شامل کریں', address:'پتہ', addressPlaceholder:'دکان / گودام کا پتہ', 
+      contactPerson:'رابطہ کار', contactPersonPlaceholder:'رابطہ کار کا نام', email:'ای میل', emailPlaceholder:'ای میل ایڈریس', 
+      notes:'نوٹس', notesPlaceholder:'ادائیگی کی شرائط، ڈیلیوری کے دن وغیرہ۔', phone:'فون', phonePlaceholder:'فون نمبر', 
+      supplierLabel:'سپلائر', supplierList:'سپلائرز کی فہرست', supplierName:'سپلائر / کمپنی کا نام', supplierNamePlaceholder:'مثلاً النور آٹو ٹریڈرز', 
+      thContact:'رابطہ', thOwed:'سپلائر کو واجب الادا', thPhone:'فون', thProductsSupplied:'فراہم کردہ پروڈکٹس', 
+      thTotalPurchased:'کل خریداری', whatsapp:'واٹس ایپ', whatsappPlaceholder:'واٹس ایپ نمبر'
     },
     aiAssistant: {
       title:'AI معاون', inputPlaceholder:'کچھ بھی پوچھیں یا کوئی کمانڈ دیں...',
