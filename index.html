@@ -8617,9 +8617,17 @@ function aiAdjustStock(productId, type, qty, reason, note){
 // ==================== BACKEND CALL (server-side API key) ====================
 // The API key never touches the browser — /api/ai.js on Vercel holds it
 // and proxies to the Claude API (Part 33 / Part 38 of the spec).
+// The Vercel deployment is the only place /api/ai actually exists. On the
+// web this page is served FROM that same origin, so a relative path works.
+// Inside Electron the page loads via file://, which has no server behind
+// it, so we point at the live URL explicitly there instead.
+const AI_BACKEND_BASE = (navigator.userAgent.indexOf('Electron') !== -1)
+  ? 'https://malikautoz.vercel.app/api/ai'
+  : '/api/ai';
+
 async function callAIBackend(payload){
   try{
-    const res = await fetch('/api/ai', {
+    const res = await fetch(AI_BACKEND_BASE, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify(Object.assign({lang: currentLanguage}, payload))
