@@ -6297,13 +6297,17 @@ function loadShopSettingsUI(){
 }
 
 // Manual trigger for the same keep-alive ping the daily GitHub Action
-// performs automatically — any authenticated request to Supabase's REST
-// endpoint counts as activity, resetting its 7-day inactivity timer.
+// performs automatically — this must hit an actual table (not just the
+// bare REST root) so the request reaches the real Postgres database and
+// genuinely resets Supabase's inactivity timer. A bare, unauthenticated
+// hit to /rest/v1/ only reaches the API gateway and gets a 401 without
+// ever touching the database, which does NOT count as activity — that
+// was the bug that let the project pause again despite "successful" pings.
 // The anon/public key below is safe to embed client-side by design
 // (Supabase's security model relies on Row Level Security, not key
 // secrecy) — it's the same key already used server-side in the license
 // server, just exposed here since there's no backend proxy for this app.
-const SUPABASE_KEEPALIVE_URL = 'https://wkpqrkwjmtvpaswvjdly.supabase.co/rest/v1/';
+const SUPABASE_KEEPALIVE_URL = 'https://wkpqrkwjmtvpaswvjdly.supabase.co/rest/v1/kv_store?select=key&limit=1';
 const SUPABASE_ANON_KEY_PUBLIC = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndrcHFya3dqbXR2cGFzd3ZqZGx5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3ODMwMTcsImV4cCI6MjEwMTM1OTAxN30.rg3LxLydgmvrbfXqZwS20M_Q5XO52ZFWyL-z7Tiv5kI';
 async function pingSupabaseKeepAlive(){
   const btn = document.getElementById('supabasePingBtn');
