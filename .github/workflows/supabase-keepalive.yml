@@ -12,7 +12,7 @@ jobs:
       - name: Ping Supabase REST endpoint (real table query)
         run: |
           response=$(curl -s -o /tmp/resp.json -w "%{http_code}" \
-                        "https://wkpqrkwjmtvpaswvjdly.supabase.co/rest/v1/customers?select=id&limit=1" \
+            "https://wkpqrkwjmtvpaswvjdly.supabase.co/rest/v1/kv_store?select=key&limit=1" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
           echo "Supabase responded with HTTP $response"
