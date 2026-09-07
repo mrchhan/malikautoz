@@ -9,14 +9,15 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase REST endpoint
+      - name: Ping Supabase REST endpoint (real table query)
         run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" \
-            "https://wkpqrkwjmtvpaswvjdly.supabase.co/rest/v1/" \
+          response=$(curl -s -o /tmp/resp.json -w "%{http_code}" \
+                        "https://wkpqrkwjmtvpaswvjdly.supabase.co/rest/v1/customers?select=id&limit=1" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
           echo "Supabase responded with HTTP $response"
-          if [ "$response" -eq 000 ]; then
-            echo "::error::Could not reach Supabase at all"
+          cat /tmp/resp.json
+          if [ "$response" -ne 200 ]; then
+            echo "::error::Expected HTTP 200 from a real table query, got $response"
             exit 1
           fi
