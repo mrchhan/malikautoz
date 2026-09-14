@@ -11647,11 +11647,20 @@ const AI_BACKEND_BASE = (navigator.userAgent.indexOf('Electron') !== -1)
   ? 'https://malikautoz.vercel.app/api/ai'
   : '/api/ai';
 
+// Shared secret so /api/ai.js can reject requests that didn't come from
+// this app (see the comment at the top of api/ai.js). This value is
+// visible to anyone who reads this file -- like everything else in a
+// single-file client-side app -- so it stops casual/automated abuse
+// (bots probing for open API routes), not a determined person reading
+// the source. Must match AI_PROXY_SECRET in Vercel's Environment
+// Variables exactly; change both together if it's ever rotated.
+const AI_PROXY_SECRET = 'F8WSs7yuf0qc4OfHmvIGFfahmuaIP3jSqZZEVQj8';
+
 async function callAIBackend(payload){
   try{
     const res = await fetch(AI_BACKEND_BASE, {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      headers: {'Content-Type':'application/json', 'X-App-Key': AI_PROXY_SECRET},
       body: JSON.stringify(Object.assign({lang: currentLanguage}, payload))
     });
     if(!res.ok) throw new Error('HTTP_'+res.status);
