@@ -15,10 +15,60 @@
 // Two request modes, chosen by the frontend's payload:
 //   { mode: "intent",  text, lang, context }              -> natural-language command -> structured action
 //   { mode: "invoice", fileBase64, mediaType, lang }       -> invoice file -> structured invoice data
+//
+// ---- ACCESS CONTROL -------------------------------------------------------
+// This endpoint is a public URL with your Gemini key behind it -- with no
+// check at all, anyone who finds the URL (not just people using the app)
+// could call it directly and spend your daily quota. Two lightweight,
+// no-new-infrastructure mitigations:
+//   1. A shared-secret header (X-App-Key) the frontend sends on every call.
+//      Set AI_PROXY_SECRET in Vercel's Environment Variables to the same
+//      value baked into the frontend (see AI_PROXY_SECRET near
+//      callAIBackend() in index.html). This stops casual/automated abuse
+//      (bots scanning for open API routes) -- it does NOT stop someone who
+//      deliberately reads this app's own source and copies the value out;
+//      that's a hard limit of any fully client-side app with no real login
+//      server, not something fixable by hiding a string harder.
+//   2. A simple per-IP rate limit, kept in memory. Vercel can run several
+//      instances of this function at once and recycles them on a cold
+//      start, so this resets sometimes and isn't a hard guarantee -- but it
+//      stops a burst/loop from one source hammering a warm instance, which
+//      is the common case. A guaranteed limit across all instances would
+//      need a shared store (e.g. Vercel KV / Upstash Redis) -- worth adding
+//      later if this endpoint ever sees real abuse.
+const ACCESS_SECRET = process.env.AI_PROXY_SECRET || '';
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 20; // per IP, per warm instance, per window
+const rateLimitState = new Map(); // ip -> [timestamps]
+
+function timingSafeEqual(a, b) {
+    // Plain !== leaks how many leading characters matched via response
+    // timing; for a secret comparison that's worth avoiding even though
+    // the practical risk here is small.
+    if (typeof a !== 'string' || typeof b !== 'string' || a.length !== b.length) return false;
+    let diff = 0;
+    for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+    return diff === 0;
+}
+
+function isRateLimited(ip) {
+    const now = Date.now();
+    const timestamps = (rateLimitState.get(ip) || []).filter(t => now - t < RATE_LIMIT_WINDOW_MS);
+    timestamps.push(now);
+    rateLimitState.set(ip, timestamps);
+    // Keep this map from growing forever across a long-lived warm instance.
+    if (rateLimitState.size > 500) {
+        for (const [key, arr] of rateLimitState) {
+            if (arr.every(t => now - t > RATE_LIMIT_WINDOW_MS)) rateLimitState.delete(key);
+        }
+    }
+    return timestamps.length > RATE_LIMIT_MAX_REQUESTS;
+}
 
 const GEMINI_MODEL = 'gemini-flash-lite-latest'; // Flash-Lite: much higher free-tier daily quota than gemini-3.6-flash, which has a very restrictive preview-tier cap
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 const REQUEST_TIMEOUT_MS = 25000; // fail fast instead of hanging — the frontend already shows a friendly fallback message
+const MAX_FILE_BASE64_CHARS = 4 * 1024 * 1024; // ~3 MB decoded, comfortably above the app's own 2 MB attachment limit, with headroom for base64 overhead
 
 const ALLOWED_ACTIONS = [
       'create_customer','update_customer','search_customer','create_product','search_product',
@@ -35,9 +85,27 @@ module.exports = async function handler(req, res) {
               return;
       }
 
+      // Reject up front, before touching Gemini at all, if this deployment
+      // has a secret configured and the caller didn't send a matching one.
+      // (If AI_PROXY_SECRET isn't set in Vercel yet, this check is skipped
+      // entirely rather than locking everyone out -- see SETUP.md.)
+      if (ACCESS_SECRET) {
+              const provided = req.headers['x-app-key'] || '';
+              if (!timingSafeEqual(provided, ACCESS_SECRET)) {
+                      res.status(401).json({ error: true, message: 'Unauthorized' });
+                      return;
+              }
+      }
+
+      const ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown').split(',')[0].trim();
+      if (isRateLimited(ip)) {
+              res.status(429).json({ error: true, message: 'Too many requests -- please wait a moment and try again.' });
+              return;
+      }
+
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) {
-              res.status(500).json({ error: true, message: 'GEMINI_API_KEY is not configured on the server.' });
+              res.status(500).json({ error: true, message: 'AI service is not configured.' });
               return;
       }
 
@@ -47,6 +115,11 @@ module.exports = async function handler(req, res) {
       }
       body = body || {};
       const lang = body.lang === 'ur' ? 'ur' : 'en';
+
+      if (body.mode === 'invoice' && typeof body.fileBase64 === 'string' && body.fileBase64.length > MAX_FILE_BASE64_CHARS) {
+              res.status(413).json({ error: true, message: 'That file is too large. Please attach something under 2-3 MB.' });
+              return;
+      }
 
       try {
               if (body.mode === 'intent') {
@@ -61,8 +134,12 @@ module.exports = async function handler(req, res) {
               }
               res.status(400).json({ error: true, message: 'Unknown mode' });
       } catch (e) {
+              // Full detail (including whatever Gemini said) goes to the
+              // server log only -- the caller just gets a generic message,
+              // so a probing request doesn't learn anything useful about
+              // the backend from its errors.
               console.error('AI handler error:', e && e.stack ? e.stack : e);
-              res.status(500).json({ error: true, message: e.message || 'AI request failed' });
+              res.status(500).json({ error: true, message: 'AI request failed. Please try again.' });
       }
 };
 
