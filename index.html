@@ -4746,18 +4746,65 @@ function formatDateTime(d){
 // localStorage, cloud sync, or a backup file. The plain PIN only exists
 // in memory for the instant it's typed in; nothing that touches storage
 // or leaves the device ever sees it.
-async function hashPin(pin){
+//
+// PBKDF2 (SHA-256, 100k iterations, random 16-byte salt per PIN) instead of
+// a bare SHA-256 digest -- a bare hash of a short numeric PIN is crackable
+// almost instantly (unsalted + no stretching means every possible 4-6 digit
+// PIN can just be hashed once and compared). The salt is stored alongside
+// the hash in the same string (pbkdf2$<iterations>$<saltHex>$<hashHex>),
+// so this is still a single string field everywhere it's used -- no schema
+// change needed elsewhere.
+const PIN_HASH_ITERATIONS = 100000;
+async function hashPin(pin, existingSaltHex){
+  const saltBytes = existingSaltHex
+    ? new Uint8Array(existingSaltHex.match(/.{2}/g).map(b=>parseInt(b,16)))
+    : crypto.getRandomValues(new Uint8Array(16));
+  const saltHex = existingSaltHex || Array.from(saltBytes).map(b=>b.toString(16).padStart(2,'0')).join('');
+  const keyMaterial = await crypto.subtle.importKey('raw', new TextEncoder().encode(String(pin)), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({ name:'PBKDF2', salt: saltBytes, iterations: PIN_HASH_ITERATIONS, hash:'SHA-256' }, keyMaterial, 256);
+  const hashHex = Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  return `pbkdf2$${PIN_HASH_ITERATIONS}$${saltHex}$${hashHex}`;
+}
+// The old bare-SHA-256 scheme this replaces -- kept only so a PIN hashed
+// before this change can still be verified (and then transparently
+// upgraded to the salted scheme the moment its owner next logs in; see
+// tryLogin() and migrateWeakPins() below).
+async function legacyHashPin(pin){
   const bytes = new TextEncoder().encode(String(pin));
   const digest = await crypto.subtle.digest('SHA-256', bytes);
   return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-function looksHashed(str){
+function isPbkdf2Hash(str){
+  return typeof str === 'string' && /^pbkdf2\$\d+\$[0-9a-f]{32}\$[0-9a-f]{64}$/.test(str);
+}
+function isLegacyHash(str){
   return typeof str === 'string' && /^[0-9a-f]{64}$/.test(str);
 }
+function looksHashed(str){
+  return isPbkdf2Hash(str) || isLegacyHash(str);
+}
+// True if `entered` (plain text, just typed in) matches whatever form
+// `stored` is currently in -- new salted hash, old bare hash, or (for an
+// employee who's never logged in since a PIN was set by an Admin) still
+// plain text.
+async function verifyPin(entered, stored){
+  if(!stored) return false;
+  if(isPbkdf2Hash(stored)){
+    const [, , saltHex] = stored.split('$');
+    return (await hashPin(entered, saltHex)) === stored;
+  }
+  if(isLegacyHash(stored)){
+    return (await legacyHashPin(entered)) === stored;
+  }
+  return String(stored) === String(entered);
+}
 // Any employee still holding a plain-text PIN from before this existed
-// gets silently upgraded to a hash the moment the app loads, without
-// needing them to log in or change it first.
-async function migratePlaintextPins(){
+// gets silently upgraded to a salted hash the moment the app loads, without
+// needing them to log in or change it first. A PIN still on the OLD bare-
+// SHA-256 scheme can't be upgraded this way (the plain PIN isn't known
+// until they type it in) -- that happens in tryLogin() on their next
+// successful login instead.
+async function migrateWeakPins(){
   let changed = false;
   for(const emp of employees){
     if(emp.pin && !looksHashed(emp.pin)){
@@ -4786,8 +4833,11 @@ function waitForAccessGate(){
 async function tryAccessGate(){
   const input = document.getElementById('accessGateInput').value;
   const errEl = document.getElementById('accessGateError');
-  const enteredHash = await hashPin(input);
-  if(enteredHash === shopSettings.accessCodeHash){
+  if(await verifyPin(input, shopSettings.accessCodeHash)){
+    if(isLegacyHash(shopSettings.accessCodeHash)){
+      shopSettings.accessCodeHash = await hashPin(input);
+      saveRaw('moto_settings', JSON.stringify(shopSettings));
+    }
     document.getElementById('accessGateOverlay').remove();
     if(window.__resolveAccessGate) window.__resolveAccessGate();
   } else {
@@ -5046,7 +5096,7 @@ function populateLoginEmployeeSelect(){
   const sel = document.getElementById('loginEmployee');
   const active = employees.filter(e=>e.status==='active');
   sel.innerHTML = active.length
-    ? active.map(e=>`<option value="${e.id}">${e.name}</option>`).join('')
+    ? active.map(e=>`<option value="${e.id}">${escapeHtml(e.name)}</option>`).join('')
     : '<option value="">-- No active employees set up --</option>';
 }
 
@@ -5059,11 +5109,10 @@ async function tryLogin(){
   if(emp.status!=='active'){ errEl.textContent = 'This employee is inactive.'; return; }
   if(!emp.pin){ errEl.textContent = 'No PIN is set for this employee. Ask an Admin to set one in Employees.'; return; }
 
-  const enteredHash = await hashPin(pin);
   const storedIsHashed = looksHashed(emp.pin);
-  const matches = storedIsHashed ? (emp.pin === enteredHash) : (String(emp.pin) === pin);
+  const matches = await verifyPin(pin, emp.pin);
   if(!matches){ errEl.textContent = 'Incorrect PIN.'; return; }
-  if(!storedIsHashed){ emp.pin = enteredHash; save('moto_employees', employees); } // upgrade on successful login
+  if(!storedIsHashed || isLegacyHash(emp.pin)){ emp.pin = await hashPin(pin); save('moto_employees', employees); } // upgrade on successful login
 
   currentUser = { employeeId: emp.id, name: emp.name, role: emp.role || 'cashier' };
   localStorage.setItem('moto_current_session', JSON.stringify(currentUser));
@@ -5344,7 +5393,7 @@ function renderStockDetailList(which){
     ? products.filter(p=>p.stock>0 && p.stock<=p.lowLevel)
     : products.filter(p=>p.stock<=0);
   el.innerHTML = list.length
-    ? list.map(p=>`<div><span>${p.name}</span><span class="${which==='out'?'low':''}">${which==='out' ? 'OUT OF STOCK' : 'Stock: '+p.stock+' (min '+p.lowLevel+')'}</span></div>`).join('')
+    ? list.map(p=>`<div><span>${escapeHtml(p.name)}</span><span class="${which==='out'?'low':''}">${which==='out' ? 'OUT OF STOCK' : 'Stock: '+p.stock+' (min '+p.lowLevel+')'}</span></div>`).join('')
     : `<div class="empty">${which==='low' ? 'Nothing running low right now.' : 'Nothing out of stock right now.'} 🎉</div>`;
 }
 
@@ -5521,7 +5570,7 @@ function renderDashboard(){
     document.getElementById('dashDrawingsBars').innerHTML = partners.length ? partners.map(p=>{
       const v = partnerDrawingsBalance(p.id);
       const h = Math.max(2, Math.round((v/maxDraw)*100));
-      return `<div class="bar-col"><div class="bar" style="height:${h}%;background:${partnerColor(p.id)};"></div><div class="bar-lbl">${p.name}<br>${fmt(v)}</div></div>`;
+      return `<div class="bar-col"><div class="bar" style="height:${h}%;background:${partnerColor(p.id)};"></div><div class="bar-lbl">${escapeHtml(p.name)}<br>${fmt(v)}</div></div>`;
     }).join('') : '<div class="empty">No partners configured.</div>';
   }
 
@@ -5609,7 +5658,7 @@ function renderDashboard(){
 function refreshSupplierDropdown(){
   const sel = document.getElementById('pSupplier');
   const cur = sel.value;
-  sel.innerHTML = '<option value="">-- None --</option>' + suppliers.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  sel.innerHTML = '<option value="">-- None --</option>' + suppliers.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
   sel.value = cur;
 }
 
@@ -5814,7 +5863,7 @@ function renderStockLedger(){
       <td><span class="badge">${l.type}</span></td>
       <td class="${l.qtyChange<0?'low':''}">${l.qtyChange>0?'+':''}${l.qtyChange}</td>
       <td>${l.resultingStock}</td>
-      <td>${l.reason}${l.note?' — '+l.note:''}</td>
+      <td>${escapeHtml(l.reason)}${l.note?' — '+escapeHtml(l.note):''}</td>
     </tr>`).join('') : '<tr><td colspan="6" class="empty">No stock movements logged yet.</td></tr>';
 }
 
@@ -5904,9 +5953,9 @@ function renderInventory(){
       if(hasPermission('delete')) actions.push(`<button class="btn danger small" onclick="deleteProduct(${p.id})">Delete</button>`);
       return `<tr>
         <td>${canDelete ? `<input type="checkbox" class="prod-select" ${selectedProductIds.has(p.id)?'checked':''} onchange="toggleProductSelect(${p.id}, this.checked)">` : ''}</td>
-        <td>${p.name}</td>
-        <td>${p.model||'-'}</td>
-        <td>${p.company||'-'}</td>
+        <td>${escapeHtml(p.name)}</td>
+        <td>${escapeHtml(p.model||'-')}</td>
+        <td>${escapeHtml(p.company||'-')}</td>
         <td><span class="badge">${p.category}</span></td>
         <td>${p.sku||'-'}</td>
         <td class="${low?'low':''}">${p.stock}${low?' ⚠️':''}</td>
@@ -6556,7 +6605,7 @@ function renderSuppliers(){
     if(hasPermission('edit')) supActions.push(`<button class="btn ghost small" onclick="editSupplier(${s.id})">Edit</button>`);
     if(hasPermission('delete')) supActions.push(`<button class="btn danger small" onclick="deleteSupplier(${s.id})">Delete</button>`);
     return `<tr>
-      <td>${s.name}</td><td>${s.contact||'-'}</td><td>${s.phone||'-'}</td><td>${count}</td>
+      <td>${escapeHtml(s.name)}</td><td>${s.contact||'-'}</td><td>${escapeHtml(s.phone||'-')}</td><td>${count}</td>
       <td>${fmt(totalPurchased)}</td>
       <td class="${owed>0?'low':''}">${fmt(owed)}</td>
       <td>${supActions.join(' ') || '<span class="empty" style="padding:0;">View only</span>'}</td>
@@ -6686,7 +6735,7 @@ function renderClaims(){
 function renderPurchases(){
   const supSelect = document.getElementById('purSupplier');
   const curSup = supSelect.value;
-  supSelect.innerHTML = '<option value="">-- Select supplier --</option>' + suppliers.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  supSelect.innerHTML = '<option value="">-- Select supplier --</option>' + suppliers.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
   supSelect.value = curSup;
   if(!document.getElementById('purDate').value) setDateFieldValue('purDate', new Date().toISOString().slice(0,10));
   document.getElementById('purSearch').value = '';
@@ -6717,7 +6766,7 @@ function renderPurchaseSearchResults(){
   purSearchMatches = matches;
   if(matches.length===0){ box.innerHTML = '<div class="empty">No matching products</div>'; box.classList.remove('hidden'); return; }
   box.innerHTML = matches.map((p,i)=>`<div data-index="${i}" onclick="openPurAddItemModal(${p.id})" onmouseenter="setPurSearchHighlight(${i})">
-      <div style="font-weight:600;">${p.name}${p.model?' — '+p.model:''} ${p.company?`<span class="badge" style="background:var(--primary);color:#fff;">${p.company}</span>`:''}</div>
+      <div style="font-weight:600;">${escapeHtml(p.name)}${p.model?' — '+escapeHtml(p.model):''} ${p.company?`<span class="badge" style="background:var(--primary);color:#fff;">${escapeHtml(p.company)}</span>`:''}</div>
       <div style="font-size:11px;color:var(--muted);">SKU: ${p.sku||'-'} &nbsp;·&nbsp; Category: ${p.category||'-'} &nbsp;·&nbsp; Current stock: ${p.stock} &nbsp;·&nbsp; Last cost: ${fmt(p.cost)}</div>
     </div>`).join('');
   box.classList.remove('hidden');
@@ -6769,7 +6818,7 @@ function openPurAddItemModal(id){
   if(!product) return;
   purAddItemPendingProductId = id;
   document.getElementById('purAddItemInfo').innerHTML = `
-    <div style="font-weight:600;">${product.name}${product.model?' — '+product.model:''} ${product.company?`<span class="badge" style="background:var(--primary);color:#fff;">${product.company}</span>`:''}</div>
+    <div style="font-weight:600;">${escapeHtml(product.name)}${product.model?' — '+escapeHtml(product.model):''} ${product.company?`<span class="badge" style="background:var(--primary);color:#fff;">${escapeHtml(product.company)}</span>`:''}</div>
     <div style="font-size:11px;color:var(--muted);">SKU: ${product.sku||'-'} &nbsp;·&nbsp; Current stock: ${product.stock} &nbsp;·&nbsp; Last cost: ${fmt(product.cost)}</div>
   `;
   document.getElementById('purAddItemQty').value = 1;
@@ -6903,7 +6952,7 @@ function renderPurchaseItems(){
     return `
     <div class="cart-item">
       <div class="ci-left">
-        <div class="ci-name">${c.name}${catalogProduct?.model?' — '+catalogProduct.model:''} ${catalogProduct?.company?`<span class="badge" style="background:var(--primary);color:#fff;">${catalogProduct.company}</span>`:''}</div>
+        <div class="ci-name">${escapeHtml(c.name)}${catalogProduct?.model?' — '+catalogProduct.model:''} ${catalogProduct?.company?`<span class="badge" style="background:var(--primary);color:#fff;">${escapeHtml(catalogProduct.company)}</span>`:''}</div>
         <div class="ci-sub" style="color:var(--muted);">SKU: ${catalogProduct?.sku||'-'}</div>
         <div class="ci-sub">
           Qty: <input type="number" min="0" value="${c.qty}" style="width:60px;display:inline-block;margin:0 8px 0 4px;padding:3px 6px;font-size:12px;" onchange="updatePurchaseItem(${c.productId},'qty',this.value)">
@@ -6915,7 +6964,7 @@ function renderPurchaseItems(){
           </select>
         </div>
         <div class="ci-sub">
-          🎁 Gift: <input type="text" placeholder="e.g. 9+1" value="${c.gift||''}" style="width:70px;display:inline-block;margin:0 4px 0 4px;padding:3px 6px;font-size:12px;" onchange="updatePurchaseItemGift(${c.productId},this.value)">
+          🎁 Gift: <input type="text" placeholder="e.g. 9+1" value="${escapeHtml(c.gift||'')}" style="width:70px;display:inline-block;margin:0 4px 0 4px;padding:3px 6px;font-size:12px;" onchange="updatePurchaseItemGift(${c.productId},this.value)">
           ${giftUnits>0 ? `<span style="color:var(--success);">+${giftUnits} free — ${c.qty + giftUnits} total received</span>` : ''}
           ${giftValid ? `<span style="color:var(--danger);">Format as "buy+free", e.g. 9+1</span>` : ''}
         </div>
@@ -6978,7 +7027,7 @@ function reversePurchaseEffects(purchase){
     if(!product) return;
     const totalReceived = item.qty + (item.giftUnits||0);
     const newStock = product.stock - totalReceived;
-    if(newStock < 0) clampWarnings.push(`${product.name} (had ${product.stock}, would go to ${newStock})`);
+    if(newStock < 0) clampWarnings.push(`${escapeHtml(product.name)} (had ${product.stock}, would go to ${newStock})`);
     product.stock = Math.max(0, newStock);
     logStockChange(product, -totalReceived, 'Purchase Edited/Deleted', `Reversing Invoice #${purchase.invoiceNumber}`, '');
   });
@@ -7238,7 +7287,7 @@ function viewPurchase(id){
     const company = i.company || prod?.company || '';
     return `<tr>
       <td>
-        <div>${i.name}${i.giftUnits>0 ? ` <span style="color:var(--success);font-size:11px;">(+${i.giftUnits} gift)</span>` : ''}</div>
+        <div>${escapeHtml(i.name)}${i.giftUnits>0 ? ` <span style="color:var(--success);font-size:11px;">(+${i.giftUnits} gift)</span>` : ''}</div>
         ${(model||company) ? `<div style="color:var(--muted);font-size:11px;margin-top:2px;">${model ? escapeHtml(model) : ''}${model&&company?' · ':''}${company ? escapeHtml(company) : ''}</div>` : ''}
       </td>
       <td style="text-align:right;">${i.qty}</td>
@@ -7267,7 +7316,7 @@ function viewPurchase(id){
     <div class="rcpt-meta" style="margin-top:10px;border-top:1px dashed var(--border);padding-top:8px;">
       <div><span>Logistics (Bilty)</span><span>${p.biltyAmount>0 ? `${fmt(p.biltyAmount)}${p.biltyNumber?' (#'+p.biltyNumber+')':''}${p.biltyImage?` <button class="btn ghost small" onclick="viewBiltyImage(${p.id})">📷 View</button>`:''}` : '-'}</span></div>
       <div><span>Attachment</span><span>${p.attachment ? `<button class="btn ghost small" onclick="viewAttachment(${p.id})">📎 View</button>` : '-'}</span></div>
-      ${p.notes ? `<div><span>Notes</span><span>${p.notes}</span></div>` : ''}
+      ${p.notes ? `<div><span>Notes</span><span>${escapeHtml(p.notes)}</span></div>` : ''}
     </div>
   `;
   document.getElementById('purchaseViewModal').classList.remove('hidden');
@@ -7302,7 +7351,7 @@ function renderPurchaseList(){
       <td>${formatDate(p.date)}</td>
       <td>${p.invoiceNumber}</td>
       <td>${sup ? sup.name : '-'}</td>
-      <td>${p.items.map(i=>`${i.name} x${i.qty}${i.giftUnits>0?` <span style="color:var(--success);">(+${i.giftUnits} gift)</span>`:''}`).join(', ')}</td>
+      <td>${p.items.map(i=>`${escapeHtml(i.name)} x${i.qty}${i.giftUnits>0?` <span style="color:var(--success);">(+${i.giftUnits} gift)</span>`:''}`).join(', ')}</td>
       <td>${totalDiscount>0 ? fmt(totalDiscount) : '-'}</td>
       <td>${fmt(p.total)}</td>
       <td>${fmt(p.amountPaid)}</td>
@@ -7378,7 +7427,7 @@ function checkExistingDraftForSupplier(){
 function renderDemand(){
   const supSelect = document.getElementById('demSupplier');
   const curSup = supSelect.value;
-  supSelect.innerHTML = '<option value="">-- Select supplier --</option>' + suppliers.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  supSelect.innerHTML = '<option value="">-- Select supplier --</option>' + suppliers.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
   supSelect.value = curSup;
   if(!document.getElementById('demDate').value) setDateFieldValue('demDate', new Date().toISOString().slice(0,10));
   document.getElementById('demSearch').value = '';
@@ -7398,7 +7447,7 @@ function renderDemandSearchResults(){
     return tokens.every(t=>haystack.includes(t));
   }).slice(0,20);
   box.innerHTML = matches.length ? matches.map(p=>`<div onclick="pickDemandProduct(${p.id})">
-      <div style="font-weight:600;">${p.name}${p.model?' — '+p.model:''} ${p.company?`<span class="badge" style="background:var(--primary);color:#fff;">${p.company}</span>`:''}</div>
+      <div style="font-weight:600;">${escapeHtml(p.name)}${p.model?' — '+escapeHtml(p.model):''} ${p.company?`<span class="badge" style="background:var(--primary);color:#fff;">${escapeHtml(p.company)}</span>`:''}</div>
       <div style="font-size:11px;color:var(--muted);">Current stock: ${p.stock}</div>
     </div>`).join('') : '<div class="empty">No matching products</div>';
   box.classList.remove('hidden');
@@ -7430,7 +7479,7 @@ function renderDemandItems(){
   div.innerHTML = demandCart.length ? demandCart.map(c=>`
     <div class="cart-item">
       <div class="ci-left">
-        <div class="ci-name">${c.name}</div>
+        <div class="ci-name">${escapeHtml(c.name)}</div>
         <div class="ci-sub">
           Qty needed: <input type="number" min="0" value="${c.qty}" style="width:80px;display:inline-block;margin:0 0 0 4px;padding:3px 6px;font-size:12px;" onchange="updateDemandItem(${c.productId},this.value)">
         </div>
@@ -7697,7 +7746,7 @@ function renderCustomers(){
     if(owed>0 && hasPermission('edit')) custActions.push(`<button class="btn small" onclick="openPaymentModal(${c.id})">💰 Record Payment</button>`);
     if(hasPermission('edit')) custActions.push(`<button class="btn ghost small" onclick="editCustomer(${c.id})">Edit</button>`);
     return `<tr>
-      <td>${c.name}</td><td>${c.phone||'-'}</td>
+      <td>${escapeHtml(c.name)}</td><td>${escapeHtml(c.phone||'-')}</td>
       <td><span class="badge" style="${c.customerType==='wholesale'?'background:var(--primary);color:#fff;':''}">${c.customerType==='wholesale'?'Wholesale':'Retail'}</span></td>
       <td>${c.bike||'-'}</td><td>${custPurchases.length}</td><td>${fmt(totalSpent)}</td>
       <td class="${owed>0?'low':''}">${fmt(owed)}</td>
@@ -7962,7 +8011,7 @@ function renderEmployees(){
     if(hasPermission('edit')) actions.push(`<button class="btn ghost small" onclick="editEmployee(${e.id})">Edit</button>`);
     if(hasPermission('delete')) actions.push(`<button class="btn danger small" onclick="deleteEmployee(${e.id})">Delete</button>`);
     return `<tr>
-      <td>${e.name}</td><td>${e.phone||'-'}</td><td>${e.position}</td>
+      <td>${escapeHtml(e.name)}</td><td>${escapeHtml(e.phone||'-')}</td><td>${escapeHtml(e.position)}</td>
       <td><span class="badge">${ROLE_LABELS[e.role]||'Other (view + POS)'}</span></td>
       <td><span class="badge">${e.status==='active'?'Active':'Inactive'}</span></td>
       <td>${monthSales.length} sale(s) — ${fmt(total)}</td>
@@ -7976,7 +8025,7 @@ function renderEmployees(){
 function renderPos(){
   const custSelect = document.getElementById('posCustomer');
   const curCust = custSelect.value;
-  custSelect.innerHTML = '<option value="">Walk-in customer</option>' + customers.map(c=>`<option value="${c.id}">${c.name}${c.customerType==='wholesale'?' (Wholesale)':''}</option>`).join('');
+  custSelect.innerHTML = '<option value="">Walk-in customer</option>' + customers.map(c=>`<option value="${c.id}">${escapeHtml(c.name)}${c.customerType==='wholesale'?' (Wholesale)':''}</option>`).join('');
   custSelect.value = curCust;
   const empSelect = document.getElementById('posEmployee');
   // "Served By" always reflects whoever is actually logged in — it's not a
@@ -7984,7 +8033,7 @@ function renderPos(){
   // the way the customer dropdown does. Setup Mode (zero employees exist
   // yet) has no real employee record to lock to, so it stays blank.
   const activeEmployees = employees.filter(e=>e.status==='active');
-  empSelect.innerHTML = '<option value="">-- Not specified --</option>' + activeEmployees.map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
+  empSelect.innerHTML = '<option value="">-- Not specified --</option>' + activeEmployees.map(e=>`<option value="${e.id}">${escapeHtml(e.name)}</option>`).join('');
   empSelect.value = (currentUser && currentUser.employeeId) ? String(currentUser.employeeId) : '';
   empSelect.disabled = true;
   document.getElementById('posSearch').value = '';
@@ -8051,7 +8100,7 @@ function renderSearchResults(){
     const stockLabel = p.stock<=0 ? 'Out of stock' : 'Stock: '+p.stock;
     const subParts = [p.model, p.company].filter(Boolean).join(' · ');
     return `<div class="${p.stock<=0?'sr-oos':''}" data-index="${i}" onclick="openPosAddItemModal(${p.id})" onmouseenter="setPosSearchHighlight(${i})">
-      <div style="font-weight:600;">${p.name}${subParts?' — '+subParts:''}</div>
+      <div style="font-weight:600;">${escapeHtml(p.name)}${subParts?' — '+subParts:''}</div>
       <div style="font-size:11px;color:var(--muted);">
         Retail: ${fmt(p.priceRetail)} &nbsp;·&nbsp; Wholesale: ${p.priceWholesale ? fmt(p.priceWholesale) : '—'} &nbsp;·&nbsp; ${stockLabel}
       </div>
@@ -8110,7 +8159,7 @@ function openPosAddItemModal(id){
   posAddItemPendingProductId = id;
   const price = selectedPriceType==='wholesale' && product.priceWholesale ? product.priceWholesale : product.priceRetail;
   document.getElementById('posAddItemInfo').innerHTML = `
-    <div style="font-weight:600;">${product.name}${product.model?' — '+product.model:''} ${product.company?`<span class="badge" style="background:var(--primary);color:#fff;">${product.company}</span>`:''}</div>
+    <div style="font-weight:600;">${escapeHtml(product.name)}${product.model?' — '+escapeHtml(product.model):''} ${product.company?`<span class="badge" style="background:var(--primary);color:#fff;">${escapeHtml(product.company)}</span>`:''}</div>
     <div style="font-size:11px;color:var(--muted);">${selectedPriceType==='wholesale'?'Wholesale':'Retail'} price: ${fmt(price)} &nbsp;·&nbsp; In stock: ${product.stock}</div>
   `;
   document.getElementById('posAddItemQty').value = 1;
@@ -8296,7 +8345,7 @@ function renderCart(){
     return `
     <div class="cart-item" style="flex-wrap:wrap;">
       <div class="ci-left">
-        <div class="ci-name">${c.name}</div>
+        <div class="ci-name">${escapeHtml(c.name)}</div>
         <div class="ci-sub">
           ${c.priceType==='wholesale'?'Wholesale':'Retail'} price:
           <input type="number" min="0" value="${c.price}" class="price-edit-input"
@@ -9023,7 +9072,7 @@ function renderReports(){
 
   const exTbody = document.getElementById('expenseTable');
   exTbody.innerHTML = expenses.slice().reverse().map(e=>`<tr>
-      <td>${formatDate(e.date)}</td><td>${e.category}</td><td>${fmt(e.amount)}</td><td>${e.note||'-'}</td>
+      <td>${formatDate(e.date)}</td><td>${e.category}</td><td>${fmt(e.amount)}</td><td>${escapeHtml(e.note||'-')}</td>
       <td>${hasPermission('delete') ? `<button class="btn danger small" onclick="deleteExpense(${e.id})">Delete</button>` : ''}</td>
     </tr>`).join('') || '<tr><td colspan="5" class="empty">No expenses recorded yet.</td></tr>';
 
@@ -9080,7 +9129,7 @@ function renderSalesView(){
       <td>${r.items.map(i=>i.name+' x'+i.qty).join(', ')}</td>
       <td>${fmt(r.refundAmount)}</td>
       <td><span class="badge">${methodLabel}</span></td>
-      <td>${r.reason}</td>
+      <td>${escapeHtml(r.reason)}</td>
     </tr>`;
   }).join('') || '<tr><td colspan="6" class="empty">No returns recorded yet.</td></tr>';
 }
@@ -9198,7 +9247,7 @@ function generateCustomReport(){
     output.innerHTML = `
       <div class="table-scroll"><table>
         <thead><tr><th>Customer</th><th># Sales</th><th>Gross Sales</th><th>Returns</th><th>Net Sales</th></tr></thead>
-        <tbody>${rows.length ? rows.map(r=>`<tr><td>${r.name}</td><td>${r.count}</td><td>${fmt(r.gross)}</td><td>${fmt(r.returns)}</td><td>${fmt(r.net)}</td></tr>`).join('') : '<tr><td colspan="5" class="empty">No sales in this range.</td></tr>'}</tbody>
+        <tbody>${rows.length ? rows.map(r=>`<tr><td>${escapeHtml(r.name)}</td><td>${r.count}</td><td>${fmt(r.gross)}</td><td>${fmt(r.returns)}</td><td>${fmt(r.net)}</td></tr>`).join('') : '<tr><td colspan="5" class="empty">No sales in this range.</td></tr>'}</tbody>
       </table></div>`;
   }
   else if(type==='supplier'){
@@ -9218,7 +9267,7 @@ function generateCustomReport(){
     output.innerHTML = `
       <div class="table-scroll"><table>
         <thead><tr><th>Supplier</th><th># Invoices</th><th>Total Purchased</th><th>Paid</th><th>Owed</th></tr></thead>
-        <tbody>${rows.length ? rows.map(r=>`<tr><td>${r.name}</td><td>${r.count}</td><td>${fmt(r.total)}</td><td>${fmt(r.paid)}</td><td class="${r.owed>0?'low':''}">${fmt(r.owed)}</td></tr>`).join('') : '<tr><td colspan="5" class="empty">No purchases in this range.</td></tr>'}</tbody>
+        <tbody>${rows.length ? rows.map(r=>`<tr><td>${escapeHtml(r.name)}</td><td>${r.count}</td><td>${fmt(r.total)}</td><td>${fmt(r.paid)}</td><td class="${r.owed>0?'low':''}">${fmt(r.owed)}</td></tr>`).join('') : '<tr><td colspan="5" class="empty">No purchases in this range.</td></tr>'}</tbody>
       </table></div>`;
   }
 }
@@ -9524,7 +9573,7 @@ function partnerColor(id){
   return colors[Math.max(0,idx) % colors.length];
 }
 function populatePartnerSelects(){
-  const opts = partners.map(p=>`<option value="${p.id}">${p.name} (${p.share}%)</option>`).join('');
+  const opts = partners.map(p=>`<option value="${p.id}">${escapeHtml(p.name)} (${p.share}%)</option>`).join('');
   ['capPartner','drawPartner'].forEach(id=>{
     const sel = document.getElementById(id);
     if(sel){ const prev = sel.value; sel.innerHTML = opts; if(prev) sel.value = prev; }
@@ -9539,7 +9588,7 @@ function renderEquityBreakdown(balanceSheetEquity){
     const cap = partnerCapitalBalance(p.id), draw = partnerDrawingsBalance(p.id), cur = partnerCurrentBalance(p.id);
     const net = cap - draw + cur;
     ledgerTotal += net;
-    return `<div class="equity-row"><span><span class="pc-dot" style="background:${partnerColor(p.id)};display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;"></span>${p.name} (${p.share}%) — Capital ${fmt(cap)} − Drawings ${fmt(draw)} + Current ${fmt(cur)}</span><span>${fmt(net)}</span></div>`;
+    return `<div class="equity-row"><span><span class="pc-dot" style="background:${partnerColor(p.id)};display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;"></span>${escapeHtml(p.name)} (${p.share}%) — Capital ${fmt(cap)} − Drawings ${fmt(draw)} + Current ${fmt(cur)}</span><span>${fmt(net)}</span></div>`;
   }).join('');
   const avail = availableProfit();
   ledgerTotal += avail;
@@ -9555,21 +9604,21 @@ function renderEquityBreakdown(balanceSheetEquity){
 function renderPartnersPanel(){
   populatePartnerSelects();
   const listEl = document.getElementById('partnersList');
-  listEl.innerHTML = partners.map(p=>`<span class="partner-chip"><span class="pc-dot" style="background:${partnerColor(p.id)}"></span>${p.name} — ${p.share}%${hasPermission('delete') ? ` <button class="btn danger small" style="padding:2px 8px;" onclick="deletePartner(${p.id})">✕</button>` : ''}</span>`).join('') || '<div class="empty">No partners yet — add one below.</div>';
+  listEl.innerHTML = partners.map(p=>`<span class="partner-chip"><span class="pc-dot" style="background:${partnerColor(p.id)}"></span>${escapeHtml(p.name)} — ${p.share}%${hasPermission('delete') ? ` <button class="btn danger small" style="padding:2px 8px;" onclick="deletePartner(${p.id})">✕</button>` : ''}</span>`).join('') || '<div class="empty">No partners yet — add one below.</div>';
   const totalShare = partners.reduce((s,p)=>s+Number(p.share||0),0);
   document.getElementById('partnerShareWarning').textContent = (partners.length && Math.abs(totalShare-100)>0.5) ? `⚠️ Shares add up to ${totalShare}%, not 100%. Profit distribution will still split proportionally to whatever you've entered.` : '';
 
   const rows = [...capitalLog].sort((a,b)=>b.date.localeCompare(a.date));
   document.getElementById('capitalLogOutput').innerHTML = '<div class="table-scroll"><table><tbody>' + (rows.length ? rows.map(c=>{
     const p = partners.find(x=>x.id===c.partnerId);
-    return `<tr><td>${formatDate(c.date)}</td><td>${p?p.name:'—'}</td><td>${c.note||''}</td><td style="text-align:right;">${fmt(c.amount)}</td></tr>`;
+    return `<tr><td>${formatDate(c.date)}</td><td>${p?p.name:'—'}</td><td>${escapeHtml(c.note||'')}</td><td style="text-align:right;">${fmt(c.amount)}</td></tr>`;
   }).join('') : '<tr><td class="empty">No capital contributions recorded yet.</td></tr>') + '</tbody></table></div>';
 
   const maxCap = Math.max(1, ...partners.map(p=>partnerCapitalBalance(p.id)), 0);
   document.getElementById('capitalChart').innerHTML = partners.map(p=>{
     const v = partnerCapitalBalance(p.id);
     const h = Math.max(2, Math.round((v/maxCap)*100));
-    return `<div class="bar-col"><div class="bar" style="height:${h}%;background:${partnerColor(p.id)};"></div><div class="bar-lbl">${p.name}<br>${fmt(v)}</div></div>`;
+    return `<div class="bar-col"><div class="bar" style="height:${h}%;background:${partnerColor(p.id)};"></div><div class="bar-lbl">${escapeHtml(p.name)}<br>${fmt(v)}</div></div>`;
   }).join('');
 }
 
@@ -9636,7 +9685,7 @@ function renderProfitPanel(){
 
   document.getElementById('currentAccountsOutput').innerHTML = partners.map(p=>{
     const bal = partnerCurrentBalance(p.id);
-    return `<div class="equity-row"><span>${p.name} — distributed, not yet withdrawn</span><span>${fmt(bal)}
+    return `<div class="equity-row"><span>${escapeHtml(p.name)} — distributed, not yet withdrawn</span><span>${fmt(bal)}
       ${bal>0.5 && hasPermission('edit') ? ` <button class="btn small" onclick="settleCurrentAccount(${p.id},'withdraw')">Withdraw</button> <button class="btn ghost small" onclick="settleCurrentAccount(${p.id},'reinvest')">Reinvest</button>` : ''}</span></div>`;
   }).join('') || '<div class="empty">No partners yet.</div>';
 
@@ -9679,13 +9728,13 @@ function renderDrawingsPanel(){
   document.getElementById('drawingsChart').innerHTML = partners.map(p=>{
     const v = partnerDrawingsBalance(p.id);
     const h = Math.max(2, Math.round((v/maxD)*100));
-    return `<div class="bar-col"><div class="bar" style="height:${h}%;background:${partnerColor(p.id)};"></div><div class="bar-lbl">${p.name}<br>${fmt(v)}</div></div>`;
+    return `<div class="bar-col"><div class="bar" style="height:${h}%;background:${partnerColor(p.id)};"></div><div class="bar-lbl">${escapeHtml(p.name)}<br>${fmt(v)}</div></div>`;
   }).join('');
 
   const rows = [...drawingsLog].sort((a,b)=>b.date.localeCompare(a.date));
   document.getElementById('drawingsHistoryOutput').innerHTML = '<div class="table-scroll"><table><tbody>' + (rows.length ? rows.map(d=>{
     const p = partners.find(x=>x.id===d.partnerId);
-    return `<tr><td>${formatDate(d.date)}</td><td>${p?p.name:'—'}</td><td>${d.method}</td><td>${d.note||''}</td><td style="text-align:right;">${fmt(d.amount)}</td></tr>`;
+    return `<tr><td>${formatDate(d.date)}</td><td>${p?p.name:'—'}</td><td>${d.method}</td><td>${escapeHtml(d.note||'')}</td><td style="text-align:right;">${fmt(d.amount)}</td></tr>`;
   }).join('') : '<tr><td class="empty">No drawings recorded yet.</td></tr>') + '</tbody></table></div>';
 }
 function addDrawingEntry(){
@@ -9714,12 +9763,12 @@ function exportDrawingsCsv(){
 function renderLiabilitiesPanel(){
   document.getElementById('liabilitiesOutput').innerHTML = '<div class="table-scroll"><table><tbody>' + (liabilitiesExtra.length ? liabilitiesExtra.map(l=>{
     const overdue = new Date(l.dueDate) < new Date();
-    return `<tr><td>${l.name}<br><span class="badge">${l.category}</span></td><td class="${overdue?'low':''}">${l.dueDate}</td><td style="text-align:right;">${fmt(l.amount)}</td>
+    return `<tr><td>${escapeHtml(l.name)}<br><span class="badge">${l.category}</span></td><td class="${overdue?'low':''}">${l.dueDate}</td><td style="text-align:right;">${fmt(l.amount)}</td>
       <td>${hasPermission('edit')?`<button class="btn small" onclick="payLiabilityEntry(${l.id})">Record Payment</button>`:''}${hasPermission('delete')?` <button class="btn danger small" onclick="deleteLiabilityEntry(${l.id})">Delete</button>`:''}</td></tr>`;
   }).join('') : '<tr><td class="empty">No other liabilities recorded.</td></tr>') + '</tbody></table></div>';
 
   document.getElementById('fixedAssetsOutput').innerHTML = '<div class="table-scroll"><table><tbody>' + (fixedAssets.length ? fixedAssets.map(a=>
-    `<tr><td>${a.name}<br><span class="badge">${a.category}</span></td><td>${a.purchaseDate}</td><td style="text-align:right;">${fmt(a.value)}</td><td>${hasPermission('delete')?`<button class="btn danger small" onclick="deleteFixedAsset(${a.id})">Delete</button>`:''}</td></tr>`
+    `<tr><td>${escapeHtml(a.name)}<br><span class="badge">${a.category}</span></td><td>${a.purchaseDate}</td><td style="text-align:right;">${fmt(a.value)}</td><td>${hasPermission('delete')?`<button class="btn danger small" onclick="deleteFixedAsset(${a.id})">Delete</button>`:''}</td></tr>`
   ).join('') : '<tr><td class="empty">No fixed assets registered.</td></tr>') + '</tbody></table></div>';
 }
 function addLiabilityEntry(){
@@ -9867,7 +9916,7 @@ function renderChartOfAccounts(){
     (chartOfAccounts.length ? chartOfAccounts.slice().sort((a,b)=>a.code.localeCompare(b.code)).map(a=>{
       const bal = accountBalance(a.id);
       return `<tr${a.active===false?' style="opacity:.5;"':''}>
-        <td>${a.code}</td><td>${a.name}${a.active===false?' <span class="badge">Inactive</span>':''}</td><td>${a.type}</td>
+        <td>${a.code}</td><td>${escapeHtml(a.name)}${a.active===false?' <span class="badge">Inactive</span>':''}</td><td>${a.type}</td>
         <td>${fmt(bal)}</td>
         <td>${hasPermission('edit')?`<button class="btn ghost small" onclick="editAccount(${a.id})">Edit</button>`:''}${hasPermission('delete')?` <button class="btn danger small" onclick="deleteAccount(${a.id})">Delete</button>`:''}</td>
       </tr>`;
@@ -9969,7 +10018,7 @@ function updateJournalLine(idx, field, value){
 }
 function journalLineAccountOptions(selectedId){
   return '<option value="">-- Select account --</option>' + chartOfAccounts.filter(a=>a.active!==false).slice().sort((a,b)=>a.code.localeCompare(b.code))
-    .map(a=>`<option value="${a.id}" ${Number(selectedId)===a.id?'selected':''}>${a.code} — ${a.name}</option>`).join('');
+    .map(a=>`<option value="${a.id}" ${Number(selectedId)===a.id?'selected':''}>${a.code} — ${escapeHtml(a.name)}</option>`).join('');
 }
 function renderJournalLines(){
   const el = document.getElementById('jeLines');
@@ -10078,7 +10127,7 @@ function populateLedgerAccountSelect(){
   if(!sel) return;
   const cur = sel.value;
   sel.innerHTML = chartOfAccounts.slice().sort((a,b)=>a.code.localeCompare(b.code))
-    .map(a=>`<option value="${a.id}">${a.code} — ${a.name}</option>`).join('');
+    .map(a=>`<option value="${a.id}">${a.code} — ${escapeHtml(a.name)}</option>`).join('');
   if(cur) sel.value = cur;
 }
 function renderGeneralLedger(){
@@ -10119,7 +10168,7 @@ function renderTrialBalance(){
   });
   const balanced = Math.abs(totalDebit-totalCredit) < 0.01;
   el.innerHTML = `<div class="table-scroll"><table><thead><tr><th>Code</th><th>Account</th><th>Debit</th><th>Credit</th></tr></thead><tbody>` +
-    rows.map(r=>`<tr><td>${r.code}</td><td>${r.name}</td><td>${r.debitCol?fmt(r.debitCol):''}</td><td>${r.creditCol?fmt(r.creditCol):''}</td></tr>`).join('') +
+    rows.map(r=>`<tr><td>${r.code}</td><td>${escapeHtml(r.name)}</td><td>${r.debitCol?fmt(r.debitCol):''}</td><td>${r.creditCol?fmt(r.creditCol):''}</td></tr>`).join('') +
     `<tr style="font-weight:700;border-top:2px solid var(--border);"><td colspan="2">Total</td><td>${fmt(totalDebit)}</td><td>${fmt(totalCredit)}</td></tr>` +
     `</tbody></table></div><div class="recon-note" style="margin-top:8px;">${balanced ? '✅ Debits equal credits — the books balance.' : '⚠️ Debits and credits don\'t match — check for an unbalanced journal entry.'}</div>`;
   lastTrialBalanceRows = [['Malik Autoz — Trial Balance'], ['As of', new Date().toISOString().slice(0,10)], [], ['Code','Account','Debit','Credit'],
@@ -10135,7 +10184,7 @@ function populateBankCategorySelect(selectEl, selectedId){
   if(!selectEl) return;
   selectEl.innerHTML = '<option value="">-- Uncategorized --</option>' +
     chartOfAccounts.filter(a=>a.active!==false).slice().sort((a,b)=>a.code.localeCompare(b.code))
-      .map(a=>`<option value="${a.id}" ${Number(selectedId)===a.id?'selected':''}>${a.code} — ${a.name}</option>`).join('');
+      .map(a=>`<option value="${a.id}" ${Number(selectedId)===a.id?'selected':''}>${a.code} — ${escapeHtml(a.name)}</option>`).join('');
 }
 function addBankTransaction(){
   if(!hasPermission('edit')){ denyAccess(); return; }
@@ -10274,7 +10323,7 @@ function renderBankFeed(){
   tbody.innerHTML = filtered.length ? filtered.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(t=>{
     const catSelectId = `bankCat_${t.id}`;
     return `<tr>
-      <td>${formatDate(t.date)}</td><td>${t.description}</td>
+      <td>${formatDate(t.date)}</td><td>${escapeHtml(t.description)}</td>
       <td class="${t.amount<0?'low':''}">${fmt(t.amount)}</td>
       <td><select id="${catSelectId}" style="font-size:12px;padding:4px 6px;" onchange="updateBankTransactionCategory(${t.id}, this.value)"></select></td>
       <td>${t.matched ? '<span class="badge" style="background:var(--success);color:#fff;">✅ Posted</span>' : '<span class="badge">Uncategorized</span>'}</td>
@@ -10314,7 +10363,7 @@ function openReturnModal(saleId){
     const already = alreadyReturnedQty(saleId, idx);
     const maxQty = it.qty - already;
     return `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--border);padding:6px 0;">
-      <span>${it.name}${already?` <span style="font-size:11px;color:var(--muted);">(${already} already returned)</span>`:''}</span>
+      <span>${escapeHtml(it.name)}${already?` <span style="font-size:11px;color:var(--muted);">(${already} already returned)</span>`:''}</span>
       <input type="number" min="0" max="${maxQty}" value="0" data-idx="${idx}" class="return-qty-input"
         style="width:70px;margin:0;padding:4px 6px;" oninput="updateReturnPreview()" ${maxQty<=0?'disabled':''}>
     </div>`;
@@ -10428,12 +10477,12 @@ function renderReconciliation(){
 
   const empSelect = document.getElementById('rcEmployee');
   const curEmp = empSelect.value;
-  empSelect.innerHTML = '<option value="">-- Not specified --</option>' + employees.filter(e=>e.status==='active').map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
+  empSelect.innerHTML = '<option value="">-- Not specified --</option>' + employees.filter(e=>e.status==='active').map(e=>`<option value="${e.id}">${escapeHtml(e.name)}</option>`).join('');
   empSelect.value = curEmp || (saved.employeeId!==undefined ? saved.employeeId : '');
 
   const expEmpSelect = document.getElementById('rcExpenseEmployee');
   const curExpEmp = expEmpSelect.value;
-  expEmpSelect.innerHTML = '<option value="">-- Not specified --</option>' + employees.filter(e=>e.status==='active').map(e=>`<option value="${e.id}">${e.name}</option>`).join('');
+  expEmpSelect.innerHTML = '<option value="">-- Not specified --</option>' + employees.filter(e=>e.status==='active').map(e=>`<option value="${e.id}">${escapeHtml(e.name)}</option>`).join('');
   expEmpSelect.value = curExpEmp || (saved.expenseEmployeeId!==undefined ? saved.expenseEmployeeId : '');
 
   if(document.getElementById('rcOpening').value==='' && saved.opening!==undefined) document.getElementById('rcOpening').value = saved.opening;
@@ -10871,7 +10920,7 @@ if(!document.getElementById('clmDate').value) setDateFieldValue('clmDate', new D
   // (window.storage unavailable) skips straight through, unchanged.
   await bootstrapCloudSync();
   reloadStateFromLocalStorage();
-  await migratePlaintextPins();
+  await migrateWeakPins();
   document.getElementById('cloudLoadingOverlay')?.remove();
 
   restoreSession();
@@ -10956,7 +11005,7 @@ const TRANSLATIONS = {
     common: {
       save:'Save', cancel:'Cancel', confirm:'Confirm', search:'Search', edit:'Edit',
       delete:'Delete', approve:'Approve', reject:'Reject', close:'Close', yes:'Yes', no:'No',
-      loading:'Loading…', retry:'Retry', backToDashboard:'← Back to Dashboard'
+      loading:'Loading…', retry:'Retry', backToDashboard:'← Back to Dashboard', orTypeCode:'Or type the code manually:'
     },
     navigation: {
       dashboard:'Dashboard', pos:'POS', sales:'Sales', inventory:'Inventory', suppliers:'Suppliers',
@@ -11094,6 +11143,7 @@ const TRANSLATIONS = {
       exportInventory:'⬇️ Export Current Inventory (.csv)', filterByName:'🔍 Filter by product name...', lowStockAlert:'Low Stock Alert Level', 
       modelFitment:'Model / Bike Fitment', modelPlaceholder:'e.g. CG125', none:'-- None --', productCatalog:'Product Catalog', 
       productName:'Product Name', productNamePlaceholder:'e.g. Brake Pad Set', retailPrice:'Retail Price (Rs.)', 
+      qrBarcode:'QR / Barcode', 
       searchCatalog:'🔍 Search by name, model, company, or SKU...', skuCode:'SKU / Product Code', skuPlaceholder:'Leave blank to auto-generate', 
       stockLedger:'📋 Stock Movement Ledger', stockLedgerBody:'Every change to stock — sales, manual adjustments, and imports — is logged here automatically, so you always know why a number changed. Stock is never edited silently.', 
       stockQuantity:'Stock Quantity', supplierOptional:'Supplier (optional)', thCategory:'Category', thChange:'Change', 
@@ -11170,7 +11220,7 @@ const TRANSLATIONS = {
     common: {
       save:'محفوظ کریں', cancel:'منسوخ کریں', confirm:'تصدیق کریں', search:'تلاش کریں', edit:'ترمیم کریں',
       delete:'حذف کریں', approve:'منظور کریں', reject:'مسترد کریں', close:'بند کریں', yes:'جی ہاں', no:'نہیں',
-      loading:'لوڈ ہو رہا ہے…', retry:'دوبارہ کوشش کریں', backToDashboard:'← ڈیش بورڈ پر واپس جائیں'
+      loading:'لوڈ ہو رہا ہے…', retry:'دوبارہ کوشش کریں', backToDashboard:'← ڈیش بورڈ پر واپس جائیں', orTypeCode:'یا کوڈ خود ٹائپ کریں:'
     },
     navigation: {
       dashboard:'ڈیش بورڈ', pos:'POS', sales:'سیلز', inventory:'انوینٹری', suppliers:'سپلائرز',
@@ -11287,7 +11337,8 @@ const TRANSLATIONS = {
       exportInventory:'⬇️ موجودہ انوینٹری ایکسپورٹ کریں (.csv)', filterByName:'🔍 پروڈکٹ کے نام سے فلٹر کریں...', 
       lowStockAlert:'کم اسٹاک الرٹ لیول', modelFitment:'ماڈل / بائیک فٹمنٹ', modelPlaceholder:'مثلاً CG125', 
       none:'-- کوئی نہیں --', productCatalog:'پروڈکٹ کیٹلاگ', productName:'پروڈکٹ کا نام', productNamePlaceholder:'مثلاً بریک پیڈ سیٹ', 
-      retailPrice:'ریٹیل قیمت (روپے)', searchCatalog:'🔍 نام، ماڈل، کمپنی، یا SKU سے تلاش کریں...', skuCode:'SKU / پروڈکٹ کوڈ', 
+      retailPrice:'ریٹیل قیمت (روپے)', qrBarcode:'QR / بارکوڈ', 
+      searchCatalog:'🔍 نام، ماڈل، کمپنی، یا SKU سے تلاش کریں...', skuCode:'SKU / پروڈکٹ کوڈ', 
       skuPlaceholder:'خودکار بنانے کے لیے خالی چھوڑیں', stockLedger:'📋 اسٹاک موومنٹ لیجر', stockLedgerBody:'اسٹاک میں ہر تبدیلی — سیلز، دستی ایڈجسٹمنٹس، اور امپورٹس — یہاں خودکار طور پر لاگ ہوتی ہے، تاکہ آپ کو ہمیشہ معلوم رہے کہ نمبر کیوں تبدیل ہوا۔ اسٹاک کبھی خاموشی سے ترمیم نہیں کیا جاتا۔', 
       stockQuantity:'اسٹاک مقدار', supplierOptional:'سپلائر (اختیاری)', thCategory:'کیٹیگری', thChange:'تبدیلی', 
       thCompany:'کمپنی', thCost:'لاگت', thDate:'تاریخ', thModel:'ماڈل', thName:'نام', thReasonNote:'وجہ / نوٹ', 
