@@ -342,6 +342,7 @@
         <button class="quick-tile" data-view="suppliers" onclick="goToTab('suppliers')"><span class="quick-icon">🚚</span><span data-i18n="navigation.suppliers">Suppliers</span></button>
         <button class="quick-tile" data-view="purchases" onclick="goToTab('purchases')"><span class="quick-icon">🧾</span><span data-i18n="navigation.purchases">Purchases</span></button>
         <button class="quick-tile" data-view="claims" onclick="goToTab('claims')"><span class="quick-icon">🛠️</span><span data-i18n="navigation.claims">Claims</span></button>
+        <button class="quick-tile" data-view="deliveries" onclick="goToTab('deliveries')"><span class="quick-icon">🛵</span><span data-i18n="navigation.deliveries">Deliveries</span></button>
         <button class="quick-tile" data-view="demand" onclick="goToTab('demand')"><span class="quick-icon">📨</span><span data-i18n="navigation.demand">Demand</span></button>
         <button class="quick-tile" data-view="customers" onclick="goToTab('customers')"><span class="quick-icon">👤</span><span data-i18n="navigation.customers">Customers</span></button>
         <button class="quick-tile" data-view="employees" onclick="goToTab('employees')"><span class="quick-icon">🧑‍🔧</span><span data-i18n="navigation.employees">Employees</span></button>
@@ -465,10 +466,35 @@
         <input type="number" id="discountValue" value="0" min="0" style="max-width:120px;" oninput="renderCart()">
       </div>
 
+      <label style="margin-top:10px;" data-i18n="pos.orderSource">Where did this order come from?</label>
+      <select id="orderSource">
+        <option value="in_store" data-i18n="pos.sourceInStore">🏪 In-Store</option>
+        <option value="phone" data-i18n="pos.sourcePhone">📞 Phone</option>
+        <option value="whatsapp" data-i18n="pos.sourceWhatsapp">💬 WhatsApp</option>
+        <option value="instagram" data-i18n="pos.sourceInstagram">📸 Instagram</option>
+        <option value="facebook" data-i18n="pos.sourceFacebook">👍 Facebook</option>
+        <option value="other" data-i18n="pos.sourceOther">Other</option>
+      </select>
+
+      <div class="row" style="margin-top:10px;align-items:center;">
+        <label style="margin:0;flex:1;" data-i18n="pos.deliveryToggle">🛵 This is a delivery order</label>
+        <input type="checkbox" id="deliveryToggle" onchange="toggleDeliverySection()" style="width:20px;height:20px;flex:none;">
+      </div>
+      <div id="deliverySection" class="hidden">
+        <label data-i18n="pos.deliveryRider">Delivery Rider</label>
+        <select id="deliveryRider"><option value="" data-i18n="pos.noRiderYet">-- Select rider (manage in Deliveries tab) --</option></select>
+        <label data-i18n="pos.deliveryAddress">Delivery Address</label>
+        <input id="deliveryAddress" data-i18n-placeholder="pos.deliveryAddressPlaceholder" placeholder="Where should this be delivered?">
+        <label data-i18n="pos.deliveryCharge">Delivery Charge (Rs.)</label>
+        <input type="number" id="deliveryCharge" min="0" value="0" oninput="renderCart()">
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;" data-i18n="pos.deliveryChargeHint">Whatever the rider is charging for this trip — added to the customer's total below.</div>
+      </div>
+
       <div class="row" style="justify-content:space-between;margin-top:10px;flex-direction:column;align-items:stretch;">
         <div class="row" style="justify-content:space-between;"><span data-i18n="pos.subtotal">Subtotal</span><span id="cartSubtotal">Rs. 0</span></div>
         <div class="row" style="justify-content:space-between;"><span data-i18n="pos.itemDiscounts">Item Discounts</span><span id="cartItemDiscounts">- Rs. 0</span></div>
         <div class="row" style="justify-content:space-between;"><span data-i18n="pos.cartDiscount">Cart Discount</span><span id="cartDiscount">Rs. 0</span></div>
+        <div class="row hidden" style="justify-content:space-between;" id="deliveryChargeRow"><span data-i18n="pos.deliveryChargeLabel">🛵 Delivery Charge</span><span id="cartDeliveryCharge">Rs. 0</span></div>
         <div class="row" style="justify-content:space-between;"><strong data-i18n="pos.grandTotal">Grand Total</strong><strong id="cartTotal">Rs. 0</strong></div>
       </div>
 
@@ -678,6 +704,59 @@
       <div class="table-scroll"><table>
         <thead><tr><th data-i18n="inventory.thDate">Date</th><th data-i18n="claims.product">Product</th><th data-i18n="suppliers.supplierLabel">Supplier</th><th data-i18n="claims.thQty">Qty</th><th data-i18n="claims.thReason">Reason</th><th data-i18n="claims.status">Status</th><th data-i18n="claims.thRefund">Refund</th><th></th></tr></thead>
         <tbody id="claimTable"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- DELIVERIES VIEW (riders roster + dispatch board) -->
+  <div class="view" id="view-deliveries">
+    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;" data-i18n="common.backToDashboard">← Back to Dashboard</button>
+    <div class="card">
+      <h2 id="riderFormTitle" data-i18n="deliveries.addRider">Add Rider</h2>
+      <input type="hidden" id="riderEditId">
+      <div class="grid2">
+        <div><label data-i18n="deliveries.riderName">Rider Name</label><input id="riderName" data-i18n-placeholder="deliveries.riderNamePlaceholder" placeholder="e.g. Imran (bike)"></div>
+        <div><label data-i18n="suppliers.phone">Phone</label><input id="riderPhone" type="tel" inputmode="tel" data-i18n-placeholder="suppliers.phonePlaceholder" placeholder="Phone number" oninput="this.value=this.value.replace(/[^0-9+\-\s()]/g,'')"></div>
+      </div>
+      <label data-i18n="suppliers.notes">Notes</label>
+      <textarea id="riderNotes" rows="2" data-i18n-placeholder="deliveries.riderNotesPlaceholder" placeholder="Areas covered, availability, etc."></textarea>
+      <div class="row">
+        <button class="btn" onclick="saveRider()" data-i18n="deliveries.addRiderBtn">➕ Add Rider</button>
+        <button class="btn ghost" id="riderCancelBtn" onclick="cancelEditRider()" data-i18n="inventory.clear">🧹 Clear</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2 data-i18n="deliveries.riderList">Riders</h2>
+      <div class="table-scroll"><table>
+        <thead><tr><th data-i18n="inventory.thName">Name</th><th data-i18n="suppliers.thPhone">Phone</th><th data-i18n="deliveries.thTotalDeliveries">Total Deliveries</th><th data-i18n="deliveries.thPending">Pending</th><th></th></tr></thead>
+        <tbody id="riderTable"></tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <h2 data-i18n="deliveries.deliveryBoard">Delivery Board</h2>
+      <p style="color:var(--muted);font-size:13px;margin-top:-6px;">
+        <span data-i18n="deliveries.pendingCountLabel">Pending / out for delivery right now:</span>
+        <strong id="deliveryPendingCount">0</strong>
+      </p>
+      <div class="row">
+        <select id="deliveryStatusFilter" onchange="renderDeliveries()">
+          <option value="" data-i18n="deliveries.allStatuses">All statuses</option>
+          <option value="pending" data-i18n="deliveries.statusPending">Pending Dispatch</option>
+          <option value="out_for_delivery" data-i18n="deliveries.statusOutForDelivery">Out for Delivery</option>
+          <option value="delivered" data-i18n="deliveries.statusDelivered">Delivered</option>
+          <option value="cancelled" data-i18n="deliveries.statusCancelled">Cancelled</option>
+        </select>
+        <select id="deliveryRiderFilter" onchange="renderDeliveries()">
+          <option value="" data-i18n="deliveries.allRiders">All riders</option>
+        </select>
+      </div>
+      <div class="table-scroll"><table>
+        <thead><tr>
+          <th data-i18n="inventory.thDate">Date</th><th data-i18n="deliveries.thSource">Source</th><th data-i18n="deliveries.thCustomer">Customer</th>
+          <th data-i18n="deliveries.thItems">Items</th><th data-i18n="deliveries.thAddress">Address</th><th data-i18n="deliveries.thRider">Rider</th>
+          <th data-i18n="deliveries.thDeliveryCharge">Delivery Charge</th><th data-i18n="deliveries.thOrderTotal">Order Total</th><th data-i18n="deliveries.thStatus">Status</th>
+        </tr></thead>
+        <tbody id="deliveryTable"></tbody>
       </table></div>
     </div>
   </div>
@@ -4569,6 +4648,7 @@ function rerenderCurrentView(){
   if(view==='suppliers') renderSuppliers();
   if(view==='purchases') renderPurchases();
   if(view==='claims') renderClaims();
+  if(view==='deliveries') renderDeliveries();
   if(view==='reports') renderReports();
   if(view==='customers') renderCustomers();
   if(view==='employees') renderEmployees();
@@ -4636,6 +4716,7 @@ let stockLog = load('moto_stock_log');
 let returns = load('moto_returns');
 let employees = load('moto_employees');
 let purchases = load('moto_purchases');
+let riders = load('moto_riders'); // delivery riders roster
 let demands = load('moto_demands');
 let claims = load('moto_claims');
 let customerPayments = load('moto_customer_payments');
@@ -4701,6 +4782,20 @@ products.forEach(p=>{
   if(p.qrCode===undefined) p.qrCode = '';
 });
 save('moto_products', products);
+
+// Old sales made before delivery/order-source tracking existed still work --
+// they just show as "In-Store" with no delivery info, same as they really were.
+sales.forEach(s=>{
+  if(s.orderSource===undefined) s.orderSource = 'in_store';
+  if(s.delivery===undefined) s.delivery = null;
+});
+save('moto_sales', sales);
+riders.forEach(r=>{
+  if(r.phone===undefined) r.phone = '';
+  if(r.notes===undefined) r.notes = '';
+  if(r.active===undefined) r.active = true;
+});
+save('moto_riders', riders);
 
 // Every stock-quantity change in the app funnels through here, so stock is
 // never silently overwritten — there is always an auditable reason on file.
@@ -5304,6 +5399,7 @@ function goToTab(view){
   if(view==='suppliers') renderSuppliers();
   if(view==='purchases') renderPurchases();
   if(view==='claims') renderClaims();
+  if(view==='deliveries') renderDeliveries();
   if(view==='reports') renderReports();
   if(view==='customers') renderCustomers();
   if(view==='employees') renderEmployees();
@@ -5326,9 +5422,9 @@ document.querySelectorAll('nav button').forEach(btn=>{
 // what's visible/reachable from the dashboard itself.
 const DASHBOARD_SECTIONS_BY_ROLE = {
   mechanic: { tiles:[], finance:false, stock:false, counts:false, chart:false, topProducts:false, recentSales:false, lowStockList:false, brief:false },
-  cashier:  { tiles:['pos','sales'], finance:false, stock:true, counts:false, chart:false, topProducts:false, recentSales:true, lowStockList:true, brief:false },
-  manager:  { tiles:['pos','sales','inventory','purchases','claims','demand','customers'], finance:false, stock:true, counts:false, chart:false, topProducts:false, recentSales:true, lowStockList:true, brief:false },
-  admin:    { tiles:['pos','sales','inventory','suppliers','purchases','claims','demand','customers','employees','reports','backup','accounting'], finance:true, stock:true, counts:true, chart:true, topProducts:true, recentSales:true, lowStockList:true, brief:true }
+  cashier:  { tiles:['pos','sales','deliveries'], finance:false, stock:true, counts:false, chart:false, topProducts:false, recentSales:true, lowStockList:true, brief:false },
+  manager:  { tiles:['pos','sales','inventory','purchases','claims','deliveries','demand','customers'], finance:false, stock:true, counts:false, chart:false, topProducts:false, recentSales:true, lowStockList:true, brief:false },
+  admin:    { tiles:['pos','sales','inventory','suppliers','purchases','claims','deliveries','demand','customers','employees','reports','backup','accounting'], finance:true, stock:true, counts:true, chart:true, topProducts:true, recentSales:true, lowStockList:true, brief:true }
 };
 
 function gaugeSVG(pct, color, big){
@@ -8039,6 +8135,7 @@ function renderPos(){
   document.getElementById('posSearch').value = '';
   document.getElementById('posSearchResults').classList.add('hidden');
   document.getElementById('heldCount').textContent = heldSales.length;
+  populateRiderDropdown('deliveryRider');
   renderCart();
   setPayMethod('Cash');
   document.getElementById('cashTendered').value = '';
@@ -8274,6 +8371,16 @@ function cartDiscountAmount(){
 }
 
 function cartGrandTotal(){ return cartAfterItemDiscounts() - cartDiscountAmount(); }
+// Whatever the rider is charging for this trip, read fresh from the form
+// every time -- single source of truth so the on-screen total, the change/
+// split/card-split previews, and the actual checkout() charge can never
+// drift apart from each other.
+function deliveryChargeValue(){
+  const toggle = document.getElementById('deliveryToggle');
+  if(!toggle || !toggle.checked) return 0;
+  return Number(document.getElementById('deliveryCharge').value) || 0;
+}
+function cartGrandTotalWithDelivery(){ return cartGrandTotal() + deliveryChargeValue(); }
 
 function updateCartItemDiscount(id, priceType, field, value){
   const item = cart.find(c=>c.id===id && c.priceType===priceType);
@@ -8284,7 +8391,7 @@ function updateCartItemDiscount(id, priceType, field, value){
 }
 
 function updateChange(){
-  const total = cartGrandTotal();
+  const total = cartGrandTotalWithDelivery();
   const tendered = Number(document.getElementById('cashTendered').value) || 0;
   const box = document.getElementById('changeBox');
   if(tendered===0){ box.textContent = 'Enter cash tendered to calculate change'; box.classList.remove('negative'); return; }
@@ -8299,7 +8406,7 @@ function updateChange(){
 }
 
 function updateSplit(){
-  const total = cartGrandTotal();
+  const total = cartGrandTotalWithDelivery();
   const cashNow = Number(document.getElementById('cashReceivedNow').value) || 0;
   const box = document.getElementById('splitBox');
   if(cashNow<=0){ box.textContent = 'Enter cash received to see remaining credit'; box.classList.remove('negative'); return; }
@@ -8314,7 +8421,7 @@ function updateSplit(){
 }
 
 function updateCashCard(){
-  const total = cartGrandTotal();
+  const total = cartGrandTotalWithDelivery();
   const cash = Number(document.getElementById('cashCardCash').value) || 0;
   const card = Number(document.getElementById('cashCardCard').value) || 0;
   const box = document.getElementById('cashCardBox');
@@ -8379,8 +8486,19 @@ function renderCart(){
   document.getElementById('cartSubtotal').textContent = fmt(cartSubtotal());
   document.getElementById('cartItemDiscounts').textContent = '- ' + fmt(itemDiscountsTotal());
   document.getElementById('cartDiscount').textContent = '- ' + fmt(cartDiscountAmount());
-  document.getElementById('cartTotal').textContent = fmt(cartGrandTotal());
+  const deliveryOn = document.getElementById('deliveryToggle').checked;
+  document.getElementById('deliveryChargeRow').classList.toggle('hidden', !deliveryOn);
+  document.getElementById('cartDeliveryCharge').textContent = fmt(deliveryChargeValue());
+  document.getElementById('cartTotal').textContent = fmt(cartGrandTotalWithDelivery());
   updateChange(); updateSplit(); updateCashCard();
+}
+
+// Shows/hides the rider + address + charge fields, and keeps the totals
+// row and Cash/Split/Card math in sync the moment delivery is toggled.
+function toggleDeliverySection(){
+  const on = document.getElementById('deliveryToggle').checked;
+  document.getElementById('deliverySection').classList.toggle('hidden', !on);
+  renderCart();
 }
 
 function holdSale(){
@@ -8457,7 +8575,10 @@ function checkout(){
   const custId = document.getElementById('posCustomer').value ? Number(document.getElementById('posCustomer').value) : null;
   const empId = document.getElementById('posEmployee').value ? Number(document.getElementById('posEmployee').value) : null;
   const discount = cartDiscountAmount();
-  const total = cartGrandTotal();
+  const deliveryOn = document.getElementById('deliveryToggle').checked;
+  const deliveryChargeVal = deliveryChargeValue();
+  if(deliveryOn && deliveryChargeVal < 0){ alert('Delivery charge cannot be negative.'); return; }
+  const total = cartGrandTotalWithDelivery();
   const cost = cart.reduce((sum,c)=>{
     const p = products.find(pr=>pr.id===c.id);
     return sum + (p ? p.cost*c.qty : 0);
@@ -8510,7 +8631,15 @@ function checkout(){
     paymentMethod: selectedPayMethod,
     cashTendered: cashTenderedInput, change,
     cashReceived, cardAmount, creditAmount, paid,
-    originalCreditAmount: creditAmount // never mutated by later payments -- keeps the customer ledger's history accurate
+    originalCreditAmount: creditAmount, // never mutated by later payments -- keeps the customer ledger's history accurate
+    orderSource: document.getElementById('orderSource').value,
+    delivery: deliveryOn ? {
+      riderId: document.getElementById('deliveryRider').value ? Number(document.getElementById('deliveryRider').value) : null,
+      riderName: (riders.find(r=>r.id===Number(document.getElementById('deliveryRider').value)) || {}).name || '',
+      address: document.getElementById('deliveryAddress').value.trim(),
+      charge: deliveryChargeVal,
+      status: 'pending'
+    } : null
   };
   sales.push(sale);
   save('moto_sales', sales);
@@ -8533,7 +8662,169 @@ function checkout(){
   document.getElementById('cashReceivedNow').value = '';
   document.getElementById('cashCardCash').value = '';
   document.getElementById('cashCardCard').value = '';
+  document.getElementById('orderSource').value = 'in_store';
+  document.getElementById('deliveryToggle').checked = false;
+  document.getElementById('deliveryRider').value = '';
+  document.getElementById('deliveryAddress').value = '';
+  document.getElementById('deliveryCharge').value = 0;
+  toggleDeliverySection();
   renderPos(); renderInventory(); renderDashboard();
+}
+
+// ==================== DELIVERY RIDERS & DISPATCH ====================
+// A rider roster (name + phone) so POS can offer a quick-select dropdown
+// instead of retyping a name every time, plus a Deliveries board that
+// tracks every delivery order from "just sold" through to "delivered" --
+// separate from the sale itself, since a sale is done the moment it's
+// paid for, but a delivery has its own lifecycle after that.
+const DELIVERY_STATUS_LABELS = { pending:'Pending Dispatch', out_for_delivery:'Out for Delivery', delivered:'Delivered', cancelled:'Cancelled' };
+const ORDER_SOURCE_LABELS = { in_store:'🏪 In-Store', phone:'📞 Phone', whatsapp:'💬 WhatsApp', instagram:'📸 Instagram', facebook:'👍 Facebook', other:'Other' };
+
+function populateRiderDropdown(selectId){
+  const sel = document.getElementById(selectId);
+  if(!sel) return;
+  const cur = sel.value;
+  const activeRiders = riders.filter(r=>r.active!==false);
+  sel.innerHTML = '<option value="">-- Select rider --</option>' + activeRiders.map(r=>`<option value="${r.id}">${escapeHtml(r.name)}${r.phone?' — '+escapeHtml(r.phone):''}</option>`).join('');
+  sel.value = cur;
+}
+
+function saveRider(){
+  if(!hasPermission('edit')){ denyAccess(); return; }
+  const name = document.getElementById('riderName').value.trim();
+  if(!name){ alert('Please enter the rider\'s name'); return; }
+  const editId = document.getElementById('riderEditId').value;
+  const data = {
+    name,
+    phone: document.getElementById('riderPhone').value.trim(),
+    notes: document.getElementById('riderNotes').value.trim(),
+    active: true
+  };
+  if(editId){
+    const r = riders.find(x=>x.id===Number(editId));
+    if(r) Object.assign(r, data);
+  } else {
+    riders.push(Object.assign({id: Date.now()}, data));
+  }
+  save('moto_riders', riders);
+  cancelEditRider();
+  renderRiders();
+  populateRiderDropdown('deliveryRider');
+}
+
+function editRider(id){
+  if(!hasPermission('edit')){ denyAccess(); return; }
+  const r = riders.find(x=>x.id===id);
+  if(!r) return;
+  document.getElementById('riderEditId').value = r.id;
+  document.getElementById('riderName').value = r.name;
+  document.getElementById('riderPhone').value = r.phone||'';
+  document.getElementById('riderNotes').value = r.notes||'';
+  document.getElementById('riderFormTitle').textContent = 'Edit Rider: ' + r.name;
+  document.getElementById('riderCancelBtn').textContent = '✖ Cancel Edit';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function cancelEditRider(){
+  document.getElementById('riderEditId').value = '';
+  ['riderName','riderPhone','riderNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('riderFormTitle').textContent = 'Add Rider';
+  document.getElementById('riderCancelBtn').textContent = '🧹 Clear';
+}
+
+// A rider isn't deleted outright if they have delivery history attached --
+// same reasoning as suppliers/customers elsewhere in the app: past sales
+// should keep showing who actually delivered them. "Deactivate" just hides
+// them from the picker for new orders.
+function deleteRider(id){
+  if(!hasPermission('delete')){ denyAccess(); return; }
+  const hasHistory = sales.some(s=>s.delivery && s.delivery.riderId===id);
+  if(hasHistory){
+    if(!confirm('This rider has past deliveries on file. Deactivate them instead of deleting? (Keeps delivery history intact, just hides them from new orders.)')) return;
+    const r = riders.find(x=>x.id===id);
+    if(r){ r.active = false; save('moto_riders', riders); }
+  } else {
+    if(!confirm('Delete this rider?')) return;
+    riders = riders.filter(r=>r.id!==id);
+    save('moto_riders', riders);
+  }
+  renderRiders();
+  populateRiderDropdown('deliveryRider');
+}
+
+function renderRiders(){
+  const tbody = document.getElementById('riderTable');
+  if(!tbody) return;
+  const rowsHtml = riders.map(r=>{
+    const riderSales = sales.filter(s=>s.delivery && s.delivery.riderId===r.id);
+    const pending = riderSales.filter(s=>s.delivery.status==='pending' || s.delivery.status==='out_for_delivery').length;
+    const actions = [];
+    if(hasPermission('edit')) actions.push(`<button class="btn ghost small" onclick="editRider(${r.id})">Edit</button>`);
+    if(hasPermission('delete')) actions.push(`<button class="btn danger small" onclick="deleteRider(${r.id})">${riderSales.length ? 'Deactivate' : 'Delete'}</button>`);
+    return `<tr${r.active===false ? ' style="opacity:.55;"' : ''}>
+      <td>${escapeHtml(r.name)}${r.active===false ? ' <span class="badge">Inactive</span>' : ''}</td>
+      <td>${escapeHtml(r.phone||'-')}</td>
+      <td>${riderSales.length}</td>
+      <td>${pending}</td>
+      <td>${actions.join(' ') || '<span class="empty" style="padding:0;">View only</span>'}</td>
+    </tr>`;
+  }).join('');
+  tbody.innerHTML = riders.length===0 ? '<tr><td colspan="5" class="empty">No riders yet — add one above.</td></tr>' : rowsHtml;
+}
+
+function updateDeliveryStatus(saleId, newStatus){
+  if(!hasPermission('pos')){ denyAccess(); return; }
+  const sale = sales.find(s=>s.id===saleId);
+  if(!sale || !sale.delivery) return;
+  sale.delivery.status = newStatus;
+  save('moto_sales', sales);
+  renderDeliveries();
+  renderDashboard();
+}
+
+function renderDeliveries(){
+  populateRiderDropdown('deliveryRider');
+  renderRiders();
+
+  const statusFilter = document.getElementById('deliveryStatusFilter').value;
+  const riderSel = document.getElementById('deliveryRiderFilter');
+  const curRiderFilter = riderSel.value;
+  riderSel.innerHTML = '<option value="">All riders</option>' + riders.map(r=>`<option value="${r.id}">${escapeHtml(r.name)}</option>`).join('');
+  riderSel.value = curRiderFilter;
+  const riderFilter = riderSel.value;
+
+  let deliverySales = sales.filter(s=>s.delivery);
+  if(statusFilter) deliverySales = deliverySales.filter(s=>s.delivery.status===statusFilter);
+  if(riderFilter) deliverySales = deliverySales.filter(s=>s.delivery.riderId===Number(riderFilter));
+  deliverySales.sort((a,b)=>b.id-a.id);
+
+  const tbody = document.getElementById('deliveryTable');
+  const rowsHtml = deliverySales.map(s=>{
+    const cust = customers.find(c=>c.id===s.customerId);
+    const itemsSummary = s.items.map(i=>`${i.name} ×${i.qty}`).join(', ');
+    const statusOptions = Object.keys(DELIVERY_STATUS_LABELS).map(k=>
+      `<option value="${k}" ${s.delivery.status===k?'selected':''}>${DELIVERY_STATUS_LABELS[k]}</option>`
+    ).join('');
+    return `<tr>
+      <td>${formatDate(s.date)}</td>
+      <td>${ORDER_SOURCE_LABELS[s.orderSource]||s.orderSource}</td>
+      <td>${cust ? escapeHtml(cust.name) : 'Walk-in'}</td>
+      <td style="max-width:220px;">${escapeHtml(itemsSummary)}</td>
+      <td>${escapeHtml(s.delivery.address||'-')}</td>
+      <td>${escapeHtml(s.delivery.riderName||'-')}</td>
+      <td>${fmt(s.delivery.charge)}</td>
+      <td>${fmt(s.total)}</td>
+      <td>
+        ${hasPermission('pos')
+          ? `<select onchange="updateDeliveryStatus(${s.id}, this.value)" style="padding:4px 6px;font-size:12px;">${statusOptions}</select>`
+          : `<span class="badge">${DELIVERY_STATUS_LABELS[s.delivery.status]}</span>`}
+      </td>
+    </tr>`;
+  }).join('');
+  tbody.innerHTML = deliverySales.length===0 ? '<tr><td colspan="9" class="empty">No delivery orders yet.</td></tr>' : rowsHtml;
+
+  const pendingCount = sales.filter(s=>s.delivery && (s.delivery.status==='pending'||s.delivery.status==='out_for_delivery')).length;
+  document.getElementById('deliveryPendingCount').textContent = pendingCount;
 }
 
 // ==================== MINIMAL PDF WRITER ====================
@@ -11009,7 +11300,7 @@ const TRANSLATIONS = {
     },
     navigation: {
       dashboard:'Dashboard', pos:'POS', sales:'Sales', inventory:'Inventory', suppliers:'Suppliers',
-      purchases:'Purchases', claims:'Claims', demand:'Demand', customers:'Customers',
+      purchases:'Purchases', claims:'Claims', deliveries:'Deliveries', demand:'Demand', customers:'Customers',
       employees:'Employees', reports:'Reports', backup:'Backup', accounting:'Accounting & Partners'
     },
     login: {
@@ -11164,7 +11455,23 @@ const TRANSLATIONS = {
       percent:'% Percent', priceTypeForNewItems:'Price Type for New Items', resume:'▶️ Resume', retail:'🏷️ Retail', 
       rsAmount:'Rs. Amount', searchPlaceholder:'Type to search... (↑↓ to browse, Enter to select)', servedBy:'Served By (this login — locked)', 
       subtotal:'Subtotal', viewOnlyBanner:'🔒 Your role has view-only access to POS — you can browse products and prices, but making a sale requires a Cashier, Manager, or Admin login.', 
-      walkInCustomer:'Walk-in customer', wholesale:'📦 Wholesale'
+      walkInCustomer:'Walk-in customer', wholesale:'📦 Wholesale',
+      orderSource:'Where did this order come from?', sourceInStore:'🏪 In-Store', sourcePhone:'📞 Phone', sourceWhatsapp:'💬 WhatsApp',
+      sourceInstagram:'📸 Instagram', sourceFacebook:'👍 Facebook', sourceOther:'Other',
+      deliveryToggle:'🛵 This is a delivery order', deliveryRider:'Delivery Rider', noRiderYet:'-- Select rider (manage in Deliveries tab) --',
+      deliveryAddress:'Delivery Address', deliveryAddressPlaceholder:'Where should this be delivered?',
+      deliveryCharge:'Delivery Charge (Rs.)', deliveryChargeHint:'Whatever the rider is charging for this trip — added to the customer\'s total below.',
+      deliveryChargeLabel:'🛵 Delivery Charge'
+    },
+    deliveries: {
+      addRider:'Add Rider', addRiderBtn:'➕ Add Rider', riderName:'Rider Name', riderNamePlaceholder:'e.g. Imran (bike)',
+      riderNotesPlaceholder:'Areas covered, availability, etc.', riderList:'Riders',
+      thTotalDeliveries:'Total Deliveries', thPending:'Pending',
+      deliveryBoard:'Delivery Board', pendingCountLabel:'Pending / out for delivery right now:',
+      allStatuses:'All statuses', statusPending:'Pending Dispatch', statusOutForDelivery:'Out for Delivery',
+      statusDelivered:'Delivered', statusCancelled:'Cancelled', allRiders:'All riders',
+      thSource:'Source', thCustomer:'Customer', thItems:'Items', thAddress:'Address', thRider:'Rider',
+      thDeliveryCharge:'Delivery Charge', thOrderTotal:'Order Total', thStatus:'Status'
     },
     purchases: {
       addAtLeastOneItem:'Add at least one item to this purchase.', addProductToPurchase:'Add Product to This Purchase', 
@@ -11224,7 +11531,7 @@ const TRANSLATIONS = {
     },
     navigation: {
       dashboard:'ڈیش بورڈ', pos:'POS', sales:'سیلز', inventory:'انوینٹری', suppliers:'سپلائرز',
-      purchases:'خریداری', claims:'کلیمز', demand:'ڈیمانڈ', customers:'کسٹمرز',
+      purchases:'خریداری', claims:'کلیمز', deliveries:'ڈیلیوری', demand:'ڈیمانڈ', customers:'کسٹمرز',
       employees:'ملازمین', reports:'رپورٹس', backup:'بیک اپ', accounting:'اکاؤنٹنگ اور پارٹنرز'
     },
     login: {
@@ -11358,7 +11665,23 @@ const TRANSLATIONS = {
       percent:'% فیصد', priceTypeForNewItems:'نئے آئٹمز کے لیے قیمت کی قسم', resume:'▶️ دوبارہ شروع کریں', 
       retail:'🏷️ ریٹیل', rsAmount:'روپے کی رقم', searchPlaceholder:'تلاش کے لیے ٹائپ کریں... (↑↓ سے دیکھیں، Enter سے منتخب کریں)', 
       servedBy:'خدمت فراہم کنندہ (یہ لاگ ان — مقفل)', subtotal:'سب ٹوٹل', viewOnlyBanner:'🔒 آپ کے کردار کو POS تک صرف دیکھنے کی رسائی حاصل ہے — آپ پروڈکٹس اور قیمتیں دیکھ سکتے ہیں، مگر سیل کرنے کے لیے کیشیئر، مینیجر، یا ایڈمن لاگ ان درکار ہے۔', 
-      walkInCustomer:'واک اِن کسٹمر', wholesale:'📦 ہول سیل'
+      walkInCustomer:'واک اِن کسٹمر', wholesale:'📦 ہول سیل',
+      orderSource:'یہ آرڈر کہاں سے آیا؟', sourceInStore:'🏪 دکان پر', sourcePhone:'📞 فون', sourceWhatsapp:'💬 واٹس ایپ',
+      sourceInstagram:'📸 انسٹاگرام', sourceFacebook:'👍 فیس بک', sourceOther:'دیگر',
+      deliveryToggle:'🛵 یہ ایک ڈیلیوری آرڈر ہے', deliveryRider:'ڈیلیوری رائیڈر', noRiderYet:'-- رائیڈر منتخب کریں (ڈیلیوری ٹیب میں شامل کریں) --',
+      deliveryAddress:'ڈیلیوری کا پتہ', deliveryAddressPlaceholder:'یہ کہاں ڈیلیور ہونا ہے؟',
+      deliveryCharge:'ڈیلیوری چارج (روپے)', deliveryChargeHint:'رائیڈر اس ٹرپ کے لیے جو بھی چارج کر رہا ہے — نیچے کسٹمر کے کل میں شامل کر دیا جائے گا۔',
+      deliveryChargeLabel:'🛵 ڈیلیوری چارج'
+    },
+    deliveries: {
+      addRider:'رائیڈر شامل کریں', addRiderBtn:'➕ رائیڈر شامل کریں', riderName:'رائیڈر کا نام', riderNamePlaceholder:'مثلاً عمران (بائیک)',
+      riderNotesPlaceholder:'کور کیے گئے علاقے، دستیابی، وغیرہ۔', riderList:'رائیڈرز',
+      thTotalDeliveries:'کل ڈیلیوریز', thPending:'زیر التوا',
+      deliveryBoard:'ڈیلیوری بورڈ', pendingCountLabel:'ابھی زیر التوا / روانہ شدہ:',
+      allStatuses:'تمام حیثیتیں', statusPending:'ترسیل کا منتظر', statusOutForDelivery:'ڈیلیوری کے لیے روانہ',
+      statusDelivered:'ڈیلیور ہو گئی', statusCancelled:'منسوخ شدہ', allRiders:'تمام رائیڈرز',
+      thSource:'ذریعہ', thCustomer:'کسٹمر', thItems:'آئٹمز', thAddress:'پتہ', thRider:'رائیڈر',
+      thDeliveryCharge:'ڈیلیوری چارج', thOrderTotal:'آرڈر کل', thStatus:'حیثیت'
     },
     purchases: {
       addAtLeastOneItem:'اس خریداری میں کم از کم ایک آئٹم شامل کریں۔', addProductToPurchase:'اس خریداری میں پروڈکٹ شامل کریں', 
