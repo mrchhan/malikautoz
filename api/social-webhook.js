@@ -13,14 +13,10 @@
 // This file only ever WRITES to that store; it never reads it back out.
 //
 // IMPORTANT: bodyParser is disabled below so we can read the exact raw bytes
-// Meta sent. Meta signs the POST body with the App Secret, and that
-// signature only matches against the byte-for-byte original -- Vercel's
-// default automatic JSON parsing consumes the stream before we ever see it,
-// which silently produces an empty body here otherwise. The config MUST be
-// attached to the same function object assigned to module.exports, and
-// AFTER that assignment -- attaching it to module.exports first and then
-// reassigning module.exports to the handler function (the bug this file
-// originally shipped with) discards it silently. Order matters here.
+// Meta sent, needed for signature verification. The config MUST be attached
+// to the same function object assigned to module.exports, and AFTER that
+// assignment -- attaching it to module.exports first and then reassigning
+// module.exports to the handler function discards it silently.
 
 const crypto = require('crypto');
 
@@ -41,8 +37,6 @@ async function handler(req, res) {
   res.status(405).send('Method not allowed');
 }
 
-// Assign to module.exports FIRST, then attach .config to that same object --
-// see the note above. This is the fix.
 module.exports = handler;
 module.exports.config = {
   api: { bodyParser: false }
@@ -61,9 +55,6 @@ function handleVerification(req, res) {
   }
 }
 
-// Reads the raw request body as a Buffer, byte for byte, before anything
-// else touches it. With bodyParser disabled (see config above), req is a
-// plain Node readable stream -- this is the standard way to collect one.
 function readRawBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -79,20 +70,13 @@ async function handleIncomingEvent(req, res) {
   const rawBody = rawBodyBuffer.toString('utf8');
 
   if (!rawBody) {
-    // Loud on purpose -- an empty body here almost always means bodyParser
-    // config isn't actually being applied (see the note at the top of this
-    // file), not a normal/expected condition worth staying quiet about.
-    console.error('Webhook POST arrived with an empty body -- bodyParser config may not be applied. Raw body length:', rawBodyBuffer.length);
+    console.error('Webhook POST arrived with an empty body. Raw length:', rawBodyBuffer.length);
     return res.status(200).send('EVENT_RECEIVED');
   }
 
   const signatureHeader = req.headers['x-hub-signature-256'] || '';
   if (!verifySignature(rawBody, signatureHeader)) {
     console.error('Webhook signature mismatch -- rejecting. Body length was:', rawBody.length);
-    // Still 200 here: Meta retries aggressively on non-200 responses, and a
-    // forged request doesn't deserve that many attempts acknowledged either
-    // way. Silently drop it (from Meta's perspective -- our own logs still
-    // record it, per the line above).
     return res.status(200).send('EVENT_RECEIVED');
   }
 
@@ -107,16 +91,21 @@ async function handleIncomingEvent(req, res) {
   try {
     const messages = extractMessages(body);
     console.log(`Webhook processed: ${messages.length} message(s) extracted from object="${body.object}"`);
+    if (messages.length === 0) {
+      // DIAGNOSTIC: when extraction finds nothing, log the actual shape of
+      // what arrived so we can see exactly why -- a wrong field name, an
+      // unexpected event type, whatever it turns out to be. This is the
+      // single most useful line for figuring out a real-world payload
+      // mismatch instead of guessing at Meta's documentation.
+      console.log('DIAGNOSTIC -- full payload when 0 messages extracted:', JSON.stringify(body).slice(0, 3000));
+    }
     for (const msg of messages) {
       await storeMessage(msg);
     }
   } catch (e) {
-    // Never let a parsing hiccup on one message cause Meta to retry the
-    // whole batch -- log it and move on.
     console.error('Error processing webhook event:', e && e.stack ? e.stack : e);
   }
 
-  // Meta expects a fast 200 -- it does not care what's in the body.
   res.status(200).send('EVENT_RECEIVED');
 }
 
@@ -132,6 +121,11 @@ function verifySignature(rawBody, signatureHeader) {
 // Meta's (fairly verbose) webhook payload shape. Messenger and Instagram
 // use the same "messaging" array shape when both go through a linked Page,
 // so one function covers both -- just tagged by the top-level "object".
+//
+// Also handles the newer Instagram Graph API "changes" shape as a fallback,
+// in case that's what's actually arriving (some IG webhook configurations
+// deliver messages under entry[].changes[] with field:"messages" instead
+// of entry[].messaging[] -- the diagnostic log above will confirm which).
 function extractMessages(body) {
   const platform = body.object === 'instagram' ? 'instagram' : (body.object === 'page' ? 'facebook' : null);
   if (!platform || !Array.isArray(body.entry)) return [];
@@ -140,8 +134,6 @@ function extractMessages(body) {
   for (const entry of body.entry) {
     const events = Array.isArray(entry.messaging) ? entry.messaging : [];
     for (const evt of events) {
-      // Skip delivery receipts / read receipts / echoes of our own replies --
-      // only real inbound text messages become inbox entries.
       if (!evt.message || evt.message.is_echo || !evt.message.text) continue;
       out.push({
         id: evt.message.mid || `${evt.sender && evt.sender.id}-${evt.timestamp}`,
@@ -153,12 +145,28 @@ function extractMessages(body) {
         receivedAt: Date.now()
       });
     }
+
+    // Fallback shape: entry[].changes[] with field "messages" (seen on some
+    // Instagram webhook configurations instead of the messaging[] shape).
+    const changes = Array.isArray(entry.changes) ? entry.changes : [];
+    for (const change of changes) {
+      if (change.field !== 'messages' || !change.value) continue;
+      const v = change.value;
+      if (!v.message || v.message.is_echo || !v.message.text) continue;
+      out.push({
+        id: v.message.mid || `${v.sender && v.sender.id}-${v.timestamp || Date.now()}`,
+        platform,
+        senderId: v.sender && v.sender.id,
+        recipientId: v.recipient && v.recipient.id,
+        text: v.message.text,
+        timestamp: v.timestamp || Date.now(),
+        receivedAt: Date.now()
+      });
+    }
   }
   return out;
 }
 
-// ---- Minimal Upstash REST client (no npm package -- same approach as the
-// rest of this backend: plain fetch, nothing to install or build) ----
 async function redisCommand(command) {
   if (!KV_URL || !KV_TOKEN) throw new Error('Redis is not configured (KV_REST_API_URL/TOKEN missing)');
   const resp = await fetch(KV_URL, {
@@ -174,12 +182,9 @@ async function redisCommand(command) {
 }
 
 async function storeMessage(msg) {
-  // De-dupe: Meta sometimes redelivers the same event on retry. Using the
-  // message id as part of a dedupe set keeps a flaky network from creating
-  // duplicate inbox entries.
   const dedupeKey = `social:seen:${msg.id}`;
   const seen = await redisCommand(['SET', dedupeKey, '1', 'NX', 'EX', '86400']);
-  if (seen && seen.result === null) return; // already stored this one
+  if (seen && seen.result === null) return;
 
   await redisCommand(['LPUSH', MESSAGES_KEY, JSON.stringify(msg)]);
   await redisCommand(['LTRIM', MESSAGES_KEY, '0', String(MAX_STORED_MESSAGES - 1)]);
