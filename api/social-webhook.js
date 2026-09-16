@@ -11,6 +11,13 @@
 // Redis store (Upstash, connected via Vercel Storage) until the shop opens
 // the Social Inbox screen and fetches them through api/social-messages.js.
 // This file only ever WRITES to that store; it never reads it back out.
+//
+// IMPORTANT: bodyParser is disabled below (module.exports.config) so we can
+// read the exact raw bytes Meta sent. Meta signs the POST body with the App
+// Secret, and that signature only matches against the byte-for-byte original
+// -- re-serializing an already-parsed JSON object (even with identical data)
+// almost never produces the same bytes back, so signature checks against a
+// re-stringified body fail silently and legitimate messages get dropped.
 
 const crypto = require('crypto');
 
@@ -20,6 +27,12 @@ const KV_URL = process.env.KV_REST_API_URL || '';
 const KV_TOKEN = process.env.KV_REST_API_TOKEN || '';
 const MESSAGES_KEY = 'social:messages';
 const MAX_STORED_MESSAGES = 500; // keep the store bounded -- this is a working inbox, not an archive
+
+// Tells Vercel's Node runtime not to auto-parse the body, so readRawBody()
+// below gets the untouched original bytes instead of an already-parsed copy.
+module.exports.config = {
+  api: { bodyParser: false }
+};
 
 module.exports = async function handler(req, res) {
   if (req.method === 'GET') {
@@ -44,13 +57,24 @@ function handleVerification(req, res) {
   }
 }
 
+// Reads the raw request body as a Buffer, byte for byte, before anything
+// else touches it. With bodyParser disabled (see config above), req is a
+// plain Node readable stream -- this is the standard way to collect one.
+function readRawBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    req.on('data', (chunk) => chunks.push(chunk));
+    req.on('end', () => resolve(Buffer.concat(chunks)));
+    req.on('error', reject);
+  });
+}
+
 // ---- Every real message event lands here, forever after ----
 async function handleIncomingEvent(req, res) {
-  // Meta signs every POST body with the App Secret. Checking this means we
-  // only ever store messages that genuinely came from Meta -- not from
-  // anyone who finds this URL and starts POSTing fake orders at it.
+  const rawBodyBuffer = await readRawBody(req);
+  const rawBody = rawBodyBuffer.toString('utf8');
+
   const signatureHeader = req.headers['x-hub-signature-256'] || '';
-  const rawBody = getRawBody(req);
   if (!verifySignature(rawBody, signatureHeader)) {
     console.error('Webhook signature mismatch -- rejecting');
     // Still 200 here: Meta retries aggressively on non-200 responses, and a
@@ -79,15 +103,6 @@ async function handleIncomingEvent(req, res) {
 
   // Meta expects a fast 200 -- it does not care what's in the body.
   res.status(200).send('EVENT_RECEIVED');
-}
-
-function getRawBody(req) {
-  // Vercel's Node runtime already parses req.body for us, but signature
-  // verification needs the exact original bytes -- re-serializing
-  // req.body is NOT the same string Meta signed if key order or spacing
-  // differs even slightly. req.rawBody is what Vercel exposes for this.
-  if (req.rawBody) return req.rawBody.toString('utf8');
-  return JSON.stringify(req.body || {});
 }
 
 function verifySignature(rawBody, signatureHeader) {
