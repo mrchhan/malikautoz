@@ -12,12 +12,15 @@
 // the Social Inbox screen and fetches them through api/social-messages.js.
 // This file only ever WRITES to that store; it never reads it back out.
 //
-// IMPORTANT: bodyParser is disabled below (module.exports.config) so we can
-// read the exact raw bytes Meta sent. Meta signs the POST body with the App
-// Secret, and that signature only matches against the byte-for-byte original
-// -- re-serializing an already-parsed JSON object (even with identical data)
-// almost never produces the same bytes back, so signature checks against a
-// re-stringified body fail silently and legitimate messages get dropped.
+// IMPORTANT: bodyParser is disabled below so we can read the exact raw bytes
+// Meta sent. Meta signs the POST body with the App Secret, and that
+// signature only matches against the byte-for-byte original -- Vercel's
+// default automatic JSON parsing consumes the stream before we ever see it,
+// which silently produces an empty body here otherwise. The config MUST be
+// attached to the same function object assigned to module.exports, and
+// AFTER that assignment -- attaching it to module.exports first and then
+// reassigning module.exports to the handler function (the bug this file
+// originally shipped with) discards it silently. Order matters here.
 
 const crypto = require('crypto');
 
@@ -28,13 +31,7 @@ const KV_TOKEN = process.env.KV_REST_API_TOKEN || '';
 const MESSAGES_KEY = 'social:messages';
 const MAX_STORED_MESSAGES = 500; // keep the store bounded -- this is a working inbox, not an archive
 
-// Tells Vercel's Node runtime not to auto-parse the body, so readRawBody()
-// below gets the untouched original bytes instead of an already-parsed copy.
-module.exports.config = {
-  api: { bodyParser: false }
-};
-
-module.exports = async function handler(req, res) {
+async function handler(req, res) {
   if (req.method === 'GET') {
     return handleVerification(req, res);
   }
@@ -42,6 +39,13 @@ module.exports = async function handler(req, res) {
     return handleIncomingEvent(req, res);
   }
   res.status(405).send('Method not allowed');
+}
+
+// Assign to module.exports FIRST, then attach .config to that same object --
+// see the note above. This is the fix.
+module.exports = handler;
+module.exports.config = {
+  api: { bodyParser: false }
 };
 
 // ---- Step 1 of Meta's setup: prove this URL is really ours ----
@@ -74,12 +78,21 @@ async function handleIncomingEvent(req, res) {
   const rawBodyBuffer = await readRawBody(req);
   const rawBody = rawBodyBuffer.toString('utf8');
 
+  if (!rawBody) {
+    // Loud on purpose -- an empty body here almost always means bodyParser
+    // config isn't actually being applied (see the note at the top of this
+    // file), not a normal/expected condition worth staying quiet about.
+    console.error('Webhook POST arrived with an empty body -- bodyParser config may not be applied. Raw body length:', rawBodyBuffer.length);
+    return res.status(200).send('EVENT_RECEIVED');
+  }
+
   const signatureHeader = req.headers['x-hub-signature-256'] || '';
   if (!verifySignature(rawBody, signatureHeader)) {
-    console.error('Webhook signature mismatch -- rejecting');
+    console.error('Webhook signature mismatch -- rejecting. Body length was:', rawBody.length);
     // Still 200 here: Meta retries aggressively on non-200 responses, and a
     // forged request doesn't deserve that many attempts acknowledged either
-    // way. Silently drop it.
+    // way. Silently drop it (from Meta's perspective -- our own logs still
+    // record it, per the line above).
     return res.status(200).send('EVENT_RECEIVED');
   }
 
@@ -87,11 +100,13 @@ async function handleIncomingEvent(req, res) {
   try {
     body = JSON.parse(rawBody);
   } catch (e) {
+    console.error('Webhook body failed to parse as JSON:', e.message, '-- first 200 chars:', rawBody.slice(0, 200));
     return res.status(200).send('EVENT_RECEIVED');
   }
 
   try {
     const messages = extractMessages(body);
+    console.log(`Webhook processed: ${messages.length} message(s) extracted from object="${body.object}"`);
     for (const msg of messages) {
       await storeMessage(msg);
     }
