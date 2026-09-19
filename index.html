@@ -343,6 +343,7 @@
         <button class="quick-tile" data-view="purchases" onclick="goToTab('purchases')"><span class="quick-icon">🧾</span><span data-i18n="navigation.purchases">Purchases</span></button>
         <button class="quick-tile" data-view="claims" onclick="goToTab('claims')"><span class="quick-icon">🛠️</span><span data-i18n="navigation.claims">Claims</span></button>
         <button class="quick-tile" data-view="deliveries" onclick="goToTab('deliveries')"><span class="quick-icon">🛵</span><span data-i18n="navigation.deliveries">Deliveries</span></button>
+        <button class="quick-tile" data-view="socialInbox" onclick="goToTab('socialInbox')"><span class="quick-icon">💬</span><span data-i18n="navigation.socialInbox">Social Inbox</span></button>
         <button class="quick-tile" data-view="demand" onclick="goToTab('demand')"><span class="quick-icon">📨</span><span data-i18n="navigation.demand">Demand</span></button>
         <button class="quick-tile" data-view="customers" onclick="goToTab('customers')"><span class="quick-icon">👤</span><span data-i18n="navigation.customers">Customers</span></button>
         <button class="quick-tile" data-view="employees" onclick="goToTab('employees')"><span class="quick-icon">🧑‍🔧</span><span data-i18n="navigation.employees">Employees</span></button>
@@ -465,6 +466,8 @@
         </select>
         <input type="number" id="discountValue" value="0" min="0" style="max-width:120px;" oninput="renderCart()">
       </div>
+
+      <div id="pendingSocialBanner" class="hidden" style="background:#fff7ed;border:1px solid #fde3c8;border-radius:8px;padding:10px 12px;margin-top:10px;font-size:13px;"></div>
 
       <label style="margin-top:10px;" data-i18n="pos.orderSource">Where did this order come from?</label>
       <select id="orderSource">
@@ -758,6 +761,20 @@
         </tr></thead>
         <tbody id="deliveryTable"></tbody>
       </table></div>
+    </div>
+  </div>
+
+  <!-- SOCIAL INBOX VIEW -->
+  <div class="view" id="view-socialInbox">
+    <button class="btn ghost small" onclick="goToTab('dashboard')" style="margin-bottom:12px;" data-i18n="common.backToDashboard">← Back to Dashboard</button>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;align-items:center;">
+        <h2 style="margin:0;" data-i18n="socialInbox.title">💬 Social Inbox</h2>
+        <button class="btn ghost small" onclick="renderSocialInbox()" data-i18n="socialInbox.refresh">🔄 Refresh</button>
+      </div>
+      <p style="color:var(--muted);font-size:13px;" data-i18n="socialInbox.subtitle">Messages from Instagram and Facebook — turn one into a sale, or dismiss it if it doesn't need action.</p>
+      <div id="socialInboxStatus" style="font-size:13px;color:var(--muted);"></div>
+      <div id="socialInboxList"></div>
     </div>
   </div>
 
@@ -4649,6 +4666,7 @@ function rerenderCurrentView(){
   if(view==='purchases') renderPurchases();
   if(view==='claims') renderClaims();
   if(view==='deliveries') renderDeliveries();
+  if(view==='socialInbox') renderSocialInbox();
   if(view==='reports') renderReports();
   if(view==='customers') renderCustomers();
   if(view==='employees') renderEmployees();
@@ -5400,6 +5418,7 @@ function goToTab(view){
   if(view==='purchases') renderPurchases();
   if(view==='claims') renderClaims();
   if(view==='deliveries') renderDeliveries();
+  if(view==='socialInbox') renderSocialInbox();
   if(view==='reports') renderReports();
   if(view==='customers') renderCustomers();
   if(view==='employees') renderEmployees();
@@ -5422,9 +5441,9 @@ document.querySelectorAll('nav button').forEach(btn=>{
 // what's visible/reachable from the dashboard itself.
 const DASHBOARD_SECTIONS_BY_ROLE = {
   mechanic: { tiles:[], finance:false, stock:false, counts:false, chart:false, topProducts:false, recentSales:false, lowStockList:false, brief:false },
-  cashier:  { tiles:['pos','sales','deliveries'], finance:false, stock:true, counts:false, chart:false, topProducts:false, recentSales:true, lowStockList:true, brief:false },
-  manager:  { tiles:['pos','sales','inventory','purchases','claims','deliveries','demand','customers'], finance:false, stock:true, counts:false, chart:false, topProducts:false, recentSales:true, lowStockList:true, brief:false },
-  admin:    { tiles:['pos','sales','inventory','suppliers','purchases','claims','deliveries','demand','customers','employees','reports','backup','accounting'], finance:true, stock:true, counts:true, chart:true, topProducts:true, recentSales:true, lowStockList:true, brief:true }
+  cashier:  { tiles:['pos','sales','deliveries','socialInbox'], finance:false, stock:true, counts:false, chart:false, topProducts:false, recentSales:true, lowStockList:true, brief:false },
+  manager:  { tiles:['pos','sales','inventory','purchases','claims','deliveries','socialInbox','demand','customers'], finance:false, stock:true, counts:false, chart:false, topProducts:false, recentSales:true, lowStockList:true, brief:false },
+  admin:    { tiles:['pos','sales','inventory','suppliers','purchases','claims','deliveries','socialInbox','demand','customers','employees','reports','backup','accounting'], finance:true, stock:true, counts:true, chart:true, topProducts:true, recentSales:true, lowStockList:true, brief:true }
 };
 
 function gaugeSVG(pct, color, big){
@@ -8136,6 +8155,7 @@ function renderPos(){
   document.getElementById('posSearchResults').classList.add('hidden');
   document.getElementById('heldCount').textContent = heldSales.length;
   populateRiderDropdown('deliveryRider');
+  renderPendingSocialBanner();
   renderCart();
   setPayMethod('Cash');
   document.getElementById('cashTendered').value = '';
@@ -8639,6 +8659,12 @@ function checkout(){
       address: document.getElementById('deliveryAddress').value.trim(),
       charge: deliveryChargeVal,
       status: 'pending'
+    } : null,
+    socialMessage: pendingSocialMessage ? {
+      id: pendingSocialMessage.id,
+      platform: pendingSocialMessage.platform,
+      senderId: pendingSocialMessage.senderId,
+      text: pendingSocialMessage.text
     } : null
   };
   sales.push(sale);
@@ -8668,6 +8694,11 @@ function checkout(){
   document.getElementById('deliveryAddress').value = '';
   document.getElementById('deliveryCharge').value = 0;
   toggleDeliverySection();
+  if(pendingSocialMessage){
+    dismissSocialMessage(pendingSocialMessage.id); // fire-and-forget -- removes it from the shared inbox queue
+    pendingSocialMessage = null;
+  }
+  renderPendingSocialBanner();
   renderPos(); renderInventory(); renderDashboard();
 }
 
@@ -8825,6 +8856,108 @@ function renderDeliveries(){
 
   const pendingCount = sales.filter(s=>s.delivery && (s.delivery.status==='pending'||s.delivery.status==='out_for_delivery')).length;
   document.getElementById('deliveryPendingCount').textContent = pendingCount;
+}
+
+// ==================== SOCIAL INBOX (Instagram/Facebook order intake) ====================
+// Messages arrive via the api/social-webhook.js backend (Meta calls it
+// directly) and sit in a small server-side queue until reviewed here --
+// this app has no other server database, so this is the one screen that
+// talks to a live backend instead of reading from localStorage.
+const SOCIAL_BACKEND_BASE = (navigator.userAgent.indexOf('Electron') !== -1)
+  ? 'https://malikautoz.vercel.app/api/social-messages'
+  : '/api/social-messages';
+const SOCIAL_SOURCE_ICON = { instagram: '📸', facebook: '👍' };
+const SOCIAL_SOURCE_LABEL = { instagram: 'Instagram', facebook: 'Facebook' };
+
+let lastFetchedSocialMessages = [];
+// Set when "Convert to Sale" is clicked; checkout() reads this to link the
+// sale back to the message, and clears it once the sale is complete.
+let pendingSocialMessage = null;
+
+function formatRelativeTime(ts){
+  const diffMs = Date.now() - Number(ts);
+  const mins = Math.floor(diffMs / 60000);
+  if(mins < 1) return 'just now';
+  if(mins < 60) return mins + 'm ago';
+  const hrs = Math.floor(mins / 60);
+  if(hrs < 24) return hrs + 'h ago';
+  return Math.floor(hrs / 24) + 'd ago';
+}
+
+async function renderSocialInbox(){
+  const statusEl = document.getElementById('socialInboxStatus');
+  const listEl = document.getElementById('socialInboxList');
+  if(!statusEl || !listEl) return;
+  statusEl.textContent = 'Checking for new messages…';
+  try{
+    const res = await fetch(SOCIAL_BACKEND_BASE, { headers: { 'X-App-Key': AI_PROXY_SECRET } });
+    if(!res.ok) throw new Error('HTTP_' + res.status);
+    const data = await res.json();
+    const messages = data.messages || [];
+    lastFetchedSocialMessages = messages;
+
+    if(messages.length === 0){
+      statusEl.textContent = 'No messages waiting — you\'re all caught up.';
+      listEl.innerHTML = '';
+      return;
+    }
+    statusEl.textContent = `${messages.length} message${messages.length===1?'':'s'} waiting`;
+    listEl.innerHTML = messages.map(m=>{
+      const icon = SOCIAL_SOURCE_ICON[m.platform] || '💬';
+      const label = SOCIAL_SOURCE_LABEL[m.platform] || m.platform;
+      const shortId = String(m.senderId || '').slice(-6);
+      return `<div class="card" style="margin-top:10px;padding:14px;">
+        <div style="font-weight:600;">${icon} ${escapeHtml(label)} customer ····${escapeHtml(shortId)}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">${escapeHtml(formatRelativeTime(m.timestamp))}</div>
+        <div style="margin:10px 0;padding:10px;background:#f3f5f8;border-radius:6px;">${escapeHtml(m.text)}</div>
+        <div class="row">
+          <button class="btn small" onclick="convertSocialMessageToSale('${m.id}')">🛒 Convert to Sale</button>
+          <button class="btn ghost small" onclick="dismissSocialMessage('${m.id}')">✖ Dismiss</button>
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){
+    statusEl.textContent = '⚠️ Could not load messages. Check your connection and try Refresh.';
+    listEl.innerHTML = '';
+  }
+}
+
+async function dismissSocialMessage(id){
+  try{
+    await fetch(`${SOCIAL_BACKEND_BASE}?id=${encodeURIComponent(id)}`, { method:'DELETE', headers: { 'X-App-Key': AI_PROXY_SECRET } });
+  }catch(e){ /* best effort -- if this fails the message just reappears on next refresh, not catastrophic */ }
+  renderSocialInbox();
+}
+
+// Jumps to POS with the order source pre-set and a banner showing what
+// we're converting, so the cashier has the customer's actual question in
+// view while building the cart -- they still choose items and qty
+// themselves, this just carries the context over instead of losing it.
+function convertSocialMessageToSale(id){
+  const msg = lastFetchedSocialMessages.find(m=>m.id===id);
+  if(!msg) return;
+  pendingSocialMessage = msg;
+  goToTab('pos');
+  document.getElementById('orderSource').value = (msg.platform === 'instagram') ? 'instagram' : 'facebook';
+  renderPendingSocialBanner();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderPendingSocialBanner(){
+  const el = document.getElementById('pendingSocialBanner');
+  if(!el) return;
+  if(!pendingSocialMessage){ el.classList.add('hidden'); el.innerHTML=''; return; }
+  const icon = SOCIAL_SOURCE_ICON[pendingSocialMessage.platform] || '💬';
+  el.classList.remove('hidden');
+  el.innerHTML = `<div class="row" style="justify-content:space-between;align-items:flex-start;">
+    <div><strong>${icon} Converting a message:</strong> "${escapeHtml(pendingSocialMessage.text)}"</div>
+    <button class="btn ghost small" onclick="cancelPendingSocialMessage()" type="button">✖</button>
+  </div>`;
+}
+
+function cancelPendingSocialMessage(){
+  pendingSocialMessage = null;
+  renderPendingSocialBanner();
 }
 
 // ==================== MINIMAL PDF WRITER ====================
@@ -11300,7 +11433,7 @@ const TRANSLATIONS = {
     },
     navigation: {
       dashboard:'Dashboard', pos:'POS', sales:'Sales', inventory:'Inventory', suppliers:'Suppliers',
-      purchases:'Purchases', claims:'Claims', deliveries:'Deliveries', demand:'Demand', customers:'Customers',
+      purchases:'Purchases', claims:'Claims', deliveries:'Deliveries', socialInbox:'Social Inbox', demand:'Demand', customers:'Customers',
       employees:'Employees', reports:'Reports', backup:'Backup', accounting:'Accounting & Partners'
     },
     login: {
@@ -11473,6 +11606,10 @@ const TRANSLATIONS = {
       thSource:'Source', thCustomer:'Customer', thItems:'Items', thAddress:'Address', thRider:'Rider',
       thDeliveryCharge:'Delivery Charge', thOrderTotal:'Order Total', thStatus:'Status'
     },
+    socialInbox: {
+      title:'💬 Social Inbox', refresh:'🔄 Refresh',
+      subtitle:'Messages from Instagram and Facebook — turn one into a sale, or dismiss it if it doesn\'t need action.'
+    },
     purchases: {
       addAtLeastOneItem:'Add at least one item to this purchase.', addProductToPurchase:'Add Product to This Purchase', 
       amountPaidNow:'Amount Paid Now (Rs.)', attachInvoice:'Attach Invoice Image/PDF (optional)', attachInvoiceNote:'Keep it under 2 MB — everything is stored on this device, and large attachments fill up storage quickly. A phone photo of the invoice works fine; try to avoid multi-page scanned PDFs.', 
@@ -11531,7 +11668,7 @@ const TRANSLATIONS = {
     },
     navigation: {
       dashboard:'ڈیش بورڈ', pos:'POS', sales:'سیلز', inventory:'انوینٹری', suppliers:'سپلائرز',
-      purchases:'خریداری', claims:'کلیمز', deliveries:'ڈیلیوری', demand:'ڈیمانڈ', customers:'کسٹمرز',
+      purchases:'خریداری', claims:'کلیمز', deliveries:'ڈیلیوری', socialInbox:'سوشل ان باکس', demand:'ڈیمانڈ', customers:'کسٹمرز',
       employees:'ملازمین', reports:'رپورٹس', backup:'بیک اپ', accounting:'اکاؤنٹنگ اور پارٹنرز'
     },
     login: {
@@ -11682,6 +11819,10 @@ const TRANSLATIONS = {
       statusDelivered:'ڈیلیور ہو گئی', statusCancelled:'منسوخ شدہ', allRiders:'تمام رائیڈرز',
       thSource:'ذریعہ', thCustomer:'کسٹمر', thItems:'آئٹمز', thAddress:'پتہ', thRider:'رائیڈر',
       thDeliveryCharge:'ڈیلیوری چارج', thOrderTotal:'آرڈر کل', thStatus:'حیثیت'
+    },
+    socialInbox: {
+      title:'💬 سوشل ان باکس', refresh:'🔄 ریفریش',
+      subtitle:'انسٹاگرام اور فیس بک کے پیغامات — کسی ایک کو سیل میں تبدیل کریں، یا اگر کارروائی کی ضرورت نہیں تو مسترد کر دیں۔'
     },
     purchases: {
       addAtLeastOneItem:'اس خریداری میں کم از کم ایک آئٹم شامل کریں۔', addProductToPurchase:'اس خریداری میں پروڈکٹ شامل کریں', 
