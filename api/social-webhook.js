@@ -26,6 +26,7 @@ const KV_URL = process.env.KV_REST_API_URL || '';
 const KV_TOKEN = process.env.KV_REST_API_TOKEN || '';
 const MESSAGES_KEY = 'social:messages';
 const MAX_STORED_MESSAGES = 500; // keep the store bounded -- this is a working inbox, not an archive
+const RETENTION_SECONDS = 90 * 24 * 60 * 60; // 90 days -- matches the "automatic deletion" promise in privacy.html; keep these two in sync if this ever changes
 
 async function handler(req, res) {
   if (req.method === 'GET') {
@@ -188,4 +189,10 @@ async function storeMessage(msg) {
 
   await redisCommand(['LPUSH', MESSAGES_KEY, JSON.stringify(msg)]);
   await redisCommand(['LTRIM', MESSAGES_KEY, '0', String(MAX_STORED_MESSAGES - 1)]);
+  // Refreshes a rolling 90-day expiry on the whole inbox every time a new
+  // message arrives. Not per-message (Redis lists don't support that), but
+  // a shop that goes 90 days with zero new messages has the whole backlog
+  // cleared automatically -- a genuine backstop against indefinite storage,
+  // matching what privacy.html tells customers.
+  await redisCommand(['EXPIRE', MESSAGES_KEY, String(RETENTION_SECONDS)]);
 }
