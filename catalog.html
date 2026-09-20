@@ -134,20 +134,46 @@ fieldset.pay legend{font-size:14px;font-weight:650;margin-bottom:4px;padding:0}
 .sheet-foot{padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
 .sheet-foot .btn{width:100%}
 .err{color:var(--out);font-weight:650;margin:0 0 8px;min-height:1.4em}
+
+/* logo, watermark, contact, photos */
+.brand{display:flex;align-items:center;gap:12px}
+.logo{background:#fff;border-radius:10px;padding:4px;display:inline-flex;flex:none}
+.logo img{width:46px;height:46px;object-fit:contain;display:block}
+#wm{position:fixed;inset:0;z-index:0;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.05}
+#wm img{width:200px;max-width:45vw;height:auto}
+#wm .wm-text{font-weight:800;font-size:34px;letter-spacing:4px;margin-top:8px;color:var(--ink);white-space:nowrap}
+main,footer{position:relative;z-index:1}
+.top{z-index:1}
+.contact{margin-bottom:18px}
+.contact h2{margin:0 0 8px;font-size:18px;font-weight:800;color:var(--ink)}
+.crow{display:flex;flex-wrap:wrap;gap:2px 12px;padding:6px 0;border-bottom:1px solid var(--line)}
+.crow .k{min-width:120px;color:var(--ink-2);font-size:13px;font-weight:650}
+.crow .v{font-weight:600;color:var(--ink)}
+.crow a{color:var(--ink);text-underline-offset:3px}
+.thumbbtn{border:0;padding:0;background:none;cursor:zoom-in;flex:none;line-height:0;border-radius:6px}
+dialog.photo{width:min(92vw,560px);margin:auto;border-radius:12px;padding:12px;text-align:center}
+dialog.photo img{width:100%;height:auto;max-height:68vh;object-fit:contain;border-radius:8px;background:#E3E9EA;display:block}
+dialog.photo p{margin:10px 0;font-weight:700}
 </style>
 </head>
 <body>
+
+<div id="wm" aria-hidden="true"><img id="wm-img" alt="" hidden><div class="wm-text" id="wm-text"></div></div>
 
 <div id="owner" class="owner" hidden></div>
 
 <header class="top">
   <div class="wrap">
     <div class="brand">
-      <h1 id="shop-name">Malik Autoz</h1>
-      <p data-i18n="tagline"></p>
+      <span class="logo" id="logo-wrap" hidden><img id="logo-img" alt=""></span>
+      <div>
+        <h1 id="shop-name">Malik Autoz</h1>
+        <p data-i18n="tagline"></p>
+      </div>
     </div>
     <div class="top-actions">
       <button id="lang" class="pill" type="button"></button>
+      <a id="call" class="pill" href="#" hidden data-i18n="call"></a>
       <a id="chat" class="pill wa" href="#" target="_blank" rel="noopener" data-i18n="chat"></a>
     </div>
   </div>
@@ -180,9 +206,12 @@ fieldset.pay legend{font-size:14px;font-weight:650;margin-bottom:4px;padding:0}
 
 <footer>
   <div class="wrap">
+    <div class="contact" id="contact" hidden>
+      <h2 data-i18n="contactTitle"></h2>
+      <div id="contact-rows"></div>
+    </div>
     <p id="foot-note"></p>
     <p id="foot-updated"></p>
-    <p id="foot-shop"></p>
   </div>
 </footer>
 
@@ -195,6 +224,12 @@ fieldset.pay legend{font-size:14px;font-weight:650;margin-bottom:4px;padding:0}
     <button id="review" class="btn add" type="button" data-i18n="review"></button>
   </div>
 </div>
+
+<dialog id="photo" class="photo" aria-labelledby="photo-cap">
+  <img id="photo-img" alt="">
+  <p id="photo-cap"></p>
+  <button id="photo-close" class="btn ghost" type="button" data-i18n="close"></button>
+</dialog>
 
 <dialog id="sheet" aria-labelledby="sheet-title">
   <div class="sheet">
@@ -226,22 +261,22 @@ fieldset.pay legend{font-size:14px;font-weight:650;margin-bottom:4px;padding:0}
   </div>
 </dialog>
 
+<script src="catalog-config.js"></script>
 <script>
 (function(){
 'use strict';
 
-/* ===== Edit these ===== */
-const CONFIG = {
-  shopName: 'Malik Autoz',
-  whatsapp: '923363330884',              // country code + number, digits only. Example: '923001234567'
+/* ===== Shop details live in catalog-config.js (so updating this page never erases them) ===== */
+const CONFIG = Object.assign({
+  shopName: 'Malik Autoz', logo: 'icon-192.png', whatsapp: '', phone: '', address: '', hours: '', mapsUrl: '',
+  photoBase: 'img/'
+}, window.CATALOG_CONFIG || {}, {
   catalogUrl: 'catalog.json',
-  address: '',               // optional, shown in the footer
-  hours: '',                 // optional, shown in the footer
   currency: 'Rs',
   lowStockAt: 3,             // show "Only N left" at or below this
   pageSize: 40,              // parts shown before "Show more"
   maxBikeChips: 10           // bike buttons shown before "More bikes"
-};
+});
 
 /* ===== Text (English + Urdu) ===== */
 const I18N = {
@@ -265,7 +300,9 @@ const I18N = {
     loading:'Loading parts…', loadError:'Could not load the catalog. Check your connection and try again.', retry:'Try again',
     empty:'No parts match. Try another bike or spelling, or ask us on WhatsApp.', askUs:'Ask us on WhatsApp',
     showMore:'Show more', updated:'Prices and stock updated {d}',
-    confirmNote:'Prices and stock are confirmed on WhatsApp before dispatch.'
+    confirmNote:'Prices and stock are confirmed on WhatsApp before dispatch.',
+    contactTitle:'Visit or contact us', addressLabel:'Shop address', phoneLabel:'Phone', whatsappLabel:'WhatsApp', hoursLabel:'Opening hours',
+    directions:'Get directions', call:'Call', viewPhoto:'View photo of {name}'
   },
   ur:{
     tagline:'موٹر سائیکل کے اسپیئر پارٹس', chat:'واٹس ایپ',
@@ -287,7 +324,9 @@ const I18N = {
     loading:'پارٹس لوڈ ہو رہے ہیں…', loadError:'کیٹلاگ لوڈ نہیں ہو سکا۔ انٹرنیٹ چیک کر کے دوبارہ کوشش کریں۔', retry:'دوبارہ کوشش کریں',
     empty:'کوئی پارٹ نہیں ملا۔ دوسری موٹر سائیکل یا اسپیلنگ آزمائیں، یا ہم سے واٹس ایپ پر پوچھیں۔', askUs:'واٹس ایپ پر پوچھیں',
     showMore:'مزید دکھائیں', updated:'قیمتیں اور اسٹاک اپڈیٹ: {d}',
-    confirmNote:'قیمت اور اسٹاک روانگی سے پہلے واٹس ایپ پر تصدیق کیے جاتے ہیں۔'
+    confirmNote:'قیمت اور اسٹاک روانگی سے پہلے واٹس ایپ پر تصدیق کیے جاتے ہیں۔',
+    contactTitle:'ہم سے ملیں یا رابطہ کریں', addressLabel:'دکان کا پتہ', phoneLabel:'فون', whatsappLabel:'واٹس ایپ', hoursLabel:'اوقاتِ کار',
+    directions:'راستہ دیکھیں', call:'کال کریں', viewPhoto:'{name} کی تصویر دیکھیں'
   }
 };
 const PAY_EN = { cod:'Cash on delivery', wallet:'JazzCash / Easypaisa', bank:'Bank transfer' };
@@ -448,12 +487,13 @@ function partRow(it){
   fillCtl(ctl, it);
 
   let extra = null;
-  if(it.canOrder) extra = askLink('linkbtn', it.image ? t('askPart') : t('askPhoto'), askMessage(it, it.image ? 'ask' : 'photo'));
+  if(it.canOrder){
+    extra = askLink('linkbtn', t('askPhoto'), askMessage(it, 'photo'));
+    extra.setAttribute('data-ask', '1');
+  }
 
-  return h('li', { class:'part' },
+  return h('li', { class:'part', 'data-id':it.id },
     h('div', { class:'row1' },
-      it.image ? h('img', { class:'thumb', src:it.image, alt:'', width:'76', height:'76', loading:'lazy', decoding:'async',
-                            onerror:e => e.target.remove() }) : null,
       h('div', { class:'body' },
         h('h3', { class:'pname', text:it.name }),
         h('p', { class:'fits' }, h('b', { text:t('fits') + ' ' }), fitsText(it)),
@@ -487,6 +527,7 @@ function renderList(){
   const list = $('#list'); list.replaceChildren();
   const shown = res.slice(0, state.page * CONFIG.pageSize);
   shown.forEach(it => list.append(partRow(it)));
+  observePhotos();
 
   const bikeLabel = state.bike ? (state.bikes.find(b => b.key === state.bike) || {}).label : '';
   $('#count').textContent = state.loaded ? (bikeLabel ? t('countBike', { n:res.length, bike:bikeLabel }) : t('countAll', { n:res.length })) : '';
@@ -513,6 +554,82 @@ function showState(kind, q){
 }
 function hideState(){ const b = $('#state'); b.hidden = true; b.replaceChildren(); delete b.dataset.kind; }
 
+
+/* ===== Product photos =====
+   A part's photo is simply a file named after its SKU inside the img/ folder
+   (img/ENG-0001.webp, or .jpg). Nothing needs to be re-exported when a photo is
+   added. Rows are checked only when they scroll near the screen. */
+let photoObserver = null;
+function probe(src, ok, fail){
+  const im = new Image();
+  im.onload = () => ok(im);
+  im.onerror = () => { if(fail) fail(); };
+  im.src = src;
+}
+function photoSources(it){
+  if(it.image) return [it.image];
+  if(!it.code) return [];
+  const base = CONFIG.photoBase + encodeURIComponent(it.code);
+  return [base + '.webp', base + '.jpg'];
+}
+function showPhoto(row, it, src){
+  const r1 = row.querySelector('.row1');
+  if(!r1 || r1.querySelector('.thumbbtn')) return;
+  const img = h('img', { class:'thumb', src, alt:'', width:'76', height:'76', decoding:'async' });
+  const btn = h('button', { class:'thumbbtn', type:'button', 'aria-label':t('viewPhoto', { name:it.name }),
+                            onclick:() => openPhoto(src, it.name) }, img);
+  r1.insertBefore(btn, r1.firstChild);
+  const ask = row.querySelector('[data-ask]');
+  if(ask){ ask.textContent = t('askPart'); ask.setAttribute('href', waLink(askMessage(it, 'ask'))); }
+}
+function loadPhoto(row){
+  const it = byId.get(row.dataset.id); if(!it) return;
+  const srcs = photoSources(it); let i = 0;
+  const next = () => { if(i >= srcs.length) return; const src = srcs[i++]; probe(src, () => showPhoto(row, it, src), next); };
+  next();
+}
+function observePhotos(){
+  if(photoObserver) photoObserver.disconnect();
+  const rows = document.querySelectorAll('#list .part');
+  if(!('IntersectionObserver' in window)){ rows.forEach(loadPhoto); return; }
+  photoObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ photoObserver.unobserve(e.target); loadPhoto(e.target); } });
+  }, { rootMargin:'300px' });
+  rows.forEach(r => photoObserver.observe(r));
+}
+function openPhoto(src, name){
+  $('#photo-img').src = src; $('#photo-cap').textContent = name;
+  $('#photo').showModal();
+}
+
+/* ===== Brand, contact ===== */
+function setupBrand(){
+  $('#wm-text').textContent = CONFIG.shopName.toUpperCase();
+  if(CONFIG.logo){
+    probe(CONFIG.logo, () => {
+      $('#logo-img').src = CONFIG.logo; $('#logo-wrap').hidden = false;
+      $('#wm-img').src = CONFIG.logo; $('#wm-img').hidden = false;
+    });
+  }
+  if(CONFIG.phone){
+    const a = $('#call'); a.setAttribute('href', 'tel:' + CONFIG.phone.replace(/[^\d+]/g, '')); a.hidden = false;
+  }
+}
+function renderContact(){
+  const box = $('#contact-rows'); box.replaceChildren();
+  const wa = (CONFIG.whatsapp || '').replace(/\D/g, '');
+  const rows = [];
+  if(CONFIG.address){
+    const maps = CONFIG.mapsUrl || 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(CONFIG.address);
+    rows.push([t('addressLabel'), h('span', {}, CONFIG.address + ' ', h('a', { href:maps, target:'_blank', rel:'noopener', text:t('directions') }))]);
+  }
+  if(CONFIG.phone) rows.push([t('phoneLabel'), h('a', { class:'num', href:'tel:' + CONFIG.phone.replace(/[^\d+]/g, ''), text:CONFIG.phone })]);
+  if(wa) rows.push([t('whatsappLabel'), h('a', { class:'num', href:waLink(''), target:'_blank', rel:'noopener', text:'+' + wa })]);
+  if(CONFIG.hours) rows.push([t('hoursLabel'), CONFIG.hours]);
+  rows.forEach(r => box.append(h('div', { class:'crow' }, h('span', { class:'k', text:r[0] }), h('span', { class:'v' }, r[1]))));
+  $('#contact').hidden = rows.length === 0;
+}
+
 function renderFooter(){
   $('#foot-note').textContent = t('confirmNote');
   let d = '';
@@ -521,12 +638,11 @@ function renderFooter(){
     if(d === 'Invalid Date') d = '';
   }
   $('#foot-updated').textContent = d ? t('updated', { d }) : '';
-  $('#foot-shop').textContent = [CONFIG.address, CONFIG.hours].filter(Boolean).join(' | ');
 }
 function renderOwner(){
   const box = $('#owner'); box.replaceChildren();
   if(state.sample) box.append(h('p', { text:'Sample catalog: replace catalog.json with your real products before sharing this page.' }));
-  if(!CONFIG.whatsapp) box.append(h('p', { text:'WhatsApp number is not set: edit CONFIG.whatsapp in catalog.html.' }));
+  if(!CONFIG.whatsapp) box.append(h('p', { text:'WhatsApp number is not set: edit whatsapp in catalog-config.js.' }));
   box.hidden = !box.childNodes.length;
 }
 
@@ -653,6 +769,7 @@ function setLang(l){
   document.documentElement.dir = l === 'ur' ? 'rtl' : 'ltr';
   lsSet(LS.lang, l);
   applyStatic();
+  renderContact();
   if(state.loaded){ renderChips(); renderList(); renderFooter(); if($('#sheet').open) renderSheet(); }
   else if($('#state').dataset.kind) showState($('#state').dataset.kind);
   updateBar();
@@ -661,6 +778,8 @@ function setLang(l){
 /* ===== Boot ===== */
 function init(){
   $('#shop-name').textContent = CONFIG.shopName;
+  document.title = CONFIG.shopName + ' – Motorcycle spare parts';
+  setupBrand();
   $('#chat').setAttribute('href', waLink('Assalam o Alaikum, I have a question about a spare part.'));
   const saved = lsGet(LS.lang);
   state.lang = (saved === 'ur' || saved === 'en') ? saved : ((navigator.language || '').toLowerCase().indexOf('ur') === 0 ? 'ur' : 'en');
@@ -680,6 +799,8 @@ function init(){
 
   setLang(state.lang);
   renderOwner();
+  document.getElementById('photo-close').addEventListener('click', () => $('#photo').close());
+  $('#photo').addEventListener('click', e => { if(e.target === $('#photo')) $('#photo').close(); });
   load();
 }
 init();
