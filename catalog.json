@@ -1,0 +1,18 @@
+{
+  "_sample": true,
+  "updated": "2026-09-20T09:00:00Z",
+  "items": [
+    { "id": "s1",  "name": "Piston kit STD",        "models": ["Honda CD 70", "Honda CD 100"], "company": "Taiwan",  "grade": "Imported", "category": "Engine",       "code": "PK-70",  "price": 2800, "stock": 8,  "image": "" },
+    { "id": "s2",  "name": "Clutch plate set",      "models": ["Honda CD 70"],                 "company": "Genuine", "grade": "Original", "category": "Clutch",       "code": "CP-70",  "price": 1900, "stock": 3,  "image": "" },
+    { "id": "s3",  "name": "Front brake shoe",      "models": ["Honda CD 70", "Honda CD 100"], "company": "Local",   "grade": "Local",    "category": "Brakes",       "code": "BS-F70", "price": 450,  "stock": 25, "image": "" },
+    { "id": "s4",  "name": "Chain and sprocket kit","models": ["Honda CG 125"],                "company": "Taiwan",  "grade": "Imported", "category": "Transmission", "code": "CS-125", "price": 3400, "stock": 5,  "image": "" },
+    { "id": "s5",  "name": "Spark plug",            "models": ["Universal"],                   "company": "Standard","grade": "",         "category": "Electrical",   "code": "SP-01",  "price": 350,  "stock": 40, "image": "" },
+    { "id": "s6",  "name": "Air filter",            "models": ["Honda CG 125"],                "company": "Local",   "grade": "Local",    "category": "Engine",       "code": "AF-125", "price": 500,  "stock": 12, "image": "" },
+    { "id": "s7",  "name": "Handle grip pair",      "models": ["Universal"],                   "company": "Local",   "grade": "Local",    "category": "Body",         "code": "HG-01",  "price": 300,  "stock": 0,  "image": "" },
+    { "id": "s8",  "name": "Headlight assembly",    "models": ["Yamaha YBR 125"],              "company": "Local",   "grade": "Local",    "category": "Electrical",   "code": "HL-YBR", "price": 4200, "stock": 2,  "image": "" },
+    { "id": "s9",  "name": "Clutch cable",          "models": ["Suzuki GS 150"],               "company": "Genuine", "grade": "Original", "category": "Cables",       "code": "CC-GS",  "price": 380,  "stock": 15, "image": "" },
+    { "id": "s10", "name": "Front brake pad set",   "models": ["Yamaha YBR 125"],              "company": "Imported","grade": "Imported", "category": "Brakes",       "code": "BP-YBR", "price": 900,  "stock": 12, "image": "" },
+    { "id": "s11", "name": "Rear shock absorber pair","models": ["Honda CD 70"],               "company": "Local",   "grade": "Local",    "category": "Suspension",   "code": "SH-70",  "price": 3800, "stock": 4,  "image": "" },
+    { "id": "s12", "name": "Tappet cover gasket",   "models": ["Suzuki GS 150"],               "company": "Local",   "grade": "Local",    "category": "Engine",       "code": "TG-GS",  "price": 250,  "stock": 30, "image": "" }
+  ]
+}

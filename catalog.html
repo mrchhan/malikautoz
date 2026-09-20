@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Malik Autoz – Motorcycle spare parts</title>
+<meta name="description" content="Pick your motorcycle, check price and stock, then send your order on WhatsApp.">
+<meta property="og:title" content="Malik Autoz – Motorcycle spare parts">
+<meta property="og:description" content="Pick your bike, add the parts you need and send the order on WhatsApp.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0F1F24">
+<style>
+:root{
+  --paper:#F2F5F5; --surface:#FFFFFF; --ink:#0F1F24; --ink-2:#465960; --line:#D3DBDD;
+  --amber:#FFC20E; --ok:#0B7A4B; --low:#A85300; --out:#B3261E; --wa:#0B7A43;
+  --font:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-ur:"Noto Nastaliq Urdu","Jameel Noori Nastaleeq","Noto Naskh Arabic","Segoe UI",Tahoma,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.45 var(--font)}
+html[lang="ur"] body{font-family:var(--font-ur);line-height:1.9}
+body.has-bar{padding-bottom:92px}
+:focus-visible{outline:3px solid #1B5FD6;outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+.num{direction:ltr;unicode-bidi:isolate}
+
+/* owner-only warnings */
+.owner{background:#FFF3CD;border-bottom:1px solid #E6C86E;padding:10px 16px;font:14px/1.4 var(--font);color:#4A3800;direction:ltr;text-align:left}
+.owner p{margin:2px 0}
+
+/* header */
+.top{position:relative;background:var(--ink);color:#fff;padding:14px 0 20px}
+.top::after{content:"";position:absolute;inset-inline:0;bottom:0;height:6px;background:repeating-linear-gradient(90deg,var(--amber) 0 26px,transparent 26px 40px)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand h1{margin:0;font-size:26px;line-height:1.2;font-weight:800;letter-spacing:-.01em}
+.brand p{margin:2px 0 0;font-size:14px;opacity:.85}
+.top-actions{display:flex;gap:8px}
+.pill{min-height:40px;padding:0 14px;border-radius:8px;border:2px solid rgba(255,255,255,.7);color:#fff;background:transparent;font:inherit;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;text-decoration:none}
+.pill.wa{background:var(--wa);border-color:var(--wa)}
+
+/* bike picker */
+.picker{padding-block:24px 12px}
+.picker h2{margin:0 0 14px;font-size:clamp(24px,5vw,32px);line-height:1.25;font-weight:800;letter-spacing:-.01em}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{min-height:48px;padding:0 16px;border:2px solid var(--ink);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit;font-weight:750;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.chip[aria-pressed="true"]{background:var(--amber)}
+.chip .n{font-weight:600;font-size:13px;color:var(--ink-2)}
+.chip.plain{border-style:dashed;font-weight:650}
+
+/* search + filters */
+.tools{position:sticky;top:0;z-index:5;background:var(--paper);padding:12px 0;border-bottom:1px solid var(--line)}
+.tools .wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.search{flex:1 1 260px}
+.search input{width:100%;min-height:48px;padding:0 14px;border:2px solid var(--ink);border-radius:8px;font:inherit;font-size:16px;background:var(--surface);color:var(--ink)}
+.chk{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-weight:650;cursor:pointer}
+.chk input{width:22px;height:22px;accent-color:var(--ink)}
+.count{margin:16px 0 0;color:var(--ink-2);font-size:14px;font-weight:650;scroll-margin-top:96px}
+
+/* part rows */
+.list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;column-gap:40px}
+@media (min-width:820px){.list{grid-template-columns:1fr 1fr}}
+.part{padding:16px 0;border-bottom:1px solid var(--line)}
+.row1{display:flex;gap:12px;align-items:flex-start}
+.thumb{width:76px;height:76px;object-fit:cover;border:1px solid var(--line);border-radius:6px;background:#E3E9EA;flex:none}
+.body{flex:1;min-width:0}
+.pname{margin:0;font-size:17px;font-weight:750;line-height:1.35}
+.fits{margin:4px 0 0;color:var(--ink-2);font-size:14px}
+.fits b{color:var(--ink);font-weight:650}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag{font-size:12px;border:1px solid var(--line);padding:1px 7px;border-radius:4px;color:var(--ink-2);background:var(--surface)}
+.pr{text-align:end;flex:none}
+.price{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.price.ask{font-size:14px;font-weight:650;color:var(--ink-2)}
+.stock{font-size:13px;font-weight:650;display:flex;align-items:center;gap:6px;justify-content:flex-end}
+.dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.stock.in{color:var(--ok)} .stock.low{color:var(--low)} .stock.out{color:var(--out)}
+.row2{display:flex;align-items:center;gap:16px;margin-top:10px;flex-wrap:wrap}
+
+/* buttons */
+.btn{min-height:44px;padding:0 18px;border:0;border-radius:8px;font:inherit;font-weight:750;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+.btn.add{background:var(--amber);color:var(--ink)}
+.btn.add:hover{filter:brightness(.95)}
+.btn.wa{background:var(--wa);color:#fff}
+.btn.ghost{background:var(--surface);color:var(--ink);border:2px solid var(--ink)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.linkbtn{background:none;border:0;padding:0 2px;min-height:44px;display:inline-flex;align-items:center;font:inherit;font-size:14px;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.step{display:inline-flex;align-items:center;border:2px solid var(--ink);border-radius:8px;overflow:hidden;background:var(--surface)}
+.step button{width:44px;height:40px;border:0;background:var(--surface);color:var(--ink);font:inherit;font-size:22px;font-weight:700;cursor:pointer}
+.step button:disabled{opacity:.35;cursor:not-allowed}
+.step output{min-width:40px;text-align:center;font-weight:800;font-variant-numeric:tabular-nums}
+
+.state{padding:36px 0;text-align:center;color:var(--ink-2)}
+.state p{margin:0 auto 12px;max-width:44ch}
+#more{padding:20px 0;text-align:center}
+
+footer{margin-top:40px;padding:24px 0 32px;border-top:1px solid var(--line);color:var(--ink-2);font-size:14px}
+footer p{margin:4px 0}
+
+/* order bar */
+.bar{position:fixed;inset-inline:0;bottom:0;z-index:10;background:var(--ink);color:#fff;padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+.bar-in{max-width:980px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.bar-info{font-weight:700;line-height:1.3}
+.bar-info small{display:block;font-weight:600;font-size:14px;opacity:.85}
+
+/* order sheet */
+dialog{border:0;padding:0;width:100%;max-width:none;margin:auto 0 0;border-radius:16px 16px 0 0;background:var(--surface);color:var(--ink);overflow:hidden}
+dialog::backdrop{background:rgba(15,31,36,.55)}
+@media (min-width:640px){dialog{width:min(560px,calc(100% - 32px));margin:auto;border-radius:16px}}
+dialog[open]{animation:rise .2s ease-out}
+@keyframes rise{from{transform:translateY(20px);opacity:0}}
+@media (prefers-reduced-motion:reduce){dialog[open]{animation:none}}
+.sheet{display:flex;flex-direction:column;max-height:92vh;max-height:92dvh}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.sheet-head h2{margin:0;font-size:20px;font-weight:800}
+.sheet-body{overflow:auto;padding:0 16px 16px;flex:1}
+.lines{list-style:none;margin:0;padding:0}
+.line{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.l-name{font-weight:750}
+.l-fits{font-size:13px;color:var(--ink-2)}
+.l-side{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex:none}
+.l-total{font-weight:800;font-variant-numeric:tabular-nums;margin-top:4px}
+.sum{display:flex;justify-content:space-between;padding:14px 0 6px;font-size:18px;font-weight:800}
+.note{font-size:14px;color:var(--ink-2);margin:0 0 16px}
+.field{display:block;margin:0 0 12px}
+.field span{display:block;font-size:14px;font-weight:650;margin-bottom:4px}
+.field input,.field textarea{width:100%;padding:10px 12px;min-height:46px;border:2px solid var(--ink);border-radius:8px;font:inherit;font-size:16px;background:var(--surface);color:var(--ink)}
+fieldset.pay{border:0;margin:0 0 12px;padding:0}
+fieldset.pay legend{font-size:14px;font-weight:650;margin-bottom:4px;padding:0}
+.opt{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:600}
+.opt input{width:20px;height:20px;accent-color:var(--ink)}
+.sheet-foot{padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+.sheet-foot .btn{width:100%}
+.err{color:var(--out);font-weight:650;margin:0 0 8px;min-height:1.4em}
+</style>
+</head>
+<body>
+
+<div id="owner" class="owner" hidden></div>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <h1 id="shop-name">Malik Autoz</h1>
+      <p data-i18n="tagline"></p>
+    </div>
+    <div class="top-actions">
+      <button id="lang" class="pill" type="button"></button>
+      <a id="chat" class="pill wa" href="#" target="_blank" rel="noopener" data-i18n="chat"></a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="picker wrap" aria-labelledby="pick-h">
+    <h2 id="pick-h" data-i18n="pickBike"></h2>
+    <div id="chips" class="chips" role="group" aria-labelledby="pick-h"></div>
+  </section>
+
+  <div class="tools">
+    <div class="wrap">
+      <label class="search">
+        <span class="sr" data-i18n="searchLabel"></span>
+        <input id="q" type="search" autocomplete="off" enterkeyhint="search" data-i18n-ph="search">
+      </label>
+      <label class="chk"><input id="instock" type="checkbox"><span data-i18n="inStockOnly"></span></label>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <p id="count" class="count" aria-live="polite"></p>
+    <div id="state" class="state" hidden></div>
+    <ul id="list" class="list"></ul>
+    <div id="more"></div>
+    <noscript><p>This catalog needs JavaScript. Please message us on WhatsApp instead.</p></noscript>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p id="foot-note"></p>
+    <p id="foot-updated"></p>
+    <p id="foot-shop"></p>
+  </div>
+</footer>
+
+<div id="bar" class="bar" hidden>
+  <div class="bar-in">
+    <div class="bar-info" role="status">
+      <span id="bar-count"></span>
+      <small class="num" id="bar-total"></small>
+    </div>
+    <button id="review" class="btn add" type="button" data-i18n="review"></button>
+  </div>
+</div>
+
+<dialog id="sheet" aria-labelledby="sheet-title">
+  <div class="sheet">
+    <div class="sheet-head">
+      <h2 id="sheet-title" tabindex="-1" data-i18n="yourOrder"></h2>
+      <button id="close" class="btn ghost" type="button" data-i18n="close"></button>
+    </div>
+    <div class="sheet-body">
+      <ul id="lines" class="lines"></ul>
+      <div class="sum"><span data-i18n="total"></span><span id="total" class="num"></span></div>
+      <p class="note" data-i18n="deliveryNote"></p>
+
+      <label class="field"><span data-i18n="fName"></span><input id="f-name" type="text" autocomplete="name"></label>
+      <label class="field"><span data-i18n="fBike"></span><input id="f-bike" type="text"></label>
+      <label class="field"><span data-i18n="fCity"></span><input id="f-city" type="text" autocomplete="address-level2"></label>
+      <label class="field"><span data-i18n="fAddress"></span><textarea id="f-address" rows="3" autocomplete="street-address"></textarea></label>
+      <fieldset class="pay">
+        <legend data-i18n="pay"></legend>
+        <label class="opt"><input type="radio" name="pay" value="cod" checked><span data-i18n="cod"></span></label>
+        <label class="opt"><input type="radio" name="pay" value="wallet"><span data-i18n="wallet"></span></label>
+        <label class="opt"><input type="radio" name="pay" value="bank"><span data-i18n="bank"></span></label>
+      </fieldset>
+      <button id="clear" class="linkbtn" type="button" data-i18n="clear"></button>
+    </div>
+    <div class="sheet-foot">
+      <p id="err" class="err" role="alert"></p>
+      <button id="send" class="btn wa" type="button" data-i18n="send"></button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(function(){
+'use strict';
+
+/* ===== Edit these ===== */
+const CONFIG = {
+  shopName: 'Malik Autoz',
+  whatsapp: '',              // country code + number, digits only. Example: '923001234567'
+  catalogUrl: 'catalog.json',
+  address: '',               // optional, shown in the footer
+  hours: '',                 // optional, shown in the footer
+  currency: 'Rs',
+  lowStockAt: 3,             // show "Only N left" at or below this
+  pageSize: 40,              // parts shown before "Show more"
+  maxBikeChips: 10           // bike buttons shown before "More bikes"
+};
+
+/* ===== Text (English + Urdu) ===== */
+const I18N = {
+  en:{
+    tagline:'Motorcycle spare parts', chat:'WhatsApp',
+    pickBike:'Which bike do you ride?', allParts:'All parts', moreBikes:'More bikes', fewerBikes:'Fewer bikes',
+    searchLabel:'Search parts', search:'Part name, brand or code', inStockOnly:'In stock only',
+    countAll:'{n} parts', countBike:'{n} parts for {bike}',
+    fits:'Fits', fitsAll:'All bikes',
+    in:'In stock', low:'Only {n} left', out:'Out of stock',
+    add:'Add to order', askPhoto:'Ask for photo', askPart:'Ask about this part', askStock:'Ask availability', askPrice:'Ask for price',
+    lessQty:'Decrease quantity', moreQty:'Increase quantity',
+    inOrder:'{n} in your order', review:'Review order', yourOrder:'Your order', close:'Close',
+    remove:'Remove', clear:'Clear order', total:'Parts total',
+    deliveryNote:'Delivery charges are confirmed on WhatsApp before you pay.',
+    fName:'Your name', fBike:'Your bike (model and year)', fCity:'City',
+    fAddress:'Full delivery address (leave empty for shop pickup)',
+    pay:'Payment', cod:'Cash on delivery', wallet:'JazzCash / Easypaisa', bank:'Bank transfer',
+    send:'Send order on WhatsApp', needName:'Enter your name to send the order.',
+    noNumber:'The shop WhatsApp number is not set yet.',
+    loading:'Loading parts…', loadError:'Could not load the catalog. Check your connection and try again.', retry:'Try again',
+    empty:'No parts match. Try another bike or spelling, or ask us on WhatsApp.', askUs:'Ask us on WhatsApp',
+    showMore:'Show more', updated:'Prices and stock updated {d}',
+    confirmNote:'Prices and stock are confirmed on WhatsApp before dispatch.'
+  },
+  ur:{
+    tagline:'موٹر سائیکل کے اسپیئر پارٹس', chat:'واٹس ایپ',
+    pickBike:'آپ کون سی موٹر سائیکل چلاتے ہیں؟', allParts:'تمام پارٹس', moreBikes:'مزید ماڈلز', fewerBikes:'کم ماڈلز',
+    searchLabel:'پارٹس تلاش کریں', search:'پارٹ کا نام، برانڈ یا کوڈ', inStockOnly:'صرف دستیاب پارٹس',
+    countAll:'{n} پارٹس', countBike:'{bike} کے لیے {n} پارٹس',
+    fits:'موزوں برائے', fitsAll:'تمام موٹر سائیکلیں',
+    in:'دستیاب', low:'صرف {n} باقی', out:'اسٹاک ختم',
+    add:'آرڈر میں شامل کریں', askPhoto:'تصویر منگوائیں', askPart:'اس پارٹ کے بارے میں پوچھیں', askStock:'دستیابی پوچھیں', askPrice:'قیمت پوچھیں',
+    lessQty:'مقدار کم کریں', moreQty:'مقدار بڑھائیں',
+    inOrder:'آرڈر میں {n} آئٹم', review:'آرڈر دیکھیں', yourOrder:'آپ کا آرڈر', close:'بند کریں',
+    remove:'ہٹائیں', clear:'آرڈر صاف کریں', total:'پارٹس کی کل رقم',
+    deliveryNote:'ڈیلیوری چارجز آپ کی ادائیگی سے پہلے واٹس ایپ پر بتائے جائیں گے۔',
+    fName:'آپ کا نام', fBike:'آپ کی موٹر سائیکل (ماڈل اور سال)', fCity:'شہر',
+    fAddress:'ڈیلیوری کا مکمل پتہ (دکان سے وصولی کے لیے خالی چھوڑیں)',
+    pay:'ادائیگی کا طریقہ', cod:'کیش آن ڈیلیوری', wallet:'جاز کیش / ایزی پیسہ', bank:'بینک ٹرانسفر',
+    send:'واٹس ایپ پر آرڈر بھیجیں', needName:'آرڈر بھیجنے کے لیے اپنا نام لکھیں۔',
+    noNumber:'دکان کا واٹس ایپ نمبر ابھی سیٹ نہیں ہے۔',
+    loading:'پارٹس لوڈ ہو رہے ہیں…', loadError:'کیٹلاگ لوڈ نہیں ہو سکا۔ انٹرنیٹ چیک کر کے دوبارہ کوشش کریں۔', retry:'دوبارہ کوشش کریں',
+    empty:'کوئی پارٹ نہیں ملا۔ دوسری موٹر سائیکل یا اسپیلنگ آزمائیں، یا ہم سے واٹس ایپ پر پوچھیں۔', askUs:'واٹس ایپ پر پوچھیں',
+    showMore:'مزید دکھائیں', updated:'قیمتیں اور اسٹاک اپڈیٹ: {d}',
+    confirmNote:'قیمت اور اسٹاک روانگی سے پہلے واٹس ایپ پر تصدیق کیے جاتے ہیں۔'
+  }
+};
+const PAY_EN = { cod:'Cash on delivery', wallet:'JazzCash / Easypaisa', bank:'Bank transfer' };
+const LS = { cart:'malikautoz_catalog_cart_v1', cust:'malikautoz_catalog_customer_v1', lang:'malikautoz_catalog_lang_v1' };
+
+/* ===== State ===== */
+const $ = s => document.querySelector(s);
+const state = { lang:'en', items:[], bikes:[], bike:'', q:'', inStockOnly:false, page:1,
+                showAllBikes:false, cart:new Map(), updated:'', sample:false, loaded:false };
+let byId = new Map();
+
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+
+function t(key, vars){
+  let s = (I18N[state.lang] && I18N[state.lang][key]) || I18N.en[key] || key;
+  if(vars) for(const k in vars) s = s.split('{'+k+'}').join(String(vars[k]));
+  return s;
+}
+function h(tag, attrs){
+  const el = document.createElement(tag);
+  if(attrs) for(const k in attrs){
+    const v = attrs[k];
+    if(v == null || v === false) continue;
+    if(k === 'class') el.className = v;
+    else if(k === 'text') el.textContent = v;
+    else if(k.slice(0,2) === 'on') el.addEventListener(k.slice(2), v);
+    else if(v === true) el.setAttribute(k,'');
+    else el.setAttribute(k, v);
+  }
+  for(let i=2;i<arguments.length;i++){
+    const kid = arguments[i];
+    if(kid == null || kid === false) continue;
+    el.append(kid);
+  }
+  return el;
+}
+const bikeKey = s => String(s).toLowerCase().replace(/[\s\-_.]+/g,'');
+const money = n => CONFIG.currency + ' ' + Math.round(n).toLocaleString('en-PK');
+function waLink(text){
+  const n = (CONFIG.whatsapp || '').replace(/\D/g,'');
+  return 'https://wa.me/' + n + (text ? '?text=' + encodeURIComponent(text) : '');
+}
+
+/* ===== Data ===== */
+function normalize(r, i){
+  if(!r || !r.name) return null;
+  const rawModels = r.models != null ? r.models : (r.model != null ? r.model : '');
+  const list = (Array.isArray(rawModels) ? rawModels : String(rawModels).split(/[,;|\/]/))
+                 .map(s => String(s).trim()).filter(Boolean);
+  const isUni = m => /^(universal|all|all bikes)$/i.test(m);
+  const universal = list.length === 0 || list.some(isUni);
+  const models = list.filter(m => !isUni(m));
+
+  let stock = null;
+  if(r.stock !== undefined && r.stock !== null && r.stock !== '' && isFinite(Number(r.stock))) stock = Math.max(0, Math.floor(Number(r.stock)));
+  else if(typeof r.inStock === 'boolean') stock = r.inStock ? Infinity : 0;
+  const status = stock === 0 ? 'out' : (stock !== null && stock !== Infinity && stock <= CONFIG.lowStockAt ? 'low' : 'in');
+  const maxQty = (stock === null || stock === Infinity) ? 99 : Math.min(99, stock);
+
+  const p = Number(r.price);
+  const price = isFinite(p) && p > 0 ? p : null;
+  const hay = [r.name, r.company, r.category, r.grade, r.code].concat(models).filter(Boolean).join(' ').toLowerCase();
+
+  return {
+    id: r.id != null && r.id !== '' ? String(r.id) : 'i' + i,
+    name: String(r.name).trim(), models, universal, bikeKeys: models.map(bikeKey),
+    company: r.company ? String(r.company) : '', grade: r.grade ? String(r.grade) : '',
+    code: r.code ? String(r.code) : '', image: r.image ? String(r.image) : '',
+    price, stock, status, maxQty, canOrder: status !== 'out' && price !== null,
+    hay, compact: hay.replace(/[\s\-_.]+/g,'')
+  };
+}
+function buildBikes(){
+  const map = new Map();
+  for(const it of state.items) it.models.forEach((m, idx) => {
+    const k = it.bikeKeys[idx];
+    if(!map.has(k)) map.set(k, { key:k, label:m, count:0 });
+    map.get(k).count++;
+  });
+  state.bikes = [...map.values()].sort((a,b) => b.count - a.count || a.label.localeCompare(b.label));
+}
+async function load(){
+  showState('loading');
+  try{
+    const res = await fetch(CONFIG.catalogUrl, { cache:'no-cache' });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const arr = Array.isArray(data) ? data : data.items;
+    if(!Array.isArray(arr)) throw new Error('bad format');
+    state.items = arr.map(normalize).filter(Boolean);
+    byId = new Map(state.items.map(i => [i.id, i]));
+    state.updated = (!Array.isArray(data) && data.updated) || '';
+    state.sample = !Array.isArray(data) && !!data._sample;
+    state.loaded = true;
+    buildBikes(); pruneCart();
+    hideState(); renderChips(); renderList(); renderFooter(); updateBar(); renderOwner();
+  }catch(e){
+    showState('error');
+  }
+}
+
+/* ===== Filtering ===== */
+function filtered(){
+  const toks = state.q.toLowerCase().split(/\s+/).filter(Boolean);
+  const rank = s => s === 'out' ? 1 : 0;
+  return state.items.filter(it => {
+    if(state.bike && !(it.universal || it.bikeKeys.includes(state.bike))) return false;
+    if(state.inStockOnly && it.status === 'out') return false;
+    return toks.every(tk => it.hay.includes(tk) || it.compact.includes(tk.replace(/[\s\-_.]+/g,'')));
+  }).sort((a,b) => rank(a.status) - rank(b.status) || a.name.localeCompare(b.name));
+}
+
+/* ===== Rendering ===== */
+function fitsText(it){ return it.models.length ? it.models.join(', ') : t('fitsAll'); }
+
+function renderChips(){
+  const box = $('#chips'); box.replaceChildren();
+  const mk = (key, label, n, plain) => h('button', { class:'chip' + (plain ? ' plain' : ''), type:'button', 'data-key':key,
+      'aria-pressed': String(state.bike === key), onclick:() => selectBike(key) },
+      label, n != null ? h('span', { class:'n num', text:String(n) }) : null);
+  box.append(mk('', t('allParts'), state.items.length || null));
+  const shown = state.showAllBikes ? state.bikes : state.bikes.slice(0, CONFIG.maxBikeChips);
+  shown.forEach(b => box.append(mk(b.key, b.label, b.count)));
+  if(state.bikes.length > CONFIG.maxBikeChips){
+    box.append(h('button', { id:'morebikes', class:'chip plain', type:'button',
+      onclick:() => { state.showAllBikes = !state.showAllBikes; renderChips(); const b = $('#morebikes'); if(b) b.focus(); },
+      text: state.showAllBikes ? t('fewerBikes') : t('moreBikes') }));
+  }
+}
+function selectBike(key){
+  state.bike = key; state.page = 1;
+  document.querySelectorAll('#chips .chip[data-key]').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.key === key)));
+  renderList();
+  const c = $('#count');
+  if(c && key) c.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start' });
+}
+
+function askMessage(it, kind){
+  const what = it.name + (it.models.length ? ' (' + it.models.join(', ') + ')' : '') + (it.code ? ' [' + it.code + ']' : '');
+  const lead = 'Assalam o Alaikum, ';
+  if(kind === 'photo') return lead + 'please send a photo of: ' + what;
+  if(kind === 'stock') return lead + 'is this available: ' + what + '? When will it be in stock?';
+  if(kind === 'price') return lead + 'what is the price of: ' + what + '?';
+  return lead + 'I have a question about: ' + what;
+}
+function askLink(cls, text, msg){
+  return h('a', { class:cls, href:waLink(msg), target:'_blank', rel:'noopener', text });
+}
+
+function partRow(it){
+  const stockLabel = it.status === 'low' ? t('low', { n:it.stock }) : t(it.status);
+  const tags = [];
+  if(it.company) tags.push(h('span', { class:'tag', text:it.company }));
+  if(it.grade) tags.push(h('span', { class:'tag', text:it.grade }));
+
+  const ctl = h('div', { class:'ctl', 'data-id':it.id });
+  fillCtl(ctl, it);
+
+  let extra = null;
+  if(it.canOrder) extra = askLink('linkbtn', it.image ? t('askPart') : t('askPhoto'), askMessage(it, it.image ? 'ask' : 'photo'));
+
+  return h('li', { class:'part' },
+    h('div', { class:'row1' },
+      it.image ? h('img', { class:'thumb', src:it.image, alt:'', width:'76', height:'76', loading:'lazy', decoding:'async',
+                            onerror:e => e.target.remove() }) : null,
+      h('div', { class:'body' },
+        h('h3', { class:'pname', text:it.name }),
+        h('p', { class:'fits' }, h('b', { text:t('fits') + ' ' }), fitsText(it)),
+        tags.length ? h('div', { class:'tags' }, ...tags) : null),
+      h('div', { class:'pr' },
+        it.price !== null ? h('div', { class:'price num', text:money(it.price) }) : h('div', { class:'price ask', text:t('askPrice') }),
+        h('div', { class:'stock ' + it.status }, h('span', { class:'dot', 'aria-hidden':'true' }), stockLabel))),
+    h('div', { class:'row2' }, ctl, extra));
+}
+
+function stepper(it, q){
+  return h('div', { class:'step', role:'group', 'aria-label':it.name },
+    h('button', { type:'button', 'data-role':'dec', 'aria-label':t('lessQty'), onclick:() => setQty(it.id, q - 1), text:'−' }),
+    h('output', { text:String(q) }),
+    h('button', { type:'button', 'data-role':'inc', 'aria-label':t('moreQty'), disabled:q >= it.maxQty, onclick:() => setQty(it.id, q + 1), text:'+' }));
+}
+function fillCtl(ctl, it){
+  ctl.replaceChildren();
+  if(!it.canOrder){
+    const kind = it.status === 'out' ? 'stock' : 'price';
+    ctl.append(askLink('btn ghost', it.status === 'out' ? t('askStock') : t('askPrice'), askMessage(it, kind)));
+    return;
+  }
+  const q = state.cart.get(it.id) || 0;
+  if(!q) ctl.append(h('button', { class:'btn add', type:'button', 'data-role':'add', onclick:() => setQty(it.id, 1), text:t('add') }));
+  else ctl.append(stepper(it, q));
+}
+
+function renderList(){
+  const res = filtered();
+  const list = $('#list'); list.replaceChildren();
+  const shown = res.slice(0, state.page * CONFIG.pageSize);
+  shown.forEach(it => list.append(partRow(it)));
+
+  const bikeLabel = state.bike ? (state.bikes.find(b => b.key === state.bike) || {}).label : '';
+  $('#count').textContent = state.loaded ? (bikeLabel ? t('countBike', { n:res.length, bike:bikeLabel }) : t('countAll', { n:res.length })) : '';
+
+  if(state.loaded && !res.length){
+    const q = state.q || bikeLabel || '';
+    showState('empty', q);
+  } else if(state.loaded) hideState();
+
+  const more = $('#more'); more.replaceChildren();
+  if(res.length > shown.length){
+    more.append(h('button', { class:'btn ghost', type:'button', text:t('showMore') + ' (' + (res.length - shown.length) + ')',
+      onclick:() => { state.page++; renderList(); } }));
+  }
+}
+
+function showState(kind, q){
+  const box = $('#state'); box.replaceChildren(); box.hidden = false;
+  if(kind === 'loading') box.append(h('p', { text:t('loading') }));
+  if(kind === 'error') box.append(h('p', { text:t('loadError') }), h('button', { class:'btn ghost', type:'button', onclick:load, text:t('retry') }));
+  if(kind === 'empty') box.append(h('p', { text:t('empty') }),
+      askLink('btn wa', t('askUs'), 'Assalam o Alaikum, do you have a part for: ' + (q || 'my bike') + '?'));
+  box.dataset.kind = kind;
+}
+function hideState(){ const b = $('#state'); b.hidden = true; b.replaceChildren(); delete b.dataset.kind; }
+
+function renderFooter(){
+  $('#foot-note').textContent = t('confirmNote');
+  let d = '';
+  if(state.updated){
+    try{ d = new Date(state.updated).toLocaleDateString(state.lang === 'ur' ? 'ur-PK' : 'en-GB', { day:'numeric', month:'short', year:'numeric' }); }catch(e){}
+    if(d === 'Invalid Date') d = '';
+  }
+  $('#foot-updated').textContent = d ? t('updated', { d }) : '';
+  $('#foot-shop').textContent = [CONFIG.address, CONFIG.hours].filter(Boolean).join(' | ');
+}
+function renderOwner(){
+  const box = $('#owner'); box.replaceChildren();
+  if(state.sample) box.append(h('p', { text:'Sample catalog: replace catalog.json with your real products before sharing this page.' }));
+  if(!CONFIG.whatsapp) box.append(h('p', { text:'WhatsApp number is not set: edit CONFIG.whatsapp in catalog.html.' }));
+  box.hidden = !box.childNodes.length;
+}
+
+/* ===== Cart ===== */
+function loadCart(){
+  try{
+    const arr = JSON.parse(lsGet(LS.cart) || '[]');
+    if(Array.isArray(arr)) for(const p of arr) if(Array.isArray(p) && p.length === 2 && Number(p[1]) > 0) state.cart.set(String(p[0]), Math.floor(Number(p[1])));
+  }catch(e){}
+}
+function saveCart(){ lsSet(LS.cart, JSON.stringify([...state.cart])); }
+function pruneCart(){
+  for(const [id, q] of [...state.cart]){
+    const it = byId.get(id);
+    if(!it || !it.canOrder) state.cart.delete(id);
+    else state.cart.set(id, Math.min(q, it.maxQty));
+  }
+  saveCart();
+}
+function setQty(id, q){
+  const it = byId.get(id); if(!it) return;
+  const ae = document.activeElement;
+  const role = ae && ae.dataset ? ae.dataset.role : '';
+  const inSheet = !!(ae && ae.closest && ae.closest('#sheet'));
+
+  q = Math.max(0, Math.min(it.maxQty, q));
+  if(q) state.cart.set(id, q); else state.cart.delete(id);
+  saveCart();
+
+  const ctl = document.querySelector('.ctl[data-id="' + CSS.escape(id) + '"]');
+  if(ctl) fillCtl(ctl, it);
+  updateBar();
+  if($('#sheet').open) renderSheet();
+
+  if(role){
+    const scope = inSheet ? '#lines [data-id="' + CSS.escape(id) + '"]' : '.ctl[data-id="' + CSS.escape(id) + '"]';
+    const root = document.querySelector(scope);
+    const target = root && (root.querySelector('[data-role="' + (role === 'add' ? 'inc' : role) + '"]:not(:disabled)') || root.querySelector('[data-role]:not(:disabled)'));
+    if(target) target.focus(); else if(inSheet) $('#sheet-title').focus();
+  }
+}
+function cartTotals(){
+  let qty = 0, total = 0;
+  for(const [id, q] of state.cart){ const it = byId.get(id); if(it){ qty += q; total += it.price * q; } }
+  return { qty, total };
+}
+function updateBar(){
+  const { qty, total } = cartTotals();
+  $('#bar').hidden = qty === 0;
+  document.body.classList.toggle('has-bar', qty > 0);
+  $('#bar-count').textContent = t('inOrder', { n:qty });
+  $('#bar-total').textContent = money(total);
+}
+
+/* ===== Order sheet ===== */
+function renderSheet(){
+  const ul = $('#lines'); ul.replaceChildren();
+  for(const [id, q] of state.cart){
+    const it = byId.get(id); if(!it) continue;
+    ul.append(h('li', { class:'line', 'data-id':id },
+      h('div', { class:'l-main' }, h('div', { class:'l-name', text:it.name }), h('div', { class:'l-fits', text:fitsText(it) })),
+      h('div', { class:'l-side' }, stepper(it, q),
+        h('div', { class:'l-total num', text:money(it.price * q) }),
+        h('button', { class:'linkbtn', type:'button', 'data-role':'remove', onclick:() => setQty(id, 0), text:t('remove') }))));
+  }
+  $('#total').textContent = money(cartTotals().total);
+  if(!state.cart.size && $('#sheet').open) $('#sheet').close();
+}
+function openSheet(){
+  if(!state.cart.size) return;
+  renderSheet(); $('#err').textContent = '';
+  $('#sheet').showModal();
+}
+function customer(){
+  const pay = document.querySelector('input[name="pay"]:checked');
+  return { name:$('#f-name').value.trim(), bike:$('#f-bike').value.trim(), city:$('#f-city').value.trim(),
+           address:$('#f-address').value.trim(), pay: pay ? pay.value : 'cod' };
+}
+function saveCustomer(){ lsSet(LS.cust, JSON.stringify(customer())); }
+function restoreCustomer(){
+  try{
+    const c = JSON.parse(lsGet(LS.cust) || '{}');
+    $('#f-name').value = c.name || ''; $('#f-bike').value = c.bike || '';
+    $('#f-city').value = c.city || ''; $('#f-address').value = c.address || '';
+    const r = document.querySelector('input[name="pay"][value="' + (c.pay || 'cod') + '"]'); if(r) r.checked = true;
+  }catch(e){}
+}
+function orderText(f){
+  const L = ['Assalam o Alaikum, I would like to order from ' + CONFIG.shopName + ':', ''];
+  let n = 1, total = 0;
+  for(const [id, q] of state.cart){
+    const it = byId.get(id); if(!it) continue;
+    const lt = it.price * q; total += lt;
+    L.push(n++ + '. ' + it.name + (it.models.length ? ' (' + it.models.join(', ') + ')' : '') + (it.code ? ' [' + it.code + ']' : '') + ' x' + q + ' = ' + money(lt));
+  }
+  L.push('', 'Parts total: ' + money(total), '', 'Name: ' + f.name);
+  if(f.bike) L.push('My bike: ' + f.bike);
+  if(f.city) L.push('City: ' + f.city);
+  L.push('Address: ' + (f.address || 'Shop pickup'), 'Payment: ' + PAY_EN[f.pay], '',
+         'Please confirm availability and delivery charges. (Sent from the website catalog)');
+  return L.join('\n');
+}
+function sendOrder(){
+  const f = customer(); const err = $('#err');
+  if(!f.name){ err.textContent = t('needName'); $('#f-name').focus(); return; }
+  if(!(CONFIG.whatsapp || '').replace(/\D/g,'')){ err.textContent = t('noNumber'); return; }
+  err.textContent = '';
+  saveCustomer();
+  const a = h('a', { href:waLink(orderText(f)), target:'_blank', rel:'noopener' });
+  document.body.append(a); a.click(); a.remove();
+}
+
+/* ===== Language ===== */
+function applyStatic(){
+  document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => el.setAttribute('placeholder', t(el.dataset.i18nPh)));
+  const lb = $('#lang');
+  lb.textContent = state.lang === 'ur' ? 'English' : 'اردو';
+  lb.setAttribute('lang', state.lang === 'ur' ? 'en' : 'ur');
+}
+function setLang(l){
+  state.lang = l;
+  document.documentElement.lang = l;
+  document.documentElement.dir = l === 'ur' ? 'rtl' : 'ltr';
+  lsSet(LS.lang, l);
+  applyStatic();
+  if(state.loaded){ renderChips(); renderList(); renderFooter(); if($('#sheet').open) renderSheet(); }
+  else if($('#state').dataset.kind) showState($('#state').dataset.kind);
+  updateBar();
+}
+
+/* ===== Boot ===== */
+function init(){
+  $('#shop-name').textContent = CONFIG.shopName;
+  $('#chat').setAttribute('href', waLink('Assalam o Alaikum, I have a question about a spare part.'));
+  const saved = lsGet(LS.lang);
+  state.lang = (saved === 'ur' || saved === 'en') ? saved : ((navigator.language || '').toLowerCase().indexOf('ur') === 0 ? 'ur' : 'en');
+  loadCart(); restoreCustomer();
+
+  $('#lang').addEventListener('click', () => setLang(state.lang === 'ur' ? 'en' : 'ur'));
+  let timer;
+  $('#q').addEventListener('input', e => { clearTimeout(timer); timer = setTimeout(() => { state.q = e.target.value; state.page = 1; renderList(); }, 120); });
+  $('#instock').addEventListener('change', e => { state.inStockOnly = e.target.checked; state.page = 1; renderList(); });
+  $('#review').addEventListener('click', openSheet);
+  $('#close').addEventListener('click', () => $('#sheet').close());
+  $('#sheet').addEventListener('click', e => { if(e.target === $('#sheet')) $('#sheet').close(); });
+  $('#send').addEventListener('click', sendOrder);
+  $('#clear').addEventListener('click', () => { state.cart.clear(); saveCart(); document.querySelectorAll('.ctl[data-id]').forEach(c => { const it = byId.get(c.dataset.id); if(it) fillCtl(c, it); }); updateBar(); $('#sheet').close(); });
+  ['f-name','f-bike','f-city','f-address'].forEach(id => $('#' + id).addEventListener('input', saveCustomer));
+  document.querySelectorAll('input[name="pay"]').forEach(r => r.addEventListener('change', saveCustomer));
+
+  setLang(state.lang);
+  renderOwner();
+  load();
+}
+init();
+})();
+</script>
+</body>
+</html>
