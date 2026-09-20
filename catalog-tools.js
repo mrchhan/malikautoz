@@ -19,9 +19,9 @@
   window.__catalogToolsLoaded = true;
 
   var CFG = {
-    publicBase: 'https://malikautoz.vercel.app',
-    catalogPath: '/catalog.html',
-    githubUploadUrl: 'https://github.com/mrchhan/malikautoz/upload/main',
+    publicBase: 'https://malikautoz-shop.pages.dev',
+    catalogPath: '/',
+    githubUploadUrl: 'https://github.com/mrchhangmail/malikautoz-shop/upload/main',
     maxStockShown: 20          // exact stock stays private; anything above this shows as this
   };
 
