@@ -19,7 +19,7 @@
   window.__catalogToolsLoaded = true;
 
   var CFG = {
-    publicBase: 'https://malikautoz-shop.pages.dev',
+    publicBase: 'https://malikautoz-shop.mrchhan.workers.dev',
     catalogPath: '/',
     githubUploadUrl: 'https://github.com/mrchhangmail/malikautoz-shop/upload/main',
     maxStockShown: 20          // exact stock stays private; anything above this shows as this
