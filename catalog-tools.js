@@ -37,7 +37,7 @@
     includeOutOfStock: 'Include out-of-stock parts (shown as "Out of stock")',
     includeNoPrice: 'Include parts with no retail price (shown as "Ask for price")',
     summary: '{n} of {total} products will be published.',
-    noModel: 'Parts without a bike model ({n}) will show under every bike. Add a Model in Inventory to fix that.',
+    noModel: 'Parts without a bike model ({n}) will only show under All parts. Add a Model in Inventory, or type Universal if a part fits every bike.',
     noProducts: 'There are no products to publish yet. Add products in Inventory first.',
     download: '⬇️ Download catalog.json',
     downloaded: 'catalog.json downloaded ({n} products). Upload it to GitHub to publish it.',
@@ -46,7 +46,8 @@
     step2: 'Open the GitHub upload page, drop catalog.json in, and click Commit changes.',
     step3: 'Wait about a minute. The customer page updates by itself.',
     openGithub: 'Open GitHub upload page',
-    publishBtn: '🌐 Publish online catalog'
+    publishBtn: '🌐 Publish online catalog',
+    photoHelper: '📷 Photo helper'
   };
   var UR = {
     title: '🌐 آن لائن کیٹلاگ',
@@ -59,7 +60,7 @@
     includeOutOfStock: 'اسٹاک ختم پرزے بھی شامل کریں ("اسٹاک ختم" کے طور پر دکھائے جاتے ہیں)',
     includeNoPrice: 'بغیر ریٹیل قیمت والے پرزے بھی شامل کریں ("قیمت پوچھیں" کے طور پر دکھائے جاتے ہیں)',
     summary: '{total} میں سے {n} پروڈکٹس شائع ہوں گی۔',
-    noModel: 'بائیک ماڈل کے بغیر پرزے ({n}) ہر بائیک کے تحت دکھائی دیں گے۔ اسے ٹھیک کرنے کے لیے انوینٹری میں ماڈل شامل کریں۔',
+    noModel: 'بائیک ماڈل کے بغیر پرزے ({n}) صرف "تمام پارٹس" میں دکھائی دیں گے۔ انوینٹری میں ماڈل شامل کریں، یا اگر پرزہ ہر بائیک پر لگتا ہو تو Universal لکھیں۔',
     noProducts: 'ابھی شائع کرنے کے لیے کوئی پروڈکٹ نہیں۔ پہلے انوینٹری میں پروڈکٹس شامل کریں۔',
     download: '⬇️ catalog.json ڈاؤن لوڈ کریں',
     downloaded: 'catalog.json ڈاؤن لوڈ ہو گئی ({n} پروڈکٹس)۔ شائع کرنے کے لیے اسے گِٹ ہب پر اپ لوڈ کریں۔',
@@ -68,7 +69,8 @@
     step2: 'گِٹ ہب اپ لوڈ پیج کھولیں، catalog.json ڈالیں اور Commit changes پر کلک کریں۔',
     step3: 'تقریباً ایک منٹ انتظار کریں۔ کسٹمر پیج خود اپڈیٹ ہو جاتا ہے۔',
     openGithub: 'گِٹ ہب اپ لوڈ پیج کھولیں',
-    publishBtn: '🌐 آن لائن کیٹلاگ شائع کریں'
+    publishBtn: '🌐 آن لائن کیٹلاگ شائع کریں',
+    photoHelper: '📷 تصویر ہیلپر'
   };
 
   function registerText() {
@@ -157,6 +159,7 @@
       '      <li data-i18n="catalog.step3">' + EN.step3 + '</li>' +
       '    </ol>' +
       '    <div class="row">' +
+      '      <a class="btn ghost small" id="catalogPhotoLink" target="_blank" rel="noopener" style="text-decoration:none;" data-i18n="catalog.photoHelper">' + EN.photoHelper + '</a>' +
       '      <a class="btn ghost small" id="catalogGithubLink" target="_blank" rel="noopener" style="text-decoration:none;" data-i18n="catalog.openGithub">' + EN.openGithub + '</a>' +
       '      <button type="button" class="btn ghost" style="flex:1;" id="catalogCloseBtn" data-i18n="common.close">Close</button>' +
       '    </div>' +
@@ -167,6 +170,7 @@
     document.getElementById('catalogLinkInput').value = catalogUrl();
     document.getElementById('catalogOpenLink').setAttribute('href', catalogUrl());
     document.getElementById('catalogGithubLink').setAttribute('href', CFG.githubUploadUrl);
+    document.getElementById('catalogPhotoLink').setAttribute('href', CFG.publicBase + '/photo-helper.html');
     document.getElementById('catalogCopyBtn').addEventListener('click', copyLink);
     document.getElementById('catalogDownloadBtn').addEventListener('click', downloadCatalog);
     document.getElementById('catalogCloseBtn').addEventListener('click', closePublisher);
